@@ -128,8 +128,8 @@ const PulperiaDashboard = () => {
     }
   }, []);
 
-  // WebSocket connection
-  const { isConnected, connectionError } = useWebSocket(user?.user_id, handleWebSocketMessage);
+  // WebSocket connection (silencioso)
+  useWebSocket(user?.user_id, handleWebSocketMessage);
   
   const [pulperiaForm, setPulperiaForm] = useState({
     name: '',
