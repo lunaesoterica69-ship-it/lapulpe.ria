@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
+import { AuthProvider } from './contexts/AuthContext';
 import LandingPage from './pages/LandingPage';
 import AuthCallback from './pages/AuthCallback';
 import MapView from './pages/MapView';
@@ -20,6 +21,7 @@ import './App.css';
 function AppRouter() {
   const location = useLocation();
   
+  // Handle authentication callback
   if (location.hash?.includes('session_id=')) {
     return <AuthCallback />;
   }
@@ -47,8 +49,10 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <AppRouter />
-        <Toaster position="top-center" richColors />
+        <AuthProvider>
+          <AppRouter />
+          <Toaster position="top-center" richColors />
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );
