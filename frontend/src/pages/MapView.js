@@ -260,22 +260,16 @@ const MapView = () => {
         </div>
       )}
 
-      {/* Mini Map with Fullscreen Toggle */}
+      {/* Mini Map with Expand Toggle */}
       <div className="px-4 py-3">
         <div className={`rounded-2xl overflow-hidden shadow-md border border-pulpo-100 relative transition-all duration-300 ${
-          isMapFullscreen 
-            ? 'fixed inset-0 z-50 rounded-none border-0' 
-            : 'h-40'
+          isMapFullscreen ? 'h-[70vh]' : 'h-40'
         }`}>
-          {/* Fullscreen Toggle Button */}
+          {/* Expand/Collapse Button */}
           <button
             onClick={() => setIsMapFullscreen(!isMapFullscreen)}
-            className={`absolute z-[1000] bg-white/90 hover:bg-white p-2 rounded-xl shadow-lg border border-pulpo-100 transition-all hover:scale-105 ${
-              isMapFullscreen 
-                ? 'top-4 right-4' 
-                : 'top-2 right-2'
-            }`}
-            title={isMapFullscreen ? 'Salir de pantalla completa' : 'Ver mapa completo'}
+            className="absolute top-2 right-2 z-[1000] bg-white/90 hover:bg-white p-2 rounded-xl shadow-lg border border-pulpo-100 transition-all hover:scale-105"
+            title={isMapFullscreen ? 'Reducir mapa' : 'Ampliar mapa'}
           >
             {isMapFullscreen ? (
               <Minimize2 className="w-5 h-5 text-pulpo-600" />
@@ -284,27 +278,18 @@ const MapView = () => {
             )}
           </button>
 
-          {/* Close button in fullscreen mode */}
-          {isMapFullscreen && (
-            <button
-              onClick={() => setIsMapFullscreen(false)}
-              className="absolute top-4 left-4 z-[1000] bg-pulpo-600 hover:bg-pulpo-700 text-white p-2 rounded-xl shadow-lg transition-all hover:scale-105"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-
           <MapContainer
             center={userLocation}
-            zoom={isMapFullscreen ? 14 : 13}
+            zoom={14}
             style={{ height: '100%', width: '100%' }}
-            zoomControl={isMapFullscreen}
+            zoomControl={true}
             attributionControl={false}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <LocationMarker position={userLocation} />
+            <MapResizer isExpanded={isMapFullscreen} />
             
             {pulperias.map((pulperia) => (
               pulperia.location && (
@@ -333,15 +318,6 @@ const MapView = () => {
               )
             ))}
           </MapContainer>
-
-          {/* Pulperia count indicator in fullscreen */}
-          {isMapFullscreen && (
-            <div className="absolute bottom-4 left-4 z-[1000] bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg border border-pulpo-100">
-              <p className="text-pulpo-700 font-bold text-sm">
-                {pulperias.length} pulpería{pulperias.length !== 1 ? 's' : ''} en {radius} km
-              </p>
-            </div>
-          )}
         </div>
       </div>
 
