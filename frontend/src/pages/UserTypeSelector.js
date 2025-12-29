@@ -24,9 +24,9 @@ const UserTypeSelector = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 to-red-950">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pulpo-900 to-pulpo-950">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-red-300 border-r-transparent"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-pulpo-300 border-r-transparent"></div>
           <p className="mt-4 text-white font-semibold">Cargando...</p>
         </div>
       </div>
