@@ -21,30 +21,34 @@ const BottomNav = ({ user, cartCount = 0 }) => {
   ];
 
   return (
-    <div className="bottom-nav">
-      {navItems.map((item) => {
-        const Icon = item.icon;
-        const active = isActive(item.path);
-        
-        return (
-          <button
-            key={item.path}
-            data-testid={item.testId}
-            onClick={() => navigate(item.path)}
-            className={`flex flex-col items-center justify-center relative transition-colors ${
-              active ? 'text-primary' : 'text-stone-500 hover:text-primary'
-            }`}
-          >
-            <Icon className="w-6 h-6" strokeWidth={active ? 2.5 : 2} />
-            <span className="text-xs mt-1 font-semibold">{item.label}</span>
-            {item.badge > 0 && (
-              <span className="absolute -top-1 -right-2 bg-accent text-accent-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                {item.badge}
-              </span>
-            )}
-          </button>
-        );
-      })}
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-pulpo-100 shadow-lg safe-bottom z-50">
+      <div className="flex justify-around items-center py-2 px-4">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.path);
+          
+          return (
+            <button
+              key={item.path}
+              data-testid={item.testId}
+              onClick={() => navigate(item.path)}
+              className={`flex flex-col items-center justify-center relative transition-all py-1 px-3 rounded-xl ${
+                active 
+                  ? 'text-pulpo-600 bg-pulpo-50' 
+                  : 'text-stone-500 hover:text-pulpo-600 hover:bg-pulpo-50/50'
+              }`}
+            >
+              <Icon className="w-6 h-6" strokeWidth={active ? 2.5 : 2} />
+              <span className="text-xs mt-1 font-semibold">{item.label}</span>
+              {item.badge > 0 && (
+                <span className="absolute -top-1 right-0 bg-pulpo-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                  {item.badge}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
