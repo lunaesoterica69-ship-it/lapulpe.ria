@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider } from './contexts/AuthContext';
@@ -18,14 +19,14 @@ import OrderHistory from './pages/OrderHistory';
 import Advertising from './pages/Advertising';
 import './App.css';
 
+// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 function AppRouter() {
   const location = useLocation();
   
-  console.log('[App] Navegando a:', location.pathname, 'Hash:', location.hash);
-  
-  // Si hay hash con session_id, ir a AuthCallback
-  if (location.hash && location.hash.includes('session_id=')) {
-    console.log('[App] Detectado session_id en hash, renderizando AuthCallback');
+  // Check URL fragment for session_id synchronously during render
+  // This prevents race conditions by processing new session_id FIRST
+  if (location.hash?.includes('session_id=')) {
+    console.log('[App] Session ID detected in hash, rendering AuthCallback');
     return <AuthCallback />;
   }
   
@@ -49,15 +50,25 @@ function AppRouter() {
 }
 
 function App() {
-  console.log('[App] Iniciando aplicación');
-  console.log('[App] REACT_APP_BACKEND_URL:', process.env.REACT_APP_BACKEND_URL);
+  console.log('[App] Starting application');
+  console.log('[App] Backend URL:', process.env.REACT_APP_BACKEND_URL);
   
   return (
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
           <AppRouter />
-          <Toaster position="top-center" richColors />
+          <Toaster 
+            position="top-center" 
+            richColors 
+            toastOptions={{
+              style: {
+                background: '#B91C1C',
+                color: 'white',
+                border: 'none'
+              }
+            }}
+          />
         </AuthProvider>
       </BrowserRouter>
     </div>

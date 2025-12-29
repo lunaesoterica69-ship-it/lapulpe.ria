@@ -1,31 +1,32 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
 const AuthContext = createContext(null);
 
+// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-console.log('[AuthContext] Inicializando con BACKEND_URL:', BACKEND_URL);
+console.log('[AuthContext] Backend URL:', BACKEND_URL);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Función simple para verificar autenticación
+  // Check existing session on mount
   const checkAuth = useCallback(async () => {
     try {
-      console.log('[AuthContext] Verificando autenticación...');
+      console.log('[AuthContext] Checking existing session...');
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
         withCredentials: true,
         timeout: 15000
       });
       
-      console.log('[AuthContext] Usuario autenticado:', response.data);
+      console.log('[AuthContext] Session found:', response.data.email);
       setUser(response.data);
       return response.data;
     } catch (error) {
-      console.log('[AuthContext] No hay sesión activa');
+      console.log('[AuthContext] No active session');
       setUser(null);
       return null;
     } finally {
@@ -33,37 +34,29 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Función simple para login
+  // Login with session_id from Google OAuth
   const login = useCallback(async (sessionId) => {
     try {
       setLoading(true);
-      console.log('[AuthContext] Iniciando login con session_id:', sessionId.substring(0, 15) + '...');
-      console.log('[AuthContext] URL del backend:', `${BACKEND_URL}/api/auth/session`);
+      console.log('[AuthContext] Processing login...');
       
       const response = await axios.post(
         `${BACKEND_URL}/api/auth/session`,
         { session_id: sessionId },
         { 
           withCredentials: true,
-          timeout: 15000,
+          timeout: 20000,
           headers: {
             'Content-Type': 'application/json'
           }
         }
       );
 
-      console.log('[AuthContext] Login exitoso, datos del usuario:', response.data);
+      console.log('[AuthContext] Login successful:', response.data.email);
       setUser(response.data);
-      toast.success('¡Bienvenido!');
       return response.data;
     } catch (error) {
-      console.error('[AuthContext] Error en login:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        url: error.config?.url
-      });
-      
+      console.error('[AuthContext] Login error:', error.response?.data || error.message);
       const errorMessage = error.response?.data?.detail || 'Error al iniciar sesión';
       toast.error(errorMessage);
       throw error;
@@ -72,26 +65,43 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Función simple para logout
+  // Logout
   const logout = useCallback(async () => {
     try {
-      console.log('[AuthContext] Cerrando sesión...');
+      console.log('[AuthContext] Logging out...');
       await axios.post(
         `${BACKEND_URL}/api/auth/logout`,
         {},
         { withCredentials: true }
       );
     } catch (error) {
-      console.error('[AuthContext] Error en logout:', error);
+      console.error('[AuthContext] Logout error:', error);
     } finally {
       setUser(null);
       toast.success('Sesión cerrada');
     }
   }, []);
 
-  // Verificar auth al montar
+  // Update user type
+  const setUserType = useCallback(async (userType) => {
+    try {
+      console.log('[AuthContext] Setting user type:', userType);
+      const response = await axios.post(
+        `${BACKEND_URL}/api/auth/set-user-type?user_type=${userType}`,
+        {},
+        { withCredentials: true }
+      );
+      setUser(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('[AuthContext] Set user type error:', error);
+      throw error;
+    }
+  }, []);
+
+  // Check auth on mount
   useEffect(() => {
-    console.log('[AuthContext] Montando AuthProvider, verificando auth inicial...');
+    console.log('[AuthContext] Initializing...');
     checkAuth();
   }, [checkAuth]);
 
@@ -102,7 +112,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     checkAuth,
-    setUser
+    setUser,
+    setUserType
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
