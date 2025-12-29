@@ -2,60 +2,47 @@
   min-height: 100vh;
 }
 
+/* ================================
+   LA PULPERIA - App Styles
+   Professional "Rojo Pulpo" Theme
+   ================================ */
+
+/* Hero Gradient */
 .gradient-hero {
-  background: linear-gradient(135deg, #C41E3A 0%, #E63946 100%);
+  background: linear-gradient(135deg, #B91C1C 0%, #991B1B 100%);
 }
 
+/* Card Hover Effects */
 .card-hover {
   transition: all 0.3s ease-out;
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(185, 28, 28, 0.1), 0 10px 10px -5px rgba(185, 28, 28, 0.04);
 }
 
+/* Button Styles */
 .btn-primary {
-  @apply bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all active:scale-95 font-bold py-3 px-6 rounded-full;
+  @apply bg-pulpo-500 text-white hover:bg-pulpo-600 shadow-lg hover:shadow-xl transition-all active:scale-95 font-bold py-3 px-6 rounded-full;
 }
 
 .btn-secondary {
-  @apply bg-white text-primary border-2 border-red-100 hover:border-primary hover:bg-red-50 font-bold py-3 px-6 rounded-full transition-all;
+  @apply bg-white text-pulpo-600 border-2 border-pulpo-100 hover:border-pulpo-500 hover:bg-pulpo-50 font-bold py-3 px-6 rounded-full transition-all;
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(196, 30, 58, 0.1);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 40;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-  /* Safe area for mobile devices */
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
+/* Map Container */
 .map-container {
   height: 50vh;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(185, 28, 28, 0.1);
 }
 
 /* Responsive improvements */
 @media (min-width: 768px) {
   .map-container {
     height: 60vh;
-  }
-  
-  .bottom-nav {
-    padding: 1rem 2rem;
   }
 }
 
@@ -104,4 +91,32 @@ button, a {
   .gradient-hero {
     padding-top: max(2rem, env(safe-area-inset-top));
   }
+}
+
+/* Animation Utilities */
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
 }
