@@ -410,8 +410,10 @@ const MapView = () => {
           </div>
         )}
       </div>
+      )}
 
-      <BottomNav user={user} cartCount={cartCount} />
+      {/* Bottom Nav (hidden in fullscreen) */}
+      {!isMapFullscreen && <BottomNav user={user} cartCount={cartCount} />}
     </div>
   );
 };
