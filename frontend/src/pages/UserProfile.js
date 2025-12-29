@@ -5,40 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import { useAuth } from '../contexts/AuthContext';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
 const UserProfile = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, logout } = useAuth();
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true });
-        setUser(response.data);
-        
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-          setCart(JSON.parse(savedCart));
-        }
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        toast.error('Error al cargar perfil');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
   }, []);
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, { withCredentials: true });
+      await logout();
       localStorage.removeItem('cart');
-      toast.success('Sesión cerrada');
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Error logging out:', error);
