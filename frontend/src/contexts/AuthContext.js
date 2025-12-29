@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -7,26 +7,27 @@ const AuthContext = createContext(null);
 // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-console.log('[AuthContext] Backend URL:', BACKEND_URL);
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isLoggingIn = useRef(false);
 
   // Check existing session on mount
   const checkAuth = useCallback(async () => {
+    // Don't check auth if we're in the middle of logging in
+    if (isLoggingIn.current) {
+      return null;
+    }
+    
     try {
-      console.log('[AuthContext] Checking existing session...');
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
         withCredentials: true,
-        timeout: 15000
+        timeout: 10000
       });
       
-      console.log('[AuthContext] Session found:', response.data.email);
       setUser(response.data);
       return response.data;
     } catch (error) {
-      console.log('[AuthContext] No active session');
       setUser(null);
       return null;
     } finally {
@@ -36,46 +37,45 @@ export const AuthProvider = ({ children }) => {
 
   // Login with session_id from Google OAuth
   const login = useCallback(async (sessionId) => {
+    isLoggingIn.current = true;
     try {
       setLoading(true);
-      console.log('[AuthContext] Processing login...');
       
       const response = await axios.post(
         `${BACKEND_URL}/api/auth/session`,
         { session_id: sessionId },
         { 
           withCredentials: true,
-          timeout: 20000,
+          timeout: 15000,
           headers: {
             'Content-Type': 'application/json'
           }
         }
       );
 
-      console.log('[AuthContext] Login successful:', response.data.email);
       setUser(response.data);
       return response.data;
     } catch (error) {
-      console.error('[AuthContext] Login error:', error.response?.data || error.message);
+      console.error('[Auth] Login error:', error.response?.data || error.message);
       const errorMessage = error.response?.data?.detail || 'Error al iniciar sesión';
       toast.error(errorMessage);
       throw error;
     } finally {
       setLoading(false);
+      isLoggingIn.current = false;
     }
   }, []);
 
   // Logout
   const logout = useCallback(async () => {
     try {
-      console.log('[AuthContext] Logging out...');
       await axios.post(
         `${BACKEND_URL}/api/auth/logout`,
         {},
         { withCredentials: true }
       );
     } catch (error) {
-      console.error('[AuthContext] Logout error:', error);
+      console.error('[Auth] Logout error:', error);
     } finally {
       setUser(null);
       toast.success('Sesión cerrada');
@@ -85,7 +85,6 @@ export const AuthProvider = ({ children }) => {
   // Update user type
   const setUserType = useCallback(async (userType) => {
     try {
-      console.log('[AuthContext] Setting user type:', userType);
       const response = await axios.post(
         `${BACKEND_URL}/api/auth/set-user-type?user_type=${userType}`,
         {},
@@ -94,15 +93,21 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data);
       return response.data;
     } catch (error) {
-      console.error('[AuthContext] Set user type error:', error);
+      console.error('[Auth] Set user type error:', error);
       throw error;
     }
   }, []);
 
-  // Check auth on mount
+  // Check auth on mount - but skip if there's a session_id in the URL
   useEffect(() => {
-    console.log('[AuthContext] Initializing...');
-    checkAuth();
+    // Skip initial auth check if we're handling OAuth callback
+    const hasSessionInUrl = window.location.hash.includes('session_id=');
+    if (!hasSessionInUrl) {
+      checkAuth();
+    } else {
+      // Just set loading to false, let AuthCallback handle the login
+      setLoading(false);
+    }
   }, [checkAuth]);
 
   const value = {
