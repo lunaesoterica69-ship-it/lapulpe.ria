@@ -1,14 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=Nunito:wght@400;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ================================
+   LA PULPERIA - Professional Design System
+   Color Palette: Rojo Pulpo
+   ================================ */
+
 body {
   margin: 0;
   font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #FEF2F2;
@@ -18,11 +22,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Chivo', sans-serif;
   letter-spacing: -0.02em;
 }
 
+/* CSS Variables */
 @layer base {
   :root {
     --background: 0 40% 99%;
@@ -31,19 +37,19 @@ h1, h2, h3, h4, h5, h6 {
     --card-foreground: 0 80% 13%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 80% 13%;
-    --primary: 351 70% 45%;
+    --primary: 0 78% 42%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 80% 36%;
+    --secondary: 0 78% 35%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 354 70% 55%;
+    --accent: 0 72% 51%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 30% 90%;
     --input: 0 0% 89.8%;
-    --ring: 351 70% 45%;
+    --ring: 0 78% 42%;
     --radius: 1rem;
   }
 }
@@ -57,6 +63,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Map Styling */
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -66,8 +73,133 @@ h1, h2, h3, h4, h5, h6 {
 .leaflet-popup-content-wrapper {
   border-radius: 0.75rem;
   padding: 0;
+  box-shadow: 0 10px 40px rgba(185, 28, 28, 0.15);
 }
 
 .leaflet-popup-content {
   margin: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FEF2F2;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B91C1C;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #991B1B;
+}
+
+/* Smooth Animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button Hover Effects */
+.btn-pulpo {
+  @apply bg-pulpo-500 text-white font-semibold py-3 px-6 rounded-xl;
+  @apply hover:bg-pulpo-600 active:bg-pulpo-700;
+  @apply transition-all duration-200;
+  @apply shadow-lg shadow-pulpo-500/20;
+  @apply hover:shadow-xl hover:shadow-pulpo-500/30;
+  @apply hover:-translate-y-0.5;
+}
+
+.btn-pulpo-outline {
+  @apply bg-transparent text-pulpo-600 font-semibold py-3 px-6 rounded-xl;
+  @apply border-2 border-pulpo-500;
+  @apply hover:bg-pulpo-500 hover:text-white;
+  @apply transition-all duration-200;
+}
+
+/* Card Styles */
+.card-pulpo {
+  @apply bg-white rounded-2xl shadow-lg;
+  @apply border border-pulpo-100;
+  @apply transition-all duration-300;
+  @apply hover:shadow-xl hover:border-pulpo-200;
+}
+
+/* Glass Effect */
+.glass-pulpo {
+  @apply bg-white/80 backdrop-blur-xl;
+  @apply border border-white/20;
+  @apply shadow-xl;
+}
+
+/* Gradient Backgrounds */
+.bg-pulpo-gradient {
+  background: linear-gradient(135deg, #B91C1C 0%, #991B1B 50%, #7F1D1D 100%);
+}
+
+.bg-pulpo-gradient-soft {
+  background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+}
+
+/* Text Gradient */
+.text-pulpo-gradient {
+  background: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Input Focus States */
+input:focus, textarea:focus, select:focus {
+  @apply ring-2 ring-pulpo-500 ring-offset-2;
+  @apply border-pulpo-500;
+  outline: none;
+}
+
+/* Badge Styles */
+.badge-pulpo {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  @apply bg-pulpo-100 text-pulpo-700;
+}
+
+.badge-pulpo-solid {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  @apply bg-pulpo-500 text-white;
+}
+
+/* Loading Animation */
+.loading-pulpo {
+  @apply animate-pulse bg-pulpo-200 rounded;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .touch-action-pan {
+    touch-action: pan-y;
+  }
+}
+
+/* Safe Area for Mobile */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 20px);
 }
