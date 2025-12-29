@@ -337,8 +337,7 @@ const MapView = () => {
         </div>
       </div>
 
-      {/* Pulperias List (hidden in fullscreen) */}
-      {!isMapFullscreen && (
+      {/* Pulperias List */}
       <div className="px-4 pb-4">
         <h2 className="text-lg font-bold mb-3 text-stone-800">Pulperías Cercanas</h2>
         {pulperias.length === 0 ? (
