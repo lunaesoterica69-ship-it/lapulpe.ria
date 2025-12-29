@@ -260,14 +260,45 @@ const MapView = () => {
         </div>
       )}
 
-      {/* Mini Map */}
+      {/* Mini Map with Fullscreen Toggle */}
       <div className="px-4 py-3">
-        <div className="h-40 rounded-2xl overflow-hidden shadow-md border border-pulpo-100">
+        <div className={`rounded-2xl overflow-hidden shadow-md border border-pulpo-100 relative transition-all duration-300 ${
+          isMapFullscreen 
+            ? 'fixed inset-0 z-50 rounded-none border-0' 
+            : 'h-40'
+        }`}>
+          {/* Fullscreen Toggle Button */}
+          <button
+            onClick={() => setIsMapFullscreen(!isMapFullscreen)}
+            className={`absolute z-[1000] bg-white/90 hover:bg-white p-2 rounded-xl shadow-lg border border-pulpo-100 transition-all hover:scale-105 ${
+              isMapFullscreen 
+                ? 'top-4 right-4' 
+                : 'top-2 right-2'
+            }`}
+            title={isMapFullscreen ? 'Salir de pantalla completa' : 'Ver mapa completo'}
+          >
+            {isMapFullscreen ? (
+              <Minimize2 className="w-5 h-5 text-pulpo-600" />
+            ) : (
+              <Maximize2 className="w-5 h-5 text-pulpo-600" />
+            )}
+          </button>
+
+          {/* Close button in fullscreen mode */}
+          {isMapFullscreen && (
+            <button
+              onClick={() => setIsMapFullscreen(false)}
+              className="absolute top-4 left-4 z-[1000] bg-pulpo-600 hover:bg-pulpo-700 text-white p-2 rounded-xl shadow-lg transition-all hover:scale-105"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+
           <MapContainer
             center={userLocation}
-            zoom={13}
+            zoom={isMapFullscreen ? 14 : 13}
             style={{ height: '100%', width: '100%' }}
-            zoomControl={false}
+            zoomControl={isMapFullscreen}
             attributionControl={false}
           >
             <TileLayer
@@ -284,11 +315,17 @@ const MapView = () => {
                   <Popup>
                     <div className="p-1">
                       <h3 className="font-bold">{pulperia.name}</h3>
+                      {pulperia.rating > 0 && (
+                        <div className="flex items-center gap-1 text-sm my-1">
+                          <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          <span>{pulperia.rating.toFixed(1)}</span>
+                        </div>
+                      )}
                       <button
                         onClick={() => navigate(`/pulperia/${pulperia.pulperia_id}`)}
-                        className="mt-2 w-full bg-pulpo-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg"
+                        className="mt-2 w-full bg-pulpo-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg hover:bg-pulpo-700 transition-colors"
                       >
-                        Ver
+                        Ver Pulpería
                       </button>
                     </div>
                   </Popup>
@@ -296,6 +333,15 @@ const MapView = () => {
               )
             ))}
           </MapContainer>
+
+          {/* Pulperia count indicator in fullscreen */}
+          {isMapFullscreen && (
+            <div className="absolute bottom-4 left-4 z-[1000] bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg border border-pulpo-100">
+              <p className="text-pulpo-700 font-bold text-sm">
+                {pulperias.length} pulpería{pulperias.length !== 1 ? 's' : ''} en {radius} km
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
