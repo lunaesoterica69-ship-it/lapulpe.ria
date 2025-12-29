@@ -678,7 +678,7 @@ const PulperiaDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-pulpo-50 pb-24">
       {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
@@ -686,29 +686,8 @@ const PulperiaDashboard = () => {
         subtitle={selectedPulperia ? `${newOrdersCount} orden(es) pendiente(s)` : 'Panel de Control'}
       />
       
-      {/* WebSocket Connection Status - Solo mostrar si hay pulpería seleccionada */}
-      {selectedPulperia && (
-        <div className={`px-6 py-2 flex items-center justify-center gap-2 text-sm ${
-          isConnected 
-            ? 'bg-green-500/10 text-green-600' 
-            : 'bg-amber-500/10 text-amber-600'
-        }`}>
-          {isConnected ? (
-            <>
-              <Wifi className="w-4 h-4" />
-              <span>Órdenes en tiempo real activas</span>
-            </>
-          ) : (
-            <>
-              <WifiOff className="w-4 h-4" />
-              <span>Conectando...</span>
-            </>
-          )}
-        </div>
-      )}
-      
       {/* Pulperia Info Section */}
-      <div className="bg-gradient-to-b from-red-600 to-red-700 text-white px-6 pb-6">
+      <div className="bg-gradient-to-b from-pulpo-600 to-pulpo-700 text-white px-6 pb-6">
         {pulperias.length === 0 ? (
           <Button
             data-testid="create-pulperia-button"
