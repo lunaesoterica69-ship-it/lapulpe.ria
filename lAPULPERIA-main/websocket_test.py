@@ -10,7 +10,7 @@ import time
 
 class WebSocketTester:
     def __init__(self):
-        self.base_url = "https://tienda-cerca.preview.emergentagent.com"
+        self.base_url = "https://red-auth-connect.preview.emergentagent.com"
         self.pulperia_token = "-VQBIlnpDEMpfon3aq3vZAlmk0n-bkvQSixYRttrn78"  # Valid pulperia token
         self.tests_run = 0
         self.tests_passed = 0

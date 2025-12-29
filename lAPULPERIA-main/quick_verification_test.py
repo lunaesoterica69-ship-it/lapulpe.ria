@@ -14,7 +14,7 @@ from datetime import datetime
 class QuickVerificationTester:
     def __init__(self):
         # Use REACT_APP_BACKEND_URL from frontend/.env
-        self.base_url = "https://tienda-cerca.preview.emergentagent.com"
+        self.base_url = "https://red-auth-connect.preview.emergentagent.com"
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []

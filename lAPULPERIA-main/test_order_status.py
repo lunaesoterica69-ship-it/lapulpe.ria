@@ -7,7 +7,7 @@ This tests the main bug fix mentioned in the review request
 import requests
 import json
 
-BASE_URL = "https://tienda-cerca.preview.emergentagent.com"
+BASE_URL = "https://red-auth-connect.preview.emergentagent.com"
 PULPERIA_TOKEN = "test_session_pulperia_1766943109361"
 
 def test_order_status_transitions():

@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class OrderSystemTester:
-    def __init__(self, base_url="https://tienda-cerca.preview.emergentagent.com"):
+    def __init__(self, base_url="https://red-auth-connect.preview.emergentagent.com"):
         self.base_url = base_url
         self.cliente_token = "9tlgddE3GsdKSJ33ipNJ4-ompxnELUdGP1d-qSNyCTA"  # Ale Nolasco - cliente
         self.pulperia_token = "-VQBIlnpDEMpfon3aq3vZAlmk0n-bkvQSixYRttrn78"  # Alejandro Nolasco - pulperia
