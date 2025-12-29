@@ -35,6 +35,22 @@ function LocationMarker({ position }) {
   ) : null;
 }
 
+// Component to handle map resize when expanded/collapsed
+function MapResizer({ isExpanded }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Invalidate map size after transition
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 350);
+    
+    return () => clearTimeout(timer);
+  }, [map, isExpanded]);
+  
+  return null;
+}
+
 const MapView = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
