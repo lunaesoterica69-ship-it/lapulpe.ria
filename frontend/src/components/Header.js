@@ -104,7 +104,7 @@ const Header = ({ user, title, subtitle }) => {
   };
 
   return (
-    <div className="gradient-hero text-white px-6 py-6">
+    <div className="bg-gradient-to-r from-pulpo-600 to-pulpo-700 text-white px-6 py-6 shadow-lg">
       <div className="flex justify-between items-start">
         <div className="flex-1">
           {title && <h1 className="text-2xl font-black mb-1">{title}</h1>}
@@ -139,9 +139,9 @@ const Header = ({ user, title, subtitle }) => {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-pulpo-100 overflow-hidden z-50">
               {/* User Info Header */}
-              <div className="bg-gradient-to-r from-primary to-red-600 text-white p-4">
+              <div className="bg-gradient-to-r from-pulpo-600 to-pulpo-700 text-white p-4">
                 <div className="flex items-center gap-3">
                   {user?.picture ? (
                     <img
@@ -173,8 +173,8 @@ const Header = ({ user, title, subtitle }) => {
 
               {/* Notifications Section */}
               <div className="max-h-64 overflow-y-auto">
-                <div className="px-4 py-2 bg-stone-50 border-b border-stone-200 flex justify-between items-center">
-                  <p className="text-xs font-bold text-stone-500 uppercase">
+                <div className="px-4 py-2 bg-pulpo-50 border-b border-pulpo-100 flex justify-between items-center">
+                  <p className="text-xs font-bold text-pulpo-600 uppercase">
                     {user?.user_type === 'pulperia' ? 'Órdenes Pendientes' : 'Mis Órdenes'}
                   </p>
                   <button
@@ -182,16 +182,16 @@ const Header = ({ user, title, subtitle }) => {
                       e.stopPropagation();
                       fetchNotifications();
                     }}
-                    className="p-1 hover:bg-stone-200 rounded transition-colors"
+                    className="p-1 hover:bg-pulpo-100 rounded transition-colors"
                     title="Actualizar"
                   >
-                    <RefreshCw className={`w-4 h-4 text-stone-500 ${loading ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`w-4 h-4 text-pulpo-500 ${loading ? 'animate-spin' : ''}`} />
                   </button>
                 </div>
 
                 {loading ? (
                   <div className="p-4 text-center">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-primary border-r-transparent"></div>
+                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-pulpo-500 border-r-transparent"></div>
                   </div>
                 ) : notifications.length === 0 ? (
                   <div className="p-6 text-center text-stone-500">
@@ -207,7 +207,7 @@ const Header = ({ user, title, subtitle }) => {
                           setShowDropdown(false);
                           navigate(user?.user_type === 'pulperia' ? '/dashboard' : '/orders');
                         }}
-                        className="p-3 hover:bg-stone-50 cursor-pointer transition-colors"
+                        className="p-3 hover:bg-pulpo-50 cursor-pointer transition-colors"
                       >
                         <div className="flex items-start gap-3">
                           <div className="mt-1">
@@ -230,20 +230,20 @@ const Header = ({ user, title, subtitle }) => {
               </div>
 
               {/* Actions */}
-              <div className="border-t border-stone-200 p-2">
+              <div className="border-t border-pulpo-100 p-2">
                 <button
                   onClick={() => {
                     setShowDropdown(false);
                     navigate('/profile');
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-100 rounded-lg flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-pulpo-50 rounded-lg flex items-center gap-2"
                 >
                   <User className="w-4 h-4" />
                   Ver Perfil
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm text-pulpo-600 hover:bg-pulpo-50 rounded-lg flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                   Cerrar Sesión
