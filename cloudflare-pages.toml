@@ -1,0 +1,12 @@
+[build]
+  command = "cd frontend && yarn install && yarn build"
+  publish = "frontend/build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  YARN_VERSION = "1.22.19"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

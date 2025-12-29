@@ -1,0 +1,3 @@
+# SPA Redirect for React Router
+# All non-file requests redirect to index.html
+/*    /index.html   200
