@@ -91,4 +91,4 @@ else
 fi
 
 echo -e "\n${GREEN}✅ La Pulpería está corriendo!${NC}"
-echo -e "${YELLOW}❤️  Slogan: ¿Qué deseaba?${NC}\n"
+echo -e "${YELLOW}❤️  Lema: Qué deseaba${NC}\n"
