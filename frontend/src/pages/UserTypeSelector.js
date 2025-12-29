@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { ShoppingBag, Store, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 const UserTypeSelector = () => {
   const navigate = useNavigate();
-  const { user, updateUser, checkAuth } = useAuth();
+  const { user, setUser, setUserType, checkAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
 
