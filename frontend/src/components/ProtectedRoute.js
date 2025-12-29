@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Store } from 'lucide-react';
@@ -8,15 +8,13 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const { user, loading, checkAuth } = useAuth();
   
-  // If user data was passed from AuthCallback, use it
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    location.state?.user ? true : null
-  );
+  // If user data was passed from AuthCallback, use it immediately
+  const initialAuth = useMemo(() => location.state?.user ? true : null, [location.state?.user]);
+  const [isAuthenticated, setIsAuthenticated] = useState(initialAuth);
 
   useEffect(() => {
     // Skip auth check if user data was passed from AuthCallback
-    if (location.state?.user) {
-      setIsAuthenticated(true);
+    if (initialAuth === true) {
       return;
     }
 
@@ -37,7 +35,7 @@ const ProtectedRoute = ({ children }) => {
     } else if (!loading && !user) {
       setIsAuthenticated(false);
     }
-  }, [loading, user, checkAuth, location.state]);
+  }, [loading, user, checkAuth, initialAuth, isAuthenticated]);
 
   // Show loading state
   if (loading || isAuthenticated === null) {
