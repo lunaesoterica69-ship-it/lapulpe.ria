@@ -210,8 +210,8 @@ const MapView = () => {
         </div>
       </div>
 
-      {/* Featured Pulperias - Horizontal Scroll */}
-      {featuredPulperias.length > 0 && (
+      {/* Featured Pulperias - Horizontal Scroll (hidden in fullscreen) */}
+      {featuredPulperias.length > 0 && !isMapFullscreen && (
         <div className="px-4 pt-4">
           <div className="flex items-center gap-2 mb-3">
             <Crown className="w-5 h-5 text-yellow-500" />
