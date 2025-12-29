@@ -1,34 +1,107 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+.App {
+  min-height: 100vh;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.gradient-hero {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.card-hover {
+  transition: all 0.3s ease-out;
 }
 
-.App-link {
-    color: #61dafb;
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.btn-primary {
+  @apply bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all active:scale-95 font-bold py-3 px-6 rounded-full;
+}
+
+.btn-secondary {
+  @apply bg-white text-primary border-2 border-orange-100 hover:border-primary hover:bg-orange-50 font-bold py-3 px-6 rounded-full transition-all;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(220, 38, 38, 0.1);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 40;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  /* Safe area for mobile devices */
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.map-container {
+  height: 50vh;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive improvements */
+@media (min-width: 768px) {
+  .map-container {
+    height: 60vh;
+  }
+  
+  .bottom-nav {
+    padding: 1rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .map-container {
+    height: 70vh;
+  }
+}
+
+/* Touch-friendly inputs for mobile */
+input, select, textarea, button {
+  font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile-first card improvements */
+@media (max-width: 640px) {
+  .card-hover:hover {
+    transform: none; /* Disable hover effects on touch devices */
+  }
+  
+  .card-hover:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Improved touch targets */
+button, a {
+  min-height: 44px; /* Apple's recommended minimum touch target */
+}
+
+/* Better dialog/modal on mobile */
+@media (max-width: 640px) {
+  [role="dialog"] {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* PWA status bar safe area */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .gradient-hero {
+    padding-top: max(2rem, env(safe-area-inset-top));
+  }
 }

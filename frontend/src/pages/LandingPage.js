@@ -1,0 +1,175 @@
+import { MapPin, Store, ShoppingBag, Zap, Search, ArrowRight } from 'lucide-react';
+
+const LandingPage = () => {
+  const handleLogin = () => {
+    const redirectUrl = window.location.origin + '/select-type';
+    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+      {/* Animated background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+        <div className="absolute top-1/2 left-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Hero Section */}
+      <div className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-20">
+        <div className="max-w-6xl mx-auto text-center">
+          {/* Logo/Icon */}
+          <div className="mb-8 inline-block">
+            <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-orange-500/30 mx-auto">
+              <Store className="w-10 h-10 text-white" strokeWidth={2} />
+            </div>
+          </div>
+          
+          {/* Title */}
+          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight">
+            <span className="text-white">La </span>
+            <span className="bg-gradient-to-r from-orange-400 via-red-400 to-orange-500 bg-clip-text text-transparent">
+              Pulpería
+            </span>
+          </h1>
+          
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl mb-10 text-white/70 max-w-2xl mx-auto">
+            Conectando comunidades hondureñas con la tienda de barrio más cercana
+          </p>
+          
+          {/* CTA Button */}
+          <button
+            data-testid="login-button"
+            onClick={handleLogin}
+            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-red-500 
+              text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-xl shadow-orange-500/30 
+              hover:shadow-orange-500/50 hover:scale-105 transition-all duration-300"
+          >
+            <Store className="w-5 h-5" />
+            Comenzar con Google
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="relative z-10 px-6 py-20 bg-white/5 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+              ¿Cómo funciona?
+            </h2>
+            <p className="text-white/60 text-lg">
+              Simple, rápido y diseñado para Honduras
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Feature 1 */}
+            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-cyan-500/50 hover:bg-white/10 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                <MapPin className="w-7 h-7 text-white" strokeWidth={2} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">Encuentra</h3>
+              <p className="text-white/60">Pulperías cercanas en un mapa interactivo</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                <Search className="w-7 h-7 text-white" strokeWidth={2} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">Busca</h3>
+              <p className="text-white/60">Productos específicos en todas las tiendas</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-orange-500/50 hover:bg-white/10 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                <ShoppingBag className="w-7 h-7 text-white" strokeWidth={2} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">Ordena</h3>
+              <p className="text-white/60">Agrega al carrito y realiza tu pedido</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-green-500/50 hover:bg-white/10 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform">
+                <Zap className="w-7 h-7 text-white" strokeWidth={2} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-white">Recoge</h3>
+              <p className="text-white/60">Notificación instantánea cuando esté listo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA for Business */}
+      <div className="relative z-10 px-6 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-xl rounded-3xl p-12 border border-orange-500/20">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+              ¿Tienes una pulpería?
+            </h2>
+            <p className="text-xl text-white/70 mb-8">
+              Digitaliza tu negocio y recibe órdenes en tiempo real
+            </p>
+            <button
+              data-testid="owner-cta-button"
+              onClick={handleLogin}
+              className="inline-flex items-center gap-2 bg-white text-slate-900 font-bold py-4 px-8 rounded-2xl text-lg hover:bg-white/90 hover:scale-105 transition-all duration-300"
+            >
+              <Store className="w-5 h-5" />
+              Registrar mi Pulpería
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Support Section */}
+      <div className="relative z-10 px-6 py-16 bg-white/5">
+        <div className="max-w-3xl mx-auto text-center">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            💝 Apoya al Creador
+          </h3>
+          <p className="text-white/60 mb-6">
+            Si te gusta La Pulpería, puedes apoyar su desarrollo
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="mailto:onol4sco05@gmail.com"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl px-6 py-3 rounded-xl border border-white/10 hover:border-white/30 transition-all text-white/80 hover:text-white"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              onol4sco05@gmail.com
+            </a>
+            
+            <a 
+              href="https://paypal.me/alejandronolasco979?locale.x=es_XC&country.x=HN"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 rounded-xl hover:from-blue-500 hover:to-blue-600 transition-all text-white font-medium"
+            >
+              PayPal
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="relative z-10 px-6 py-8 border-t border-white/10">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-white/40 text-sm">
+            © 2024 La Pulpería — Conectando comunidades hondureñas
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default LandingPage;
