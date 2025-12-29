@@ -38,19 +38,9 @@ const UserTypeSelector = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/auth/set-user-type?user_type=${userType}`,
-        {},
-        { withCredentials: true }
-      );
-
-      // Update the auth context with the new user data
-      updateUser(response.data);
+      const updatedUser = await setUserType(userType);
       
       toast.success('¡Cuenta configurada correctamente!');
-      
-      // Force a re-check of auth to ensure everything is synced
-      await checkAuth(false);
       
       if (userType === 'cliente') {
         navigate('/map', { replace: true });
