@@ -68,91 +68,63 @@ const PulperiaDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   
-  // WebSocket message handler
+  // WebSocket message handler - Silencioso, solo actualiza datos
   const handleWebSocketMessage = useCallback((data) => {
-    console.log('📬 Processing WebSocket message:', data);
-    
     if (data.type === 'order_update') {
-      const { event, order, message, sound } = data;
+      const { event, order, message } = data;
       
-      // Play notification sound for new orders or ready orders
-      if (sound || event === 'new_order') {
+      // Play notification sound for new orders
+      if (event === 'new_order') {
         try {
-          // Use a better notification sound
           const audioContext = new (window.AudioContext || window.webkitAudioContext)();
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
           
           oscillator.connect(gainNode);
           gainNode.connect(audioContext.destination);
-          
-          oscillator.frequency.value = event === 'new_order' ? 880 : 660; // A5 for new, E5 for ready
+          oscillator.frequency.value = 880;
           oscillator.type = 'sine';
           gainNode.gain.value = 0.3;
           
           oscillator.start();
           oscillator.stop(audioContext.currentTime + 0.3);
           
-          // Second beep for new orders
-          if (event === 'new_order') {
-            setTimeout(() => {
-              const osc2 = audioContext.createOscillator();
-              osc2.connect(gainNode);
-              osc2.frequency.value = 1100;
-              osc2.type = 'sine';
-              osc2.start();
-              osc2.stop(audioContext.currentTime + 0.2);
-            }, 200);
-          }
-        } catch (e) {
-          console.log('Audio notification not available');
-        }
-      }
-      
-      // Show toast notification
-      if (event === 'new_order') {
+          setTimeout(() => {
+            const osc2 = audioContext.createOscillator();
+            osc2.connect(gainNode);
+            osc2.frequency.value = 1100;
+            osc2.type = 'sine';
+            osc2.start();
+            osc2.stop(audioContext.currentTime + 0.2);
+          }, 200);
+        } catch (e) {}
+        
+        // Show toast for new orders
         toast.success(message || '🔔 ¡Nueva orden recibida!', {
-          duration: 6000,
-          style: { background: '#10B981', color: 'white', fontWeight: 'bold' }
-        });
-      } else if (event === 'status_changed') {
-        toast.info(message || '📦 Estado de orden actualizado', {
-          duration: 3000
-        });
-      } else if (event === 'cancelled') {
-        toast.error(message || '❌ Orden cancelada', {
-          duration: 3000
+          duration: 5000,
+          style: { background: '#B91C1C', color: 'white', fontWeight: 'bold' }
         });
       }
       
-      // Update orders list in real-time with FULL order data
+      // Update orders list in real-time
       setOrders(prevOrders => {
         const existingIndex = prevOrders.findIndex(o => o.order_id === order.order_id);
         
         if (event === 'new_order' && existingIndex === -1) {
-          // Add new order at the beginning with full data
-          console.log('📦 Adding new order to list:', order);
           return [{ ...order, isNew: true }, ...prevOrders];
         } else if (existingIndex !== -1) {
-          // Update existing order with new data
           const updatedOrders = [...prevOrders];
-          updatedOrders[existingIndex] = { 
-            ...updatedOrders[existingIndex], 
-            ...order,
-            isNew: false 
-          };
+          updatedOrders[existingIndex] = { ...updatedOrders[existingIndex], ...order, isNew: false };
           return updatedOrders;
         }
         
         return prevOrders;
       });
       
-      // Update notification count for new orders
+      // Update notification count
       if (event === 'new_order') {
         setNewOrdersCount(prev => prev + 1);
       }
-    } else if (data.type === 'connected') {
-      toast.success('🟢 Conexión en tiempo real activa', { duration: 2000 });
     }
   }, []);
 
