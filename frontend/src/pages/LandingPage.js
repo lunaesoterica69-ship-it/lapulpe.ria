@@ -94,8 +94,8 @@ const LandingPage = () => {
             </div>
 
             {/* Feature 4 */}
-            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-green-500/50 hover:bg-white/10 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform">
+            <div className="group bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 hover:border-red-400/50 hover:bg-white/10 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-red-600/20 group-hover:scale-110 transition-transform">
                 <Zap className="w-7 h-7 text-white" strokeWidth={2} />
               </div>
               <h3 className="text-xl font-bold mb-3 text-white">Recoge</h3>
