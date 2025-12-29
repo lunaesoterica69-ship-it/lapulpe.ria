@@ -46,6 +46,7 @@ const MapView = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [radius, setRadius] = useState(5);
   const [cart, setCart] = useState([]);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
   const calculateDistance = useCallback((lat1, lon1, lat2, lon2) => {
     const R = 6371;
