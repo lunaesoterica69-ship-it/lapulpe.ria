@@ -19,12 +19,24 @@ load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[os.environ.get('DB_NAME', 'la_pulperia_db')]
 
-app = FastAPI()
+app = FastAPI(title="La Pulpería API", version="2.0.0")
 api_router = APIRouter(prefix="/api")
 
+# Emergent Auth URL for Google OAuth
+# REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 EMERGENT_AUTH_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# ============================================
+# PYDANTIC MODELS
+# ============================================
 
 class User(BaseModel):
     user_id: str
@@ -56,9 +68,8 @@ class Pulperia(BaseModel):
     logo_url: Optional[str] = None
     rating: Optional[float] = 0.0
     review_count: Optional[int] = 0
-    # Customization options
-    title_font: Optional[str] = "default"  # default, serif, script, bold
-    background_color: Optional[str] = "#DC2626"  # Default red
+    title_font: Optional[str] = "default"
+    background_color: Optional[str] = "#B91C1C"
     created_at: datetime
 
 class Product(BaseModel):
@@ -67,8 +78,8 @@ class Product(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
-    stock: int = 0  # Keep for backwards compatibility
-    available: bool = True  # New availability toggle
+    stock: int = 0
+    available: bool = True
     category: Optional[str] = None
     image_url: Optional[str] = None
     created_at: datetime
@@ -105,14 +116,14 @@ class Review(BaseModel):
     user_name: str
     rating: int
     comment: Optional[str] = None
-    images: List[str] = []  # Up to 2 images
+    images: List[str] = []
     created_at: datetime
 
 class Job(BaseModel):
     job_id: str
     employer_user_id: str
     employer_name: str
-    pulperia_id: Optional[str] = None  # If posted by a pulperia
+    pulperia_id: Optional[str] = None
     pulperia_name: Optional[str] = None
     pulperia_logo: Optional[str] = None
     title: str
@@ -162,10 +173,9 @@ class Advertisement(BaseModel):
     end_date: Optional[datetime] = None
     created_at: datetime
 
-class AdvertisementCreate(BaseModel):
-    plan: Literal["basico", "destacado", "premium"]
-    payment_method: str
-    payment_reference: Optional[str] = None
+# ============================================
+# REQUEST MODELS
+# ============================================
 
 class SessionRequest(BaseModel):
     session_id: str
@@ -182,7 +192,7 @@ class PulperiaCreate(BaseModel):
     image_url: Optional[str] = None
     logo_url: Optional[str] = None
     title_font: Optional[str] = "default"
-    background_color: Optional[str] = "#DC2626"
+    background_color: Optional[str] = "#B91C1C"
 
 class ProductCreate(BaseModel):
     name: str
@@ -196,7 +206,7 @@ class ProductCreate(BaseModel):
 class ReviewCreate(BaseModel):
     rating: int
     comment: Optional[str] = None
-    images: List[str] = []  # Up to 2 images
+    images: List[str] = []
 
 class JobApplicationCreate(BaseModel):
     contact: str
@@ -225,7 +235,7 @@ class JobCreate(BaseModel):
     pay_currency: Literal["HNL", "USD"]
     location: str
     contact: str
-    pulperia_id: Optional[str] = None  # Optional: link job to pulperia
+    pulperia_id: Optional[str] = None
 
 class ServiceCreate(BaseModel):
     title: str
@@ -237,21 +247,34 @@ class ServiceCreate(BaseModel):
     contact: str
     images: List[str] = []
 
+class AdvertisementCreate(BaseModel):
+    plan: Literal["basico", "destacado", "premium"]
+    payment_method: str
+    payment_reference: Optional[str] = None
+
+# ============================================
+# AUTHENTICATION HELPERS
+# ============================================
+
 async def get_current_user(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get current authenticated user from session token"""
     token = None
     
+    # Check cookie first, then Authorization header
     if session_token:
         token = session_token
     elif authorization and authorization.startswith("Bearer "):
         token = authorization.replace("Bearer ", "")
     
     if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+        raise HTTPException(status_code=401, detail="No autenticado")
     
+    # Find session in database
     session_doc = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
     if not session_doc:
-        raise HTTPException(status_code=401, detail="Invalid session")
+        raise HTTPException(status_code=401, detail="Sesión inválida")
     
+    # Check expiry with timezone awareness
     expires_at = session_doc["expires_at"]
     if isinstance(expires_at, str):
         expires_at = datetime.fromisoformat(expires_at)
@@ -259,41 +282,56 @@ async def get_current_user(authorization: Optional[str] = Header(None), session_
         expires_at = expires_at.replace(tzinfo=timezone.utc)
     
     if expires_at < datetime.now(timezone.utc):
-        raise HTTPException(status_code=401, detail="Session expired")
+        raise HTTPException(status_code=401, detail="Sesión expirada")
     
+    # Get user data
     user_doc = await db.users.find_one({"user_id": session_doc["user_id"]}, {"_id": 0})
     if not user_doc:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
     return User(**user_doc)
 
+# ============================================
+# AUTHENTICATION ENDPOINTS
+# ============================================
+
 @api_router.post("/auth/session")
 async def create_session(request: SessionRequest, response: Response):
-    logger.info(f"[AUTH] Received session request with session_id: {request.session_id[:10]}...")
+    """
+    Create user session from Emergent Auth session_id
+    This endpoint validates the session with Emergent Auth and creates a local session
+    """
+    logger.info(f"[AUTH] Processing session request")
     
     async with httpx.AsyncClient() as http_client:
         try:
-            logger.info(f"[AUTH] Calling Emergent Auth at: {EMERGENT_AUTH_URL}")
+            # Validate session with Emergent Auth (Google OAuth backend)
             emergent_response = await http_client.get(
                 EMERGENT_AUTH_URL,
                 headers={"X-Session-ID": request.session_id},
-                timeout=10
+                timeout=15
             )
             emergent_response.raise_for_status()
             auth_data = emergent_response.json()
-            logger.info(f"[AUTH] Emergent Auth successful for email: {auth_data.get('email')}")
+            logger.info(f"[AUTH] Google OAuth successful for: {auth_data.get('email')}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"[AUTH] Auth validation failed: {e.response.status_code}")
+            raise HTTPException(status_code=401, detail="Autenticación fallida")
         except Exception as e:
-            logger.error(f"[AUTH] Emergent Auth error: {str(e)}")
-            raise HTTPException(status_code=502, detail=f"Auth service error: {str(e)}")
+            logger.error(f"[AUTH] Auth service error: {str(e)}")
+            raise HTTPException(status_code=502, detail="Error del servicio de autenticación")
     
+    # Generate user ID or get existing
     user_id = f"user_{uuid.uuid4().hex[:12]}"
     session_token = auth_data["session_token"]
     
+    # Check if user exists
     existing_user = await db.users.find_one({"email": auth_data["email"]}, {"_id": 0})
     
     if existing_user:
         user_id = existing_user["user_id"]
-        logger.info(f"[AUTH] Existing user found: {user_id}")
+        logger.info(f"[AUTH] Existing user: {user_id}")
+        # Update user info
         await db.users.update_one(
             {"user_id": user_id},
             {"$set": {
@@ -309,13 +347,14 @@ async def create_session(request: SessionRequest, response: Response):
             "email": auth_data["email"],
             "name": auth_data["name"],
             "picture": auth_data["picture"],
-            "user_type": None,  # New users must select their type
+            "user_type": None,
             "location": None,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
         await db.users.insert_one(user_doc)
         is_new_user = True
     
+    # Create session
     session_doc = {
         "user_id": user_id,
         "session_token": session_token,
@@ -323,8 +362,9 @@ async def create_session(request: SessionRequest, response: Response):
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.user_sessions.insert_one(session_doc)
-    logger.info(f"[AUTH] Session created for user: {user_id}")
+    logger.info(f"[AUTH] Session created for: {user_id}")
     
+    # Set secure cookie
     response.set_cookie(
         key="session_token",
         value=session_token,
@@ -335,28 +375,31 @@ async def create_session(request: SessionRequest, response: Response):
         path="/"
     )
     
+    # Return user data
     user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
-    user["is_new_user"] = is_new_user if 'is_new_user' in dir() else False
-    logger.info(f"[AUTH] Returning user data for: {user_id}, user_type: {user.get('user_type')}")
+    user["is_new_user"] = is_new_user
     return user
 
 @api_router.get("/auth/me")
 async def get_me(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get current authenticated user"""
     user = await get_current_user(authorization, session_token)
     return user
 
 @api_router.post("/auth/logout")
 async def logout(response: Response, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Logout user and clear session"""
     token = session_token or (authorization.replace("Bearer ", "") if authorization else None)
     
     if token:
         await db.user_sessions.delete_one({"session_token": token})
     
     response.delete_cookie(key="session_token", path="/")
-    return {"message": "Logged out successfully"}
+    return {"message": "Sesión cerrada exitosamente"}
 
 @api_router.post("/auth/set-user-type")
 async def set_user_type(user_type: Literal["cliente", "pulperia"], authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Set user type (cliente or pulperia)"""
     user = await get_current_user(authorization, session_token)
     
     await db.users.update_one(
@@ -367,8 +410,13 @@ async def set_user_type(user_type: Literal["cliente", "pulperia"], authorization
     updated_user = await db.users.find_one({"user_id": user.user_id}, {"_id": 0})
     return updated_user
 
+# ============================================
+# PULPERIA ENDPOINTS
+# ============================================
+
 @api_router.get("/pulperias")
 async def get_pulperias(lat: Optional[float] = None, lng: Optional[float] = None, search: Optional[str] = None, sort_by: Optional[str] = None):
+    """Get all pulperias with optional search and sorting"""
     query = {}
     if search:
         query["$or"] = [
@@ -381,11 +429,11 @@ async def get_pulperias(lat: Optional[float] = None, lng: Optional[float] = None
         sort_options = [("rating", -1)]
     
     pulperias = await db.pulperias.find(query, {"_id": 0}).sort(sort_options if sort_options else [("created_at", -1)]).to_list(100)
-    
     return pulperias
 
 @api_router.get("/pulperias/{pulperia_id}")
 async def get_pulperia(pulperia_id: str):
+    """Get single pulperia by ID"""
     pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
     if not pulperia:
         raise HTTPException(status_code=404, detail="Pulpería no encontrada")
@@ -393,6 +441,7 @@ async def get_pulperia(pulperia_id: str):
 
 @api_router.post("/pulperias")
 async def create_pulperia(pulperia_data: PulperiaCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a new pulperia"""
     user = await get_current_user(authorization, session_token)
     
     if user.user_type != "pulperia":
@@ -409,16 +458,42 @@ async def create_pulperia(pulperia_data: PulperiaCreate, authorization: Optional
     }
     
     await db.pulperias.insert_one(pulperia_doc)
+    return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+
+@api_router.put("/pulperias/{pulperia_id}")
+async def update_pulperia(pulperia_id: str, pulperia_data: PulperiaCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Update pulperia"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    if pulperia["owner_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="No tienes permiso para editar esta pulpería")
+    
+    await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": pulperia_data.model_dump()}
+    )
     
     return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
 
+@api_router.get("/pulperias/{pulperia_id}/products")
+async def get_pulperia_products(pulperia_id: str):
+    """Get all products for a pulperia"""
+    products = await db.products.find({"pulperia_id": pulperia_id}, {"_id": 0}).to_list(100)
+    return products
+
 @api_router.get("/pulperias/{pulperia_id}/reviews")
 async def get_pulperia_reviews(pulperia_id: str):
+    """Get all reviews for a pulperia"""
     reviews = await db.reviews.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return reviews
 
 @api_router.post("/pulperias/{pulperia_id}/reviews")
 async def create_review(pulperia_id: str, review_data: ReviewCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a review for a pulperia"""
     user = await get_current_user(authorization, session_token)
     
     if user.user_type != "cliente":
@@ -428,7 +503,6 @@ async def create_review(pulperia_id: str, review_data: ReviewCreate, authorizati
     if not pulperia:
         raise HTTPException(status_code=404, detail="Pulpería no encontrada")
     
-    # Check if user already reviewed (1 review per person)
     existing_review = await db.reviews.find_one({"pulperia_id": pulperia_id, "user_id": user.user_id}, {"_id": 0})
     if existing_review:
         raise HTTPException(status_code=400, detail="Ya has dejado una review para esta pulpería")
@@ -436,7 +510,6 @@ async def create_review(pulperia_id: str, review_data: ReviewCreate, authorizati
     if review_data.rating < 1 or review_data.rating > 5:
         raise HTTPException(status_code=400, detail="Rating debe estar entre 1 y 5")
     
-    # Limit images to 2
     images = review_data.images[:2] if review_data.images else []
     
     review_id = f"review_{uuid.uuid4().hex[:12]}"
@@ -464,33 +537,13 @@ async def create_review(pulperia_id: str, review_data: ReviewCreate, authorizati
     
     return await db.reviews.find_one({"review_id": review_id}, {"_id": 0})
 
-    return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
-
-@api_router.put("/pulperias/{pulperia_id}")
-async def update_pulperia(pulperia_id: str, pulperia_data: PulperiaCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    user = await get_current_user(authorization, session_token)
-    
-    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
-    if not pulperia:
-        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
-    
-    if pulperia["owner_user_id"] != user.user_id:
-        raise HTTPException(status_code=403, detail="No tienes permiso para editar esta pulpería")
-    
-    await db.pulperias.update_one(
-        {"pulperia_id": pulperia_id},
-        {"$set": pulperia_data.model_dump()}
-    )
-    
-    return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
-
-@api_router.get("/pulperias/{pulperia_id}/products")
-async def get_pulperia_products(pulperia_id: str):
-    products = await db.products.find({"pulperia_id": pulperia_id}, {"_id": 0}).to_list(100)
-    return products
+# ============================================
+# PRODUCT ENDPOINTS
+# ============================================
 
 @api_router.get("/products")
 async def search_products(search: Optional[str] = None, category: Optional[str] = None, sort_by: Optional[str] = None):
+    """Search products across all pulperias"""
     query = {}
     if search:
         query["name"] = {"$regex": search, "$options": "i"}
@@ -505,7 +558,7 @@ async def search_products(search: Optional[str] = None, category: Optional[str] 
     
     products = await db.products.find(query, {"_id": 0}).sort(sort_options).to_list(100)
     
-    # Optimize: Batch fetch pulperia info to avoid N+1 queries
+    # Enrich with pulperia info
     pulperia_ids = list(set(p["pulperia_id"] for p in products))
     if pulperia_ids:
         pulperias_list = await db.pulperias.find(
@@ -514,7 +567,6 @@ async def search_products(search: Optional[str] = None, category: Optional[str] 
         ).to_list(len(pulperia_ids))
         pulperias_dict = {p["pulperia_id"]: p for p in pulperias_list}
         
-        # Enrich products with pulperia info
         for product in products:
             pulperia = pulperias_dict.get(product["pulperia_id"])
             if pulperia:
@@ -525,6 +577,7 @@ async def search_products(search: Optional[str] = None, category: Optional[str] 
 
 @api_router.get("/products/{product_id}")
 async def get_product(product_id: str):
+    """Get single product by ID"""
     product = await db.products.find_one({"product_id": product_id}, {"_id": 0})
     if not product:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
@@ -532,6 +585,7 @@ async def get_product(product_id: str):
 
 @api_router.post("/products")
 async def create_product(product_data: ProductCreate, pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a new product"""
     user = await get_current_user(authorization, session_token)
     
     pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
@@ -550,11 +604,11 @@ async def create_product(product_data: ProductCreate, pulperia_id: str, authoriz
     }
     
     await db.products.insert_one(product_doc)
-    
     return await db.products.find_one({"product_id": product_id}, {"_id": 0})
 
 @api_router.put("/products/{product_id}")
 async def update_product(product_id: str, product_data: ProductCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Update product"""
     user = await get_current_user(authorization, session_token)
     
     product = await db.products.find_one({"product_id": product_id}, {"_id": 0})
@@ -574,6 +628,7 @@ async def update_product(product_id: str, product_data: ProductCreate, authoriza
 
 @api_router.delete("/products/{product_id}")
 async def delete_product(product_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Delete product"""
     user = await get_current_user(authorization, session_token)
     
     product = await db.products.find_one({"product_id": product_id}, {"_id": 0})
@@ -585,11 +640,11 @@ async def delete_product(product_id: str, authorization: Optional[str] = Header(
         raise HTTPException(status_code=403, detail="No tienes permiso para eliminar este producto")
     
     await db.products.delete_one({"product_id": product_id})
-    
     return {"message": "Producto eliminado exitosamente"}
 
 @api_router.put("/products/{product_id}/availability")
 async def toggle_product_availability(product_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Toggle product availability"""
     user = await get_current_user(authorization, session_token)
     
     product = await db.products.find_one({"product_id": product_id}, {"_id": 0})
@@ -600,7 +655,6 @@ async def toggle_product_availability(product_id: str, authorization: Optional[s
     if pulperia["owner_user_id"] != user.user_id:
         raise HTTPException(status_code=403, detail="No tienes permiso para editar este producto")
     
-    # Toggle availability
     new_available = not product.get("available", True)
     
     await db.products.update_one(
@@ -610,8 +664,13 @@ async def toggle_product_availability(product_id: str, authorization: Optional[s
     
     return await db.products.find_one({"product_id": product_id}, {"_id": 0})
 
+# ============================================
+# ORDER ENDPOINTS
+# ============================================
+
 @api_router.get("/orders")
 async def get_orders(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get orders for current user"""
     user = await get_current_user(authorization, session_token)
     
     if user.user_type == "cliente":
@@ -625,6 +684,7 @@ async def get_orders(authorization: Optional[str] = Header(None), session_token:
 
 @api_router.post("/orders")
 async def create_order(order_data: OrderCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a new order"""
     user = await get_current_user(authorization, session_token)
     
     order_id = f"order_{uuid.uuid4().hex[:12]}"
@@ -638,7 +698,6 @@ async def create_order(order_data: OrderCreate, authorization: Optional[str] = H
     
     await db.orders.insert_one(order_doc)
     
-    # Get fresh order and broadcast to owner via WebSocket
     order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
     await broadcast_order_update(order, "new_order")
     
@@ -646,6 +705,7 @@ async def create_order(order_data: OrderCreate, authorization: Optional[str] = H
 
 @api_router.put("/orders/{order_id}/status")
 async def update_order_status(order_id: str, status_update: OrderStatusUpdate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Update order status"""
     user = await get_current_user(authorization, session_token)
     
     order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
@@ -661,17 +721,92 @@ async def update_order_status(order_id: str, status_update: OrderStatusUpdate, a
         {"$set": {"status": status_update.status, "updated_at": datetime.now(timezone.utc).isoformat()}}
     )
     
-    # Get updated order and broadcast via WebSocket
     updated_order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
-    
-    # Broadcast update to owner and customer
     event_type = "cancelled" if status_update.status == "cancelled" else "status_changed"
     await broadcast_order_update(updated_order, event_type)
     
     return updated_order
 
+@api_router.get("/orders/completed")
+async def get_completed_orders(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get completed orders"""
+    user = await get_current_user(authorization, session_token)
+    
+    if user.user_type == "pulperia":
+        user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
+        pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
+        orders = await db.orders.find(
+            {"pulperia_id": {"$in": pulperia_ids}, "status": "completed"},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(1000)
+    else:
+        orders = await db.orders.find(
+            {"customer_user_id": user.user_id, "status": "completed"},
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(1000)
+    
+    return orders
+
+@api_router.get("/orders/stats")
+async def get_order_stats(period: str = "day", authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get order statistics for pulperia owners"""
+    user = await get_current_user(authorization, session_token)
+    
+    if user.user_type != "pulperia":
+        raise HTTPException(status_code=403, detail="Solo pulperías pueden ver estadísticas")
+    
+    user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
+    pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
+    
+    now = datetime.now(timezone.utc)
+    if period == "day":
+        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif period == "week":
+        start_date = now - timedelta(days=7)
+    elif period == "month":
+        start_date = now - timedelta(days=30)
+    else:
+        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    orders = await db.orders.find(
+        {
+            "pulperia_id": {"$in": pulperia_ids},
+            "status": "completed",
+            "created_at": {"$gte": start_date.isoformat()}
+        },
+        {"_id": 0}
+    ).to_list(10000)
+    
+    total_orders = len(orders)
+    total_revenue = sum(order["total"] for order in orders)
+    
+    product_counts = {}
+    for order in orders:
+        for item in order["items"]:
+            product_name = item["product_name"]
+            if product_name in product_counts:
+                product_counts[product_name] += item["quantity"]
+            else:
+                product_counts[product_name] = item["quantity"]
+    
+    top_products = sorted(product_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+    
+    return {
+        "period": period,
+        "total_orders": total_orders,
+        "total_revenue": total_revenue,
+        "average_order": total_revenue / total_orders if total_orders > 0 else 0,
+        "top_products": [{"name": name, "quantity": qty} for name, qty in top_products],
+        "orders": orders
+    }
+
+# ============================================
+# JOB ENDPOINTS
+# ============================================
+
 @api_router.get("/jobs")
 async def get_jobs(category: Optional[str] = None, search: Optional[str] = None):
+    """Get all jobs"""
     query = {}
     if category:
         query["category"] = category
@@ -686,9 +821,9 @@ async def get_jobs(category: Optional[str] = None, search: Optional[str] = None)
 
 @api_router.post("/jobs")
 async def create_job(job_data: JobCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a new job posting"""
     user = await get_current_user(authorization, session_token)
     
-    # Check if job is linked to a pulperia
     pulperia_name = None
     pulperia_logo = None
     if job_data.pulperia_id:
@@ -714,12 +849,13 @@ async def create_job(job_data: JobCreate, authorization: Optional[str] = Header(
 
 @api_router.get("/pulperias/{pulperia_id}/jobs")
 async def get_pulperia_jobs(pulperia_id: str):
-    """Get all jobs posted by a specific pulperia"""
+    """Get jobs posted by a specific pulperia"""
     jobs = await db.jobs.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return jobs
 
 @api_router.delete("/jobs/{job_id}")
 async def delete_job(job_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Delete a job posting"""
     user = await get_current_user(authorization, session_token)
     
     job = await db.jobs.find_one({"job_id": job_id}, {"_id": 0})
@@ -730,19 +866,18 @@ async def delete_job(job_id: str, authorization: Optional[str] = Header(None), s
         raise HTTPException(status_code=403, detail="No tienes permiso para eliminar este empleo")
     
     await db.jobs.delete_one({"job_id": job_id})
-    # Also delete all applications for this job
     await db.job_applications.delete_many({"job_id": job_id})
     return {"message": "Empleo eliminado"}
 
 @api_router.post("/jobs/{job_id}/apply")
 async def apply_to_job(job_id: str, application_data: JobApplicationCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Apply to a job"""
     user = await get_current_user(authorization, session_token)
     
     job = await db.jobs.find_one({"job_id": job_id}, {"_id": 0})
     if not job:
         raise HTTPException(status_code=404, detail="Empleo no encontrado")
     
-    # Check if already applied
     existing = await db.job_applications.find_one({"job_id": job_id, "applicant_user_id": user.user_id}, {"_id": 0})
     if existing:
         raise HTTPException(status_code=400, detail="Ya aplicaste a este empleo")
@@ -762,21 +897,26 @@ async def apply_to_job(job_id: str, application_data: JobApplicationCreate, auth
 
 @api_router.get("/jobs/{job_id}/applications")
 async def get_job_applications(job_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get applications for a job"""
     user = await get_current_user(authorization, session_token)
     
     job = await db.jobs.find_one({"job_id": job_id}, {"_id": 0})
     if not job:
         raise HTTPException(status_code=404, detail="Empleo no encontrado")
     
-    # Only job owner can see applications
     if job["employer_user_id"] != user.user_id:
         raise HTTPException(status_code=403, detail="No tienes permiso para ver las aplicaciones")
     
     applications = await db.job_applications.find({"job_id": job_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return applications
 
+# ============================================
+# SERVICE ENDPOINTS
+# ============================================
+
 @api_router.get("/services")
 async def get_services(category: Optional[str] = None, search: Optional[str] = None):
+    """Get all services"""
     query = {}
     if category:
         query["category"] = category
@@ -791,6 +931,7 @@ async def get_services(category: Optional[str] = None, search: Optional[str] = N
 
 @api_router.post("/services")
 async def create_service(service_data: ServiceCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create a new service"""
     user = await get_current_user(authorization, session_token)
     
     service_id = f"service_{uuid.uuid4().hex[:12]}"
@@ -807,6 +948,7 @@ async def create_service(service_data: ServiceCreate, authorization: Optional[st
 
 @api_router.delete("/services/{service_id}")
 async def delete_service(service_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Delete a service"""
     user = await get_current_user(authorization, session_token)
     
     service = await db.services.find_one({"service_id": service_id}, {"_id": 0})
@@ -819,88 +961,18 @@ async def delete_service(service_id: str, authorization: Optional[str] = Header(
     await db.services.delete_one({"service_id": service_id})
     return {"message": "Servicio eliminado"}
 
-@api_router.get("/orders/completed")
-async def get_completed_orders(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    user = await get_current_user(authorization, session_token)
-    
-    if user.user_type == "pulperia":
-        user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
-        pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
-        orders = await db.orders.find(
-            {"pulperia_id": {"$in": pulperia_ids}, "status": "completed"},
-            {"_id": 0}
-        ).sort("created_at", -1).to_list(1000)
-    else:
-        orders = await db.orders.find(
-            {"customer_user_id": user.user_id, "status": "completed"},
-            {"_id": 0}
-        ).sort("created_at", -1).to_list(1000)
-    
-    return orders
+# ============================================
+# NOTIFICATION ENDPOINTS
+# ============================================
 
-@api_router.get("/orders/stats")
-async def get_order_stats(period: str = "day", authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    user = await get_current_user(authorization, session_token)
-    
-    if user.user_type != "pulperia":
-        raise HTTPException(status_code=403, detail="Solo pulperías pueden ver estadísticas")
-    
-    user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
-    pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
-    
-    # Calculate date range
-    now = datetime.now(timezone.utc)
-    if period == "day":
-        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    elif period == "week":
-        start_date = now - timedelta(days=7)
-    elif period == "month":
-        start_date = now - timedelta(days=30)
-    else:
-        start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    
-    orders = await db.orders.find(
-        {
-            "pulperia_id": {"$in": pulperia_ids},
-            "status": "completed",
-            "created_at": {"$gte": start_date.isoformat()}
-        },
-        {"_id": 0}
-    ).to_list(10000)
-    
-    total_orders = len(orders)
-    total_revenue = sum(order["total"] for order in orders)
-    
-    # Top products
-    product_counts = {}
-    for order in orders:
-        for item in order["items"]:
-            product_name = item["product_name"]
-            if product_name in product_counts:
-                product_counts[product_name] += item["quantity"]
-            else:
-                product_counts[product_name] = item["quantity"]
-    
-    top_products = sorted(product_counts.items(), key=lambda x: x[1], reverse=True)[:5]
-    
-    return {
-        "period": period,
-        "total_orders": total_orders,
-        "total_revenue": total_revenue,
-        "average_order": total_revenue / total_orders if total_orders > 0 else 0,
-        "top_products": [{"name": name, "quantity": qty} for name, qty in top_products],
-        "orders": orders
-    }
-
-# Notifications endpoint for the profile dropdown
 @api_router.get("/notifications")
 async def get_notifications(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get notifications for current user"""
     user = await get_current_user(authorization, session_token)
     
     notifications = []
     
     if user.user_type == "pulperia":
-        # Get pending orders for pulperia owners
         user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
         pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
         
@@ -919,7 +991,6 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
                 "created_at": order["created_at"]
             })
     else:
-        # Get order updates for customers
         customer_orders = await db.orders.find(
             {"customer_user_id": user.user_id, "status": {"$ne": "completed"}},
             {"_id": 0}
@@ -943,8 +1014,13 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
     
     return notifications
 
+# ============================================
+# MESSAGE ENDPOINTS
+# ============================================
+
 @api_router.get("/messages")
 async def get_messages(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get messages for current user"""
     user = await get_current_user(authorization, session_token)
     
     messages = await db.messages.find(
@@ -956,6 +1032,7 @@ async def get_messages(authorization: Optional[str] = Header(None), session_toke
 
 @api_router.post("/messages")
 async def create_message(message_data: MessageCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Send a message"""
     user = await get_current_user(authorization, session_token)
     
     message_id = f"message_{uuid.uuid4().hex[:12]}"
@@ -967,10 +1044,12 @@ async def create_message(message_data: MessageCreate, authorization: Optional[st
     }
     
     await db.messages.insert_one(message_doc)
-    
     return await db.messages.find_one({"message_id": message_id}, {"_id": 0})
 
-# Advertisement pricing plans
+# ============================================
+# ADVERTISING ENDPOINTS
+# ============================================
+
 AD_PLANS = {
     "basico": {"price": 50, "duration": 7, "name": "Básico", "features": ["Aparece en lista destacada"]},
     "destacado": {"price": 100, "duration": 15, "name": "Destacado", "features": ["Aparece primero en búsquedas", "Badge destacado"]},
@@ -987,13 +1066,11 @@ async def get_featured_pulperias():
     """Get featured/advertised pulperias"""
     now = datetime.now(timezone.utc)
     
-    # Get active ads
     active_ads = await db.advertisements.find(
         {"status": "active", "end_date": {"$gte": now.isoformat()}},
         {"_id": 0}
     ).sort([("plan", -1), ("created_at", -1)]).to_list(20)
     
-    # Get pulperia details for each ad
     featured = []
     for ad in active_ads:
         pulperia = await db.pulperias.find_one({"pulperia_id": ad["pulperia_id"]}, {"_id": 0})
@@ -1008,11 +1085,9 @@ async def get_my_ads(authorization: Optional[str] = Header(None), session_token:
     """Get ads for current user's pulperias"""
     user = await get_current_user(authorization, session_token)
     
-    # Get user's pulperias
     user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
     pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
     
-    # Get ads for those pulperias
     ads = await db.advertisements.find(
         {"pulperia_id": {"$in": pulperia_ids}},
         {"_id": 0}
@@ -1028,12 +1103,10 @@ async def create_advertisement(ad_data: AdvertisementCreate, authorization: Opti
     if user.user_type != "pulperia":
         raise HTTPException(status_code=403, detail="Solo pulperías pueden crear anuncios")
     
-    # Get user's pulperia
     pulperia = await db.pulperias.find_one({"owner_user_id": user.user_id}, {"_id": 0})
     if not pulperia:
         raise HTTPException(status_code=404, detail="No tienes una pulpería registrada")
     
-    # Check if already has active ad
     existing_ad = await db.advertisements.find_one({
         "pulperia_id": pulperia["pulperia_id"],
         "status": {"$in": ["pending", "active"]}
@@ -1063,24 +1136,21 @@ async def create_advertisement(ad_data: AdvertisementCreate, authorization: Opti
     }
     
     await db.advertisements.insert_one(ad_doc)
-    
     return await db.advertisements.find_one({"ad_id": ad_id}, {"_id": 0})
 
 @api_router.put("/ads/{ad_id}/activate")
 async def activate_advertisement(ad_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    """Activate an advertisement (admin function - for now any pulperia owner can activate their own)"""
+    """Activate an advertisement"""
     user = await get_current_user(authorization, session_token)
     
     ad = await db.advertisements.find_one({"ad_id": ad_id}, {"_id": 0})
     if not ad:
         raise HTTPException(status_code=404, detail="Anuncio no encontrado")
     
-    # Verify ownership
     pulperia = await db.pulperias.find_one({"pulperia_id": ad["pulperia_id"]}, {"_id": 0})
     if pulperia["owner_user_id"] != user.user_id:
         raise HTTPException(status_code=403, detail="No tienes permiso")
     
-    # Calculate dates
     now = datetime.now(timezone.utc)
     end_date = now + timedelta(days=ad["duration_days"])
     
@@ -1095,35 +1165,18 @@ async def activate_advertisement(ad_id: str, authorization: Optional[str] = Head
     
     return await db.advertisements.find_one({"ad_id": ad_id}, {"_id": 0})
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
 # ============================================
-# WEBSOCKET CONNECTION MANAGER FOR REAL-TIME
+# WEBSOCKET CONNECTION MANAGER
 # ============================================
 
 class ConnectionManager:
     """Manages WebSocket connections for real-time order updates"""
     
     def __init__(self):
-        # Maps user_id to set of active WebSocket connections
         self.active_connections: Dict[str, Set[WebSocket]] = {}
-        # Track connection count per user
         self.connection_count: Dict[str, int] = {}
     
     async def connect(self, websocket: WebSocket, user_id: str):
-        """Accept and track a new WebSocket connection"""
         await websocket.accept()
         
         if user_id not in self.active_connections:
@@ -1132,11 +1185,9 @@ class ConnectionManager:
         
         self.active_connections[user_id].add(websocket)
         self.connection_count[user_id] += 1
-        
-        logger.info(f"✅ WebSocket connected for user {user_id}. Total connections: {self.connection_count[user_id]}")
+        logger.info(f"WebSocket connected for user {user_id}")
     
     def disconnect(self, websocket: WebSocket, user_id: str):
-        """Remove a WebSocket connection"""
         if user_id in self.active_connections:
             self.active_connections[user_id].discard(websocket)
             self.connection_count[user_id] = max(0, self.connection_count.get(user_id, 1) - 1)
@@ -1145,17 +1196,15 @@ class ConnectionManager:
                 del self.active_connections[user_id]
                 del self.connection_count[user_id]
             
-            logger.info(f"❌ WebSocket disconnected for user {user_id}. Remaining: {self.connection_count.get(user_id, 0)}")
+            logger.info(f"WebSocket disconnected for user {user_id}")
     
     async def send_personal_message(self, message: dict, websocket: WebSocket):
-        """Send message to a specific connection"""
         try:
             await websocket.send_json(message)
         except Exception as e:
-            logger.error(f"Error sending personal message: {e}")
+            logger.error(f"Error sending message: {e}")
     
     async def broadcast_to_user(self, user_id: str, message: dict):
-        """Broadcast message to all connections of a specific user"""
         if user_id not in self.active_connections:
             return
         
@@ -1167,21 +1216,12 @@ class ConnectionManager:
                 logger.error(f"Error broadcasting to user {user_id}: {e}")
                 disconnected.add(connection)
         
-        # Clean up broken connections
         for conn in disconnected:
             self.active_connections[user_id].discard(conn)
     
-    async def broadcast_to_users(self, user_ids: List[str], message: dict):
-        """Broadcast to multiple users (owner and customer)"""
-        for user_id in user_ids:
-            if user_id:
-                await self.broadcast_to_user(user_id, message)
-    
     def is_user_connected(self, user_id: str) -> bool:
-        """Check if a user has any active connections"""
         return user_id in self.active_connections and len(self.active_connections[user_id]) > 0
 
-# Global connection manager
 ws_manager = ConnectionManager()
 
 # ============================================
@@ -1190,15 +1230,7 @@ ws_manager = ConnectionManager()
 
 @app.websocket("/ws/orders/{user_id}")
 async def websocket_orders_endpoint(websocket: WebSocket, user_id: str):
-    """
-    WebSocket endpoint for real-time order updates.
-    Clients connect with their user_id to receive instant notifications.
-    """
-    # Validate user_id by checking if session token is valid
-    token = websocket.query_params.get("token")
-    
-    # For now, we accept connections if they have a valid user_id format
-    # In production, validate against session tokens
+    """WebSocket endpoint for real-time order updates"""
     if not user_id or len(user_id) < 5:
         await websocket.close(code=4001, reason="Invalid user_id")
         return
@@ -1206,44 +1238,21 @@ async def websocket_orders_endpoint(websocket: WebSocket, user_id: str):
     await ws_manager.connect(websocket, user_id)
     
     try:
-        # Send initial connection success message
         await ws_manager.send_personal_message({
             "type": "connected",
-            "message": "Conexión establecida. Recibirás actualizaciones en tiempo real.",
+            "message": "Conexión establecida",
             "user_id": user_id
         }, websocket)
         
-        # Keep connection alive and handle incoming messages
         while True:
             try:
                 data = await asyncio.wait_for(websocket.receive_text(), timeout=60)
                 message = json.loads(data)
                 
-                # Handle ping/pong for keep-alive
                 if message.get("type") == "ping":
                     await ws_manager.send_personal_message({"type": "pong"}, websocket)
                 
-                # Handle order status update request via WebSocket
-                elif message.get("type") == "update_order_status":
-                    order_id = message.get("order_id")
-                    new_status = message.get("status")
-                    
-                    if order_id and new_status:
-                        # Update in database
-                        result = await db.orders.update_one(
-                            {"order_id": order_id},
-                            {"$set": {"status": new_status, "updated_at": datetime.now(timezone.utc).isoformat()}}
-                        )
-                        
-                        if result.modified_count > 0:
-                            # Get order details for notification
-                            order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
-                            if order:
-                                # Broadcast update to all relevant users
-                                await broadcast_order_update(order, "status_changed")
-                
             except asyncio.TimeoutError:
-                # Send ping to keep connection alive
                 try:
                     await ws_manager.send_personal_message({"type": "ping"}, websocket)
                 except:
@@ -1255,120 +1264,6 @@ async def websocket_orders_endpoint(websocket: WebSocket, user_id: str):
         logger.error(f"WebSocket error for user {user_id}: {e}")
         ws_manager.disconnect(websocket, user_id)
 
-# ============================================
-# BROADCAST HELPER FUNCTIONS
-# ============================================
-
-async def broadcast_order_update(order: dict, event_type: str):
-    """
-    Broadcast order update to owner and customer
-    event_type: 'new_order', 'status_changed', 'cancelled'
-    """
-    # Get pulperia owner
-    pulperia = await db.pulperias.find_one({"pulperia_id": order.get("pulperia_id")}, {"_id": 0})
-    owner_id = pulperia.get("owner_user_id") if pulperia else None
-    customer_id = order.get("customer_user_id")
-    
-    # Send FULL order data for real-time updates (like Papas Pizzeria style)
-    full_order_data = {
-        "order_id": order.get("order_id"),
-        "customer_user_id": order.get("customer_user_id"),
-        "pulperia_id": order.get("pulperia_id"),
-        "items": order.get("items", []),
-        "total": order.get("total", 0),
-        "status": order.get("status"),
-        "order_type": order.get("order_type", "pickup"),
-        "created_at": order.get("created_at")
-    }
-    
-    # Prepare notification message with FULL order data
-    notification = {
-        "type": "order_update",
-        "event": event_type,
-        "order": full_order_data,
-        "timestamp": datetime.now(timezone.utc).isoformat()
-    }
-    
-    # Send to owner (pulperia) - they need full order details
-    if owner_id:
-        owner_notification = {
-            **notification,
-            "target": "owner",
-            "message": get_owner_message(event_type, order),
-            "sound": event_type == "new_order"  # Play sound for new orders
-        }
-        await ws_manager.broadcast_to_user(owner_id, owner_notification)
-        logger.info(f"📤 Sent {event_type} notification to owner {owner_id}")
-    
-    # Send to customer - they need status updates
-    if customer_id:
-        customer_notification = {
-            **notification,
-            "target": "customer", 
-            "message": get_customer_message(event_type, order),
-            "sound": event_type in ["ready", "accepted"]  # Sound when order is ready
-        }
-        await ws_manager.broadcast_to_user(customer_id, customer_notification)
-        logger.info(f"📤 Sent {event_type} notification to customer {customer_id}")
-
-def get_owner_message(event_type: str, order: dict) -> str:
-    """Generate message for pulperia owner"""
-    order_id_short = order.get("order_id", "")[-6:]
-    total = order.get("total", 0)
-    
-    messages = {
-        "new_order": f"🔔 ¡Nueva orden #{order_id_short}! Total: L{total:.2f}",
-        "status_changed": f"📦 Orden #{order_id_short} actualizada a: {order.get('status')}",
-        "cancelled": f"❌ Orden #{order_id_short} cancelada"
-    }
-    return messages.get(event_type, f"Actualización de orden #{order_id_short}")
-
-def get_customer_message(event_type: str, order: dict) -> str:
-    """Generate message for customer"""
-    order_id_short = order.get("order_id", "")[-6:]
-    status = order.get("status", "")
-    
-    status_messages = {
-        "pending": "⏳ Tu orden está pendiente de confirmación",
-        "accepted": "✅ ¡Tu orden fue aceptada! La están preparando",
-        "ready": "🎉 ¡Tu orden está lista para recoger!",
-        "completed": "✔️ Orden completada. ¡Gracias!",
-        "cancelled": "❌ Tu orden fue cancelada"
-    }
-    
-    if event_type == "new_order":
-        return f"📝 Orden #{order_id_short} creada exitosamente"
-    
-    return status_messages.get(status, f"Actualización de orden #{order_id_short}")
-
-# ============================================
-# MODIFIED ORDER ENDPOINTS WITH WEBSOCKET NOTIFICATIONS
-# ============================================
-
-# Override the original create_order to add WebSocket notification
-@api_router.post("/orders/realtime")
-async def create_order_realtime(order_data: OrderCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    """Create order with real-time notification to pulperia owner"""
-    user = await get_current_user(authorization, session_token)
-    
-    order_id = f"order_{uuid.uuid4().hex[:12]}"
-    order_doc = {
-        "order_id": order_id,
-        "customer_user_id": user.user_id,
-        **order_data.model_dump(),
-        "status": "pending",
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
-    
-    await db.orders.insert_one(order_doc)
-    
-    # Get fresh order and broadcast to owner
-    order = await db.orders.find_one({"order_id": order_id}, {"_id": 0})
-    await broadcast_order_update(order, "new_order")
-    
-    return order
-
-# Add endpoint to get WebSocket status
 @api_router.get("/ws/status/{user_id}")
 async def get_ws_status(user_id: str):
     """Check if a user has active WebSocket connections"""
@@ -1378,7 +1273,42 @@ async def get_ws_status(user_id: str):
         "connection_count": ws_manager.connection_count.get(user_id, 0)
     }
 
-# Include the API router AFTER all endpoints are defined
+# ============================================
+# BROADCAST HELPER FUNCTIONS
+# ============================================
+
+async def broadcast_order_update(order: dict, event_type: str):
+    """Broadcast order update to owner and customer"""
+    pulperia = await db.pulperias.find_one({"pulperia_id": order.get("pulperia_id")}, {"_id": 0})
+    owner_id = pulperia.get("owner_user_id") if pulperia else None
+    customer_id = order.get("customer_user_id")
+    
+    notification = {
+        "type": "order_update",
+        "event": event_type,
+        "order": order,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }
+    
+    if owner_id:
+        await ws_manager.broadcast_to_user(owner_id, notification)
+    
+    if customer_id:
+        await ws_manager.broadcast_to_user(customer_id, notification)
+
+# ============================================
+# CORS MIDDLEWARE
+# ============================================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include API router
 app.include_router(api_router)
 
 @app.on_event("shutdown")
