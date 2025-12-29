@@ -1,69 +1,69 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'sonner';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { useAuth } from '../contexts/AuthContext';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
+    // Prevent double execution in React StrictMode
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
     const processAuth = async () => {
       try {
+        // Extract session_id from URL hash
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
         const sessionId = params.get('session_id');
 
         if (!sessionId) {
-          toast.error('Error en autenticación');
+          toast.error('Error: No se recibió el ID de sesión');
           navigate('/', { replace: true });
           return;
         }
 
-        const response = await axios.post(
-          `${BACKEND_URL}/api/auth/session`,
-          { session_id: sessionId },
-          { withCredentials: true }
-        );
+        // Login using the AuthContext
+        const user = await login(sessionId);
 
-        const user = response.data;
-        
-        // Check if user needs to select their type (new user or null type)
+        if (!user) {
+          toast.error('Error al procesar la autenticación');
+          navigate('/', { replace: true });
+          return;
+        }
+
+        // Check if user needs to select their type
         if (!user.user_type) {
-          // New user - must select type
-          navigate('/select-type', { replace: true, state: { user } });
+          navigate('/select-type', { replace: true });
         } else if (user.user_type === 'pulperia') {
-          // Pulperia owner - go to dashboard
-          toast.success(`¡Bienvenido, ${user.name}!`);
+          toast.success(`¡Bienvenido de vuelta, ${user.name}!`);
           navigate('/dashboard', { replace: true });
         } else {
-          // Client - go to map
-          toast.success(`¡Bienvenido, ${user.name}!`);
+          toast.success(`¡Bienvenido de vuelta, ${user.name}!`);
           navigate('/map', { replace: true });
         }
       } catch (error) {
-        console.error('Auth error:', error);
-        toast.error('Error al iniciar sesión');
+        console.error('Auth callback error:', error);
+        toast.error('Error al iniciar sesión. Por favor intenta nuevamente.');
         navigate('/', { replace: true });
       }
     };
 
     processAuth();
-  }, [navigate]);
+  }, [navigate, login]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 via-red-700 to-red-800">
       <div className="text-center">
-        <div className="relative">
-          <div className="w-20 h-20 border-4 border-purple-500/30 rounded-full animate-spin border-t-purple-500"></div>
-          <div className="absolute inset-0 w-20 h-20 border-4 border-transparent rounded-full animate-pulse border-t-cyan-400"></div>
+        <div className="relative inline-block">
+          <div className="w-20 h-20 border-4 border-red-300/30 rounded-full animate-spin border-t-red-100"></div>
+          <div className="absolute inset-0 w-20 h-20 border-4 border-transparent rounded-full animate-pulse border-t-orange-300"></div>
         </div>
-        <p className="mt-6 text-xl text-white font-medium">Iniciando sesión...</p>
+        <p className="mt-6 text-xl text-white font-semibold">Iniciando sesión...</p>
+        <p className="mt-2 text-red-100/70">Por favor espera un momento</p>
       </div>
     </div>
   );
