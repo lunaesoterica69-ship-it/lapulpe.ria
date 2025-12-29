@@ -1278,23 +1278,48 @@ async def get_ws_status(user_id: str):
 # ============================================
 
 async def broadcast_order_update(order: dict, event_type: str):
-    """Broadcast order update to owner and customer"""
+    """Broadcast order update to owner and customer with specific messages"""
     pulperia = await db.pulperias.find_one({"pulperia_id": order.get("pulperia_id")}, {"_id": 0})
     owner_id = pulperia.get("owner_user_id") if pulperia else None
     customer_id = order.get("customer_user_id")
+    pulperia_name = pulperia.get("name", "Pulpería") if pulperia else "Pulpería"
     
-    notification = {
-        "type": "order_update",
-        "event": event_type,
-        "order": order,
-        "timestamp": datetime.now(timezone.utc).isoformat()
+    # Status messages for customer
+    status_messages = {
+        "pending": f"Tu orden en {pulperia_name} está pendiente",
+        "accepted": f"¡{pulperia_name} aceptó tu orden! Están preparándola",
+        "ready": f"🎉 ¡Tu orden en {pulperia_name} está lista para recoger!",
+        "completed": f"Orden completada en {pulperia_name}",
+        "cancelled": f"Tu orden en {pulperia_name} fue cancelada"
     }
     
+    # Notification for pulperia owner
     if owner_id:
-        await ws_manager.broadcast_to_user(owner_id, notification)
+        owner_notification = {
+            "type": "order_update",
+            "event": event_type,
+            "target": "owner",
+            "order": order,
+            "message": f"Nueva orden #{order.get('order_id', '')[-6:]}" if event_type == "new_order" else f"Orden #{order.get('order_id', '')[-6:]} actualizada",
+            "sound": event_type == "new_order",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        await ws_manager.broadcast_to_user(owner_id, owner_notification)
+        logger.info(f"[WS] Broadcast to owner {owner_id}: {event_type}")
     
+    # Notification for customer
     if customer_id:
-        await ws_manager.broadcast_to_user(customer_id, notification)
+        customer_notification = {
+            "type": "order_update",
+            "event": event_type,
+            "target": "customer",
+            "order": order,
+            "message": status_messages.get(order.get("status"), "Estado de orden actualizado"),
+            "sound": order.get("status") == "ready",
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+        await ws_manager.broadcast_to_user(customer_id, customer_notification)
+        logger.info(f"[WS] Broadcast to customer {customer_id}: {event_type}")
 
 # ============================================
 # CORS MIDDLEWARE
