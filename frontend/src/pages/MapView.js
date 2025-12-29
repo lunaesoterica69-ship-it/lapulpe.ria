@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { MapPin, Store as StoreIcon, Phone, Star, Crown, Sparkles, ChevronRight } from 'lucide-react';
+import { MapPin, Store as StoreIcon, Phone, Star, Crown, Sparkles, ChevronRight, Maximize2, Minimize2, X } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import L from 'leaflet';
