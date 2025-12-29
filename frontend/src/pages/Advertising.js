@@ -270,7 +270,16 @@ const Advertising = () => {
             </div>
             <div className="bg-white rounded-lg p-4 border-l-4 border-blue-400">
               <p className="font-bold text-lg">💳 PayPal</p>
-              <p className="mt-2">nolascale694@gmail.com</p>
+              <p className="mt-2">
+                <a 
+                  href="https://paypal.me/alejandronolasco979?locale.x=es_XC&country.x=HN" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-700 underline"
+                >
+                  paypal.me/alejandronolasco979
+                </a>
+              </p>
             </div>
           </div>
           <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
