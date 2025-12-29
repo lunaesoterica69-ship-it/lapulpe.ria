@@ -323,7 +323,7 @@ const Advertising = () => {
                   className="w-full mt-1 border border-stone-300 rounded-lg p-3"
                 >
                   <option value="bac">🏦 Transferencia BAC (Cuenta: 754385291)</option>
-                  <option value="paypal">💳 PayPal (nolascale694@gmail.com)</option>
+                  <option value="paypal">💳 PayPal (paypal.me/alejandronolasco979)</option>
                 </select>
               </div>
 
