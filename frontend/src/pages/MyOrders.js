@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { Package, Clock, CheckCircle, XCircle, Wifi, WifiOff, ShoppingBag } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, ShoppingBag } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import useWebSocket from '../hooks/useWebSocket';
@@ -47,7 +47,7 @@ const MyOrders = () => {
         toast.success(message || '📝 ¡Tu orden fue creada!', { duration: 4000 });
       } else if (event === 'status_changed') {
         const statusColors = {
-          accepted: { background: '#3B82F6', color: 'white' },
+          accepted: { background: '#B91C1C', color: 'white' },
           ready: { background: '#10B981', color: 'white' },
           completed: { background: '#059669', color: 'white' }
         };
@@ -78,8 +78,8 @@ const MyOrders = () => {
     }
   }, []);
 
-  // WebSocket connection
-  const { isConnected } = useWebSocket(user?.user_id, handleWebSocketMessage);
+  // WebSocket connection (silent - no UI indicator)
+  useWebSocket(user?.user_id, handleWebSocketMessage);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,21 +137,21 @@ const MyOrders = () => {
 
   const getStatusStyle = (status) => {
     const styleMap = {
-      pending: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-      accepted: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      ready: 'bg-green-500/20 text-green-400 border-green-500/30 animate-pulse',
-      completed: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
-      cancelled: 'bg-red-500/20 text-red-400 border-red-500/30'
+      pending: 'bg-amber-100 text-amber-700 border-amber-200',
+      accepted: 'bg-blue-100 text-blue-700 border-blue-200',
+      ready: 'bg-green-100 text-green-700 border-green-200 animate-pulse',
+      completed: 'bg-stone-100 text-stone-600 border-stone-200',
+      cancelled: 'bg-red-100 text-red-700 border-red-200'
     };
-    return styleMap[status] || 'bg-slate-500/20 text-slate-400';
+    return styleMap[status] || 'bg-stone-100 text-stone-600';
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-pulpo-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-500/30 rounded-full animate-spin border-t-purple-500 mx-auto"></div>
-          <p className="mt-4 text-white/70 font-medium">Cargando órdenes...</p>
+          <div className="w-16 h-16 border-4 border-pulpo-200 rounded-full animate-spin border-t-pulpo-600 mx-auto"></div>
+          <p className="mt-4 text-pulpo-600 font-medium">Cargando órdenes...</p>
         </div>
       </div>
     );
@@ -160,48 +160,23 @@ const MyOrders = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pb-24">
+    <div className="min-h-screen bg-pulpo-50 pb-24">
       {/* Header */}
-      <div className="bg-black/20 backdrop-blur-xl border-b border-white/10 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Mis Órdenes</h1>
-            <p className="text-white/60 text-sm">{orders.length} orden{orders.length !== 1 ? 'es' : ''}</p>
-          </div>
-          {user?.picture && (
-            <img src={user.picture} alt="" className="w-10 h-10 rounded-full border-2 border-white/20" />
-          )}
-        </div>
-      </div>
-      
-      {/* Connection Status - Solo mostrar cuando hay órdenes */}
-      {user && orders.length > 0 && (
-        <div className={`px-4 py-2 flex items-center justify-center gap-2 text-sm ${
-          isConnected ? 'bg-green-500/10 text-green-400' : 'bg-amber-500/10 text-amber-400'
-        }`}>
-          {isConnected ? (
-            <>
-              <Wifi className="w-4 h-4" />
-              <span>Actualizaciones en tiempo real</span>
-            </>
-          ) : (
-            <>
-              <WifiOff className="w-4 h-4" />
-              <span>Conectando...</span>
-            </>
-          )}
-        </div>
-      )}
+      <Header 
+        user={user} 
+        title="Mis Órdenes" 
+        subtitle={`${orders.length} orden${orders.length !== 1 ? 'es' : ''}`}
+      />
 
       {/* Orders List */}
       <div className="px-4 py-6">
         {orders.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ShoppingBag className="w-10 h-10 text-white/30" />
+            <div className="w-20 h-20 bg-pulpo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag className="w-10 h-10 text-pulpo-400" />
             </div>
-            <p className="text-white/50 text-lg">No tienes órdenes aún</p>
-            <p className="text-white/30 text-sm mt-2">¡Explora las pulperías cercanas!</p>
+            <p className="text-pulpo-600 text-lg font-semibold">No tienes órdenes aún</p>
+            <p className="text-pulpo-400 text-sm mt-2">¡Explora las pulperías cercanas!</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -209,13 +184,13 @@ const MyOrders = () => {
               <div
                 key={order.order_id}
                 data-testid={`order-${order.order_id}`}
-                className={`bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden transition-all
-                  ${order.status === 'ready' ? 'ring-2 ring-green-500/50' : ''}`}
+                className={`bg-white rounded-2xl shadow-md border border-pulpo-100 overflow-hidden transition-all
+                  ${order.status === 'ready' ? 'ring-2 ring-green-500' : ''}`}
               >
                 {/* Order Header */}
-                <div className="px-5 py-4 border-b border-white/10 flex justify-between items-center">
+                <div className="px-5 py-4 border-b border-pulpo-100 flex justify-between items-center">
                   <div>
-                    <p className="text-white/40 text-xs">
+                    <p className="text-pulpo-400 text-xs">
                       {new Date(order.created_at).toLocaleDateString('es-HN', {
                         month: 'short',
                         day: 'numeric',
@@ -223,7 +198,7 @@ const MyOrders = () => {
                         minute: '2-digit'
                       })}
                     </p>
-                    <p className="text-white/70 text-sm font-medium">#{order.order_id.slice(-8)}</p>
+                    <p className="text-pulpo-700 text-sm font-semibold">#{order.order_id.slice(-8)}</p>
                   </div>
                   
                   <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${getStatusStyle(order.status)}`}>
@@ -237,7 +212,7 @@ const MyOrders = () => {
                   {order.items && order.items.map((item, index) => (
                     <div key={index} className="flex items-center gap-3">
                       {/* Product Image */}
-                      <div className="w-14 h-14 bg-white/10 rounded-xl overflow-hidden flex-shrink-0">
+                      <div className="w-14 h-14 bg-pulpo-100 rounded-xl overflow-hidden flex-shrink-0">
                         {item.image_url ? (
                           <img 
                             src={item.image_url} 
@@ -246,19 +221,19 @@ const MyOrders = () => {
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Package className="w-6 h-6 text-white/30" />
+                            <Package className="w-6 h-6 text-pulpo-300" />
                           </div>
                         )}
                       </div>
                       
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium truncate">{item.product_name}</p>
-                        <p className="text-white/50 text-sm">x{item.quantity}</p>
+                        <p className="text-stone-800 font-medium truncate">{item.product_name}</p>
+                        <p className="text-stone-500 text-sm">x{item.quantity}</p>
                       </div>
                       
                       {/* Price */}
-                      <p className="text-white font-bold">
+                      <p className="text-stone-800 font-bold">
                         L{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -266,15 +241,15 @@ const MyOrders = () => {
                 </div>
 
                 {/* Order Footer */}
-                <div className="px-5 py-4 bg-white/5 border-t border-white/10">
+                <div className="px-5 py-4 bg-pulpo-50 border-t border-pulpo-100">
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-white/50 text-sm">
+                    <div className="flex items-center gap-2 text-pulpo-500 text-sm">
                       <Package className="w-4 h-4" />
                       {order.order_type === 'pickup' ? 'Recoger' : 'Envío'}
                     </div>
                     <div className="text-right">
-                      <p className="text-white/50 text-xs">Total</p>
-                      <p className="text-2xl font-black bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                      <p className="text-pulpo-400 text-xs">Total</p>
+                      <p className="text-2xl font-black text-pulpo-600">
                         L{order.total?.toFixed(2) || '0.00'}
                       </p>
                     </div>
