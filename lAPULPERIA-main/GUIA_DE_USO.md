@@ -1,6 +1,6 @@
 # 🏪 La Pulpería - Guía de Inicio
 
-## Slogan: "¿Qué deseaba?"
+## Lema: "Qué deseaba"
 
 ---
 
