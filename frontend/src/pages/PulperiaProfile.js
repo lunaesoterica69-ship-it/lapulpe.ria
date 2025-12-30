@@ -169,16 +169,19 @@ const PulperiaProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-orange-50">
-        <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin border-t-red-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
+          <p className="text-white/80 mt-4 font-medium">Cargando...</p>
+        </div>
       </div>
     );
   }
 
   if (!pulperia) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-orange-50">
-        <p className="text-stone-500">Pulpería no encontrada</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
+        <p className="text-white/70">Pulpería no encontrada</p>
       </div>
     );
   }
@@ -188,51 +191,51 @@ const PulperiaProfile = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       {/* Header */}
-      <div className="relative h-48" style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}dd 100%)` }}>
-        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-white/20 p-2 rounded-full text-white hover:bg-white/30">
-          <ArrowLeft className="w-6 h-6" />
+      <div className="relative h-56" style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}cc 50%, #1c1917 100%)` }}>
+        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-black/30 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-black/50 transition-all">
+          <ArrowLeft className="w-5 h-5" />
         </button>
         
         {pulperia.logo_url && (
-          <div className="absolute -bottom-12 left-6">
-            <img src={pulperia.logo_url} alt={pulperia.name} className="w-24 h-24 rounded-2xl border-4 border-white shadow-xl object-cover" />
+          <div className="absolute -bottom-14 left-6">
+            <img src={pulperia.logo_url} alt={pulperia.name} className="w-28 h-28 rounded-2xl border-4 border-stone-800 shadow-2xl object-cover" />
           </div>
         )}
       </div>
 
       {/* Info */}
-      <div className="px-6 pt-16 pb-4">
-        <h1 className={`text-2xl ${fontClass} text-stone-800`}>{pulperia.name}</h1>
+      <div className="px-6 pt-18 pb-4" style={{ paddingTop: pulperia.logo_url ? '4.5rem' : '1.5rem' }}>
+        <h1 className={`text-2xl ${fontClass} text-white`}>{pulperia.name}</h1>
         
         {pulperia.rating > 0 && (
-          <div className="flex items-center gap-1 mt-1">
-            <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            <span className="font-bold text-stone-700">{pulperia.rating.toFixed(1)}</span>
-            <span className="text-stone-500 text-sm">({pulperia.review_count} reviews)</span>
+          <div className="flex items-center gap-1 mt-2">
+            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+            <span className="font-bold text-white">{pulperia.rating.toFixed(1)}</span>
+            <span className="text-stone-400 text-sm">({pulperia.review_count} reviews)</span>
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 mt-3 text-sm text-stone-600">
+        <div className="flex flex-wrap gap-3 mt-3 text-sm text-stone-400">
           {pulperia.address && (
-            <div className="flex items-center gap-1"><MapPin className="w-4 h-4 text-red-500" />{pulperia.address}</div>
+            <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-red-400" />{pulperia.address}</div>
           )}
           {pulperia.phone && (
-            <a href={`tel:${pulperia.phone}`} className="flex items-center gap-1"><Phone className="w-4 h-4 text-green-500" />{pulperia.phone}</a>
+            <a href={`tel:${pulperia.phone}`} className="flex items-center gap-1.5 text-green-400 hover:text-green-300"><Phone className="w-4 h-4" />{pulperia.phone}</a>
           )}
         </div>
       </div>
 
       {/* Tabs */}
       <div className="px-4 mb-4">
-        <div className="flex bg-white rounded-xl p-1 shadow-sm">
+        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50">
           {['products', 'empleos', 'reviews'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-all ${
-                activeTab === tab ? 'bg-gradient-to-r from-red-600 to-orange-500 text-white' : 'text-stone-600'
+              className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-bold transition-all ${
+                activeTab === tab ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' : 'text-stone-400 hover:text-white'
               }`}
             >
               {tab === 'products' ? `Productos (${products.length})` : 
@@ -246,34 +249,34 @@ const PulperiaProfile = () => {
       {/* Content */}
       <div className="px-4">
         {activeTab === 'products' && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {products.map(product => {
               const qty = getCartQuantity(product.product_id);
               return (
-                <div key={product.product_id} className="bg-white rounded-xl shadow-sm border border-red-50 overflow-hidden hover:shadow-md transition-all">
-                  <div className="h-24 bg-red-100 flex items-center justify-center">
+                <div key={product.product_id} className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden hover:border-red-500/50 transition-all group">
+                  <div className="h-40 bg-gradient-to-br from-stone-700 to-stone-800 flex items-center justify-center overflow-hidden">
                     {product.image_url ? (
-                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     ) : (
-                      <Package className="w-8 h-8 text-red-300" />
+                      <Package className="w-12 h-12 text-stone-500" />
                     )}
                   </div>
-                  <div className="p-3">
-                    <h3 className="font-bold text-stone-800 text-sm truncate">{product.name}</h3>
-                    <p className="text-red-600 font-black text-lg">L{product.price.toFixed(0)}</p>
+                  <div className="p-4">
+                    <h3 className="font-bold text-white text-sm truncate">{product.name}</h3>
+                    <p className="text-red-400 font-black text-xl mt-1">L{product.price.toFixed(0)}</p>
                     
                     {qty > 0 ? (
-                      <div className="flex items-center justify-between mt-2 bg-red-100 rounded-lg">
-                        <button onClick={() => removeFromCart(product.product_id)} className="p-2">
-                          <Minus className="w-4 h-4 text-red-600" />
+                      <div className="flex items-center justify-between mt-3 bg-stone-700/50 rounded-xl border border-stone-600">
+                        <button onClick={() => removeFromCart(product.product_id)} className="p-2.5 hover:bg-stone-600 rounded-l-xl transition-colors">
+                          <Minus className="w-4 h-4 text-red-400" />
                         </button>
-                        <span className="font-bold text-red-700">{qty}</span>
-                        <button onClick={() => addToCart(product)} className="p-2">
-                          <Plus className="w-4 h-4 text-red-600" />
+                        <span className="font-bold text-white">{qty}</span>
+                        <button onClick={() => addToCart(product)} className="p-2.5 hover:bg-stone-600 rounded-r-xl transition-colors">
+                          <Plus className="w-4 h-4 text-red-400" />
                         </button>
                       </div>
                     ) : (
-                      <button onClick={() => addToCart(product)} className="w-full mt-2 bg-gradient-to-r from-red-600 to-orange-500 text-white py-2 rounded-lg text-sm font-bold">
+                      <button onClick={() => addToCart(product)} className="w-full mt-3 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 rounded-xl text-sm font-bold hover:from-red-500 hover:to-red-400 transition-all shadow-lg shadow-red-900/30">
                         Agregar
                       </button>
                     )}
@@ -290,12 +293,12 @@ const PulperiaProfile = () => {
               <p className="text-center text-stone-500 py-8">No hay empleos disponibles</p>
             ) : (
               jobs.map(job => (
-                <div key={job.job_id} className="bg-white rounded-xl p-4 shadow-sm border border-red-50">
-                  <h3 className="font-bold text-stone-800">{job.title}</h3>
-                  <p className="text-stone-600 text-sm mt-1">{job.description}</p>
+                <div key={job.job_id} className="bg-stone-800/50 backdrop-blur-sm rounded-xl p-4 border border-stone-700/50">
+                  <h3 className="font-bold text-white">{job.title}</h3>
+                  <p className="text-stone-400 text-sm mt-1">{job.description}</p>
                   <div className="flex items-center gap-2 mt-2 text-sm">
-                    <DollarSign className="w-4 h-4 text-green-500" />
-                    <span className="font-bold text-green-600">L{job.pay_rate}/{job.pay_currency}</span>
+                    <DollarSign className="w-4 h-4 text-green-400" />
+                    <span className="font-bold text-green-400">L{job.pay_rate}/{job.pay_currency}</span>
                   </div>
                 </div>
               ))
@@ -306,7 +309,7 @@ const PulperiaProfile = () => {
         {activeTab === 'reviews' && (
           <div className="space-y-3">
             {user?.user_type === 'cliente' && !hasReviewed && (
-              <button onClick={() => setShowReviewDialog(true)} className="w-full bg-gradient-to-r from-red-600 to-orange-500 text-white py-3 rounded-xl font-bold">
+              <button onClick={() => setShowReviewDialog(true)} className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-red-900/30">
                 Dejar Review
               </button>
             )}
@@ -315,16 +318,16 @@ const PulperiaProfile = () => {
               <p className="text-center text-stone-500 py-8">No hay reviews aún</p>
             ) : (
               reviews.map(review => (
-                <div key={review.review_id} className="bg-white rounded-xl p-4 shadow-sm">
+                <div key={review.review_id} className="bg-stone-800/50 backdrop-blur-sm rounded-xl p-4 border border-stone-700/50">
                   <div className="flex items-center gap-2">
-                    <div className="font-bold text-stone-800">{review.user_name}</div>
+                    <div className="font-bold text-white">{review.user_name}</div>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-stone-200'}`} />
+                        <Star key={i} className={`w-4 h-4 ${i < review.rating ? 'fill-amber-400 text-amber-400' : 'text-stone-600'}`} />
                       ))}
                     </div>
                   </div>
-                  {review.comment && <p className="text-stone-600 text-sm mt-2">{review.comment}</p>}
+                  {review.comment && <p className="text-stone-400 text-sm mt-2">{review.comment}</p>}
                 </div>
               ))
             )}
