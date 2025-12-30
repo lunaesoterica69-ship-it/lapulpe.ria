@@ -213,15 +213,15 @@ const LandingPage = () => {
       <footer className="relative z-10 px-6 py-10 border-t border-white/10">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <PulperiaLogo className="w-10 h-10" />
+            <div className="flex items-center gap-2">
+              <PulperiaLogo className="w-8 h-8" />
               <span className="text-white font-bold">La Pulpería</span>
             </div>
             
             <div className="flex items-center gap-6">
               <a 
                 href="mailto:onol4sco05@gmail.com"
-                className="text-white/50 hover:text-white text-sm transition-colors"
+                className="text-white/40 hover:text-white text-sm transition-colors"
               >
                 onol4sco05@gmail.com
               </a>
@@ -229,7 +229,7 @@ const LandingPage = () => {
                 href="https://paypal.me/alejandronolasco979"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 text-blue-400 px-4 py-1.5 rounded-full text-sm hover:bg-blue-600/30 transition-all"
+                className="inline-flex items-center gap-2 bg-white/10 border border-white/10 text-white/70 px-4 py-1.5 rounded-full text-sm hover:bg-white/20 transition-all"
               >
                 💝 Apoyar
               </a>
@@ -237,7 +237,7 @@ const LandingPage = () => {
           </div>
           
           <div className="mt-8 pt-6 border-t border-white/5 text-center">
-            <p className="text-white/30 text-sm">
+            <p className="text-white/30 text-xs">
               © 2024 La Pulpería — Hecho con ❤️ en Honduras
             </p>
           </div>
