@@ -648,9 +648,9 @@ const PulperiaDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-stone-900">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-500/30 rounded-full animate-spin border-t-purple-500 mx-auto"></div>
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
           <p className="mt-4 text-white/70 font-medium">Cargando dashboard...</p>
         </div>
       </div>
@@ -659,16 +659,16 @@ const PulperiaDashboard = () => {
 
   if (!user || user?.user_type !== 'pulperia') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-6">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-stone-900 px-6">
         <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <StoreIcon className="w-10 h-10 text-orange-400" />
+          <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <StoreIcon className="w-10 h-10 text-red-400" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-4">Acceso Restringido</h2>
           <p className="text-white/60 mb-8">Este panel es exclusivo para dueños de pulpería. Si tienes una pulpería, configura tu cuenta como negocio.</p>
           <a 
             href="/map" 
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-3 px-6 rounded-xl hover:scale-105 transition-transform"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold py-3 px-6 rounded-xl hover:scale-105 transition-transform"
           >
             Ir al Mapa
           </a>
@@ -678,7 +678,7 @@ const PulperiaDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-pulpo-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
@@ -687,32 +687,32 @@ const PulperiaDashboard = () => {
       />
       
       {/* Pulperia Info Section */}
-      <div className="bg-gradient-to-b from-pulpo-600 to-pulpo-700 text-white px-6 pb-6">
+      <div className="bg-gradient-to-b from-stone-800 to-transparent text-white px-6 pb-6">
         {pulperias.length === 0 ? (
           <Button
             data-testid="create-pulperia-button"
             onClick={() => setShowPulperiaDialog(true)}
-            className="bg-white text-primary hover:bg-white/90 font-bold"
+            className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400 font-bold shadow-lg"
           >
             <Plus className="w-5 h-5 mr-2" />
             Crear Mi Pulpería
           </Button>
         ) : (
-          <div className="bg-white/10 backdrop-blur rounded-xl p-4 flex items-center gap-4">
+          <div className="bg-stone-700/50 backdrop-blur-sm rounded-xl p-4 flex items-center gap-4 border border-stone-600">
             {selectedPulperia.logo_url && (
               <img
                 src={selectedPulperia.logo_url}
                 alt={selectedPulperia.name}
-                className="w-12 h-12 rounded-full object-cover border-2 border-white"
+                className="w-12 h-12 rounded-full object-cover border-2 border-red-400"
               />
             )}
             <div className="flex-1">
-              <p className="text-sm opacity-90 mb-1">Pulpería Activa:</p>
-              <p className="text-xl font-bold">{selectedPulperia?.name}</p>
+              <p className="text-sm text-red-400 mb-1">Pulpería Activa:</p>
+              <p className="text-xl font-bold text-white">{selectedPulperia?.name}</p>
             </div>
             <Button
               onClick={handleEditPulperia}
-              className="bg-white/20 hover:bg-white/30 text-white border-0"
+              className="bg-stone-600 hover:bg-stone-500 text-white border-0"
             >
               <Edit className="w-4 h-4 mr-2" />
               Editar
