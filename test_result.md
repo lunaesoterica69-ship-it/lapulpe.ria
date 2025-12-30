@@ -228,7 +228,6 @@ test_plan:
   current_focus:
     - "Shopping Cart - Add items from multiple stores"
     - "Shopping Cart - Checkout flow"
-    - "New Logo and UI colors integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
