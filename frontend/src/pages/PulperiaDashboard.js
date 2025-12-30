@@ -726,7 +726,7 @@ const PulperiaDashboard = () => {
           {/* Products Section */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-black text-stone-800">Productos</h2>
+              <h2 className="text-2xl font-black text-white">Productos</h2>
               <Button
                 data-testid="add-product-button"
                 onClick={() => {
@@ -741,7 +741,7 @@ const PulperiaDashboard = () => {
                   });
                   setShowProductDialog(true);
                 }}
-                className="bg-primary text-white"
+                className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Agregar Producto
@@ -749,9 +749,9 @@ const PulperiaDashboard = () => {
             </div>
 
             {products.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                <Package className="w-16 h-16 mx-auto text-stone-300 mb-4" />
-                <p className="text-stone-500">Aún no tienes productos</p>
+              <div className="text-center py-12 bg-stone-800/50 rounded-2xl border border-stone-700">
+                <Package className="w-16 h-16 mx-auto text-stone-600 mb-4" />
+                <p className="text-stone-400">Aún no tienes productos</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -759,7 +759,7 @@ const PulperiaDashboard = () => {
                   <div
                     key={product.product_id}
                     data-testid={`product-${product.product_id}`}
-                    className="bg-white rounded-2xl shadow-sm border border-red-100 overflow-hidden"
+                    className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden hover:border-red-500/50 transition-all"
                   >
                     {product.image_url && (
                       <img
@@ -772,21 +772,21 @@ const PulperiaDashboard = () => {
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold text-stone-800">{product.name}</h3>
+                          <h3 className="text-lg font-bold text-white">{product.name}</h3>
                           {product.description && (
-                            <p className="text-sm text-stone-600 mt-1">{product.description}</p>
+                            <p className="text-sm text-stone-400 mt-1">{product.description}</p>
                           )}
                         </div>
                         <div className="flex gap-2 ml-2">
                           <button
                             onClick={() => handleEditProduct(product)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-blue-400 hover:bg-stone-700 rounded-lg transition-colors"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteProduct(product.product_id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-2 text-red-400 hover:bg-stone-700 rounded-lg transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -795,22 +795,22 @@ const PulperiaDashboard = () => {
                       
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="text-2xl font-black text-primary">L {product.price.toFixed(2)}</p>
+                          <p className="text-2xl font-black text-red-400">L {product.price.toFixed(2)}</p>
                           {/* Availability Toggle Button */}
                           <button
                             onClick={() => handleToggleAvailability(product.product_id, product.available !== false)}
                             className={`mt-2 px-3 py-1.5 rounded-full text-sm font-bold transition-all flex items-center gap-1 ${
                               product.available !== false
-                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                ? 'bg-green-900/50 text-green-400 border border-green-700 hover:bg-green-900'
+                                : 'bg-red-900/50 text-red-400 border border-red-700 hover:bg-red-900'
                             }`}
                           >
-                            <span className={`w-2 h-2 rounded-full ${product.available !== false ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                            <span className={`w-2 h-2 rounded-full ${product.available !== false ? 'bg-green-400' : 'bg-red-400'}`}></span>
                             {product.available !== false ? 'Disponible' : 'No disponible'}
                           </button>
                         </div>
                         {product.category && (
-                          <span className="text-xs bg-red-100 text-primary px-3 py-1 rounded-full font-semibold">
+                          <span className="text-xs bg-red-900/50 text-red-400 px-3 py-1 rounded-full font-semibold border border-red-700">
                             {product.category}
                           </span>
                         )}
@@ -824,12 +824,12 @@ const PulperiaDashboard = () => {
 
           {/* Orders Section */}
           <div>
-            <h2 className="text-2xl font-black text-stone-800 mb-4">Órdenes Recientes</h2>
+            <h2 className="text-2xl font-black text-white mb-4">Órdenes Recientes</h2>
             
             {orders.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                <Package className="w-16 h-16 mx-auto text-stone-300 mb-4" />
-                <p className="text-stone-500">No hay órdenes aún</p>
+              <div className="text-center py-12 bg-stone-800/50 rounded-2xl border border-stone-700">
+                <Package className="w-16 h-16 mx-auto text-stone-600 mb-4" />
+                <p className="text-stone-400">No hay órdenes aún</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -841,14 +841,10 @@ const PulperiaDashboard = () => {
                       setSelectedOrder(order);
                       setShowOrderDialog(true);
                     }}
-                    className="bg-white rounded-2xl shadow-md border-4 border-red-500 p-6 cursor-pointer hover:shadow-xl transition-all transform hover:-translate-y-1"
-                    style={{
-                      background: 'linear-gradient(to bottom, #ffffff 0%, #fef2f2 100%)',
-                      boxShadow: '0 8px 0 #991b1b'
-                    }}
+                    className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border-2 border-red-600 p-6 cursor-pointer hover:border-red-400 transition-all transform hover:-translate-y-1"
                   >
                     {/* Ticket Style Header */}
-                    <div className="bg-red-600 text-white px-4 py-2 -mx-6 -mt-6 mb-4 rounded-t-xl">
+                    <div className="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-2 -mx-6 -mt-6 mb-4 rounded-t-xl">
                       <div className="flex justify-between items-center">
                         <span className="font-black text-lg">ORDEN #{order.order_id.slice(-6)}</span>
                         <div className={`${getStatusColor(order.status)} px-3 py-1 rounded-full text-xs font-black`}>
@@ -860,21 +856,21 @@ const PulperiaDashboard = () => {
                     {/* Order Items */}
                     <div className="space-y-2 mb-4">
                       {order.items.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center border-b border-dashed border-red-200 pb-2">
+                        <div key={index} className="flex justify-between items-center border-b border-dashed border-stone-600 pb-2">
                           <div>
-                            <span className="font-bold text-stone-800">{item.quantity}x</span>
-                            <span className="ml-2 text-stone-700">{item.product_name}</span>
+                            <span className="font-bold text-white">{item.quantity}x</span>
+                            <span className="ml-2 text-stone-300">{item.product_name}</span>
                           </div>
-                          <span className="font-bold text-red-600">L{(item.price * item.quantity).toFixed(2)}</span>
+                          <span className="font-bold text-red-400">L{(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* Total */}
-                    <div className="bg-red-100 rounded-lg p-3 mb-3">
+                    <div className="bg-stone-700/50 rounded-lg p-3 mb-3 border border-stone-600">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-black text-stone-800">TOTAL:</span>
-                        <span className="text-2xl font-black text-red-600">L {order.total.toFixed(2)}</span>
+                        <span className="text-lg font-black text-white">TOTAL:</span>
+                        <span className="text-2xl font-black text-red-400">L {order.total.toFixed(2)}</span>
                       </div>
                     </div>
 
@@ -889,33 +885,33 @@ const PulperiaDashboard = () => {
           </div>
 
           {/* Jobs Section */}
-          <div className="bg-white rounded-2xl shadow-sm border border-blue-100 p-6">
+          <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-black text-stone-800 flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-blue-600" />
+              <h2 className="text-xl font-black text-white flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-blue-400" />
                 Ofertas de Empleo
               </h2>
               <Button
                 onClick={() => setShowJobDialog(true)}
                 size="sm"
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-blue-600 text-white hover:bg-blue-500"
               >
                 <Plus className="w-4 h-4 mr-1" />
                 Publicar
               </Button>
             </div>
             
-            <p className="text-sm text-stone-500 mb-4">
+            <p className="text-sm text-stone-400 mb-4">
               Publica ofertas de empleo que aparecerán en tu perfil y en la sección de empleos con tu logo oficial.
             </p>
             
             {jobs.length === 0 ? (
-              <div className="text-center py-8 bg-blue-50 rounded-xl">
-                <Briefcase className="w-12 h-12 mx-auto text-blue-300 mb-3" />
-                <p className="text-stone-500">No tienes ofertas de empleo activas</p>
+              <div className="text-center py-8 bg-stone-700/30 rounded-xl border border-stone-600">
+                <Briefcase className="w-12 h-12 mx-auto text-stone-500 mb-3" />
+                <p className="text-stone-400">No tienes ofertas de empleo activas</p>
                 <Button
                   onClick={() => setShowJobDialog(true)}
-                  className="mt-3 bg-blue-600 text-white hover:bg-blue-700"
+                  className="mt-3 bg-blue-600 text-white hover:bg-blue-500"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Publicar Empleo
@@ -924,22 +920,22 @@ const PulperiaDashboard = () => {
             ) : (
               <div className="space-y-3">
                 {jobs.map(job => (
-                  <div key={job.job_id} className="bg-blue-50 rounded-xl p-4 flex justify-between items-start">
+                  <div key={job.job_id} className="bg-stone-700/30 rounded-xl p-4 flex justify-between items-start border border-stone-600">
                     <div className="flex-1">
-                      <h3 className="font-bold text-stone-800">{job.title}</h3>
-                      <p className="text-sm text-stone-600 mt-1">{job.description.slice(0, 100)}...</p>
+                      <h3 className="font-bold text-white">{job.title}</h3>
+                      <p className="text-sm text-stone-400 mt-1">{job.description.slice(0, 100)}...</p>
                       <div className="flex gap-2 mt-2">
-                        <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-bold">
+                        <span className="text-xs bg-blue-900/50 text-blue-400 px-2 py-1 rounded-full font-bold border border-blue-700">
                           {job.category}
                         </span>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">
+                        <span className="text-xs bg-green-900/50 text-green-400 px-2 py-1 rounded-full font-bold border border-green-700">
                           {job.pay_rate} {job.pay_currency}/hr
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={() => handleDeleteJob(job.job_id)}
-                      className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                      className="p-2 text-red-400 hover:bg-stone-600 rounded-lg transition-colors"
                       title="Eliminar empleo"
                     >
                       <Trash2 className="w-5 h-5" />
