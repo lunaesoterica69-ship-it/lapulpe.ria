@@ -17,19 +17,19 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Professional "Pulpo Red" color palette
+        // "La Pulpería" brand colors from logo
         pulpo: {
           50: '#FEF2F2',
           100: '#FEE2E2',
           200: '#FECACA',
           300: '#FCA5A5',
           400: '#F87171',
-          500: '#B91C1C',  // Primary pulpo red
-          600: '#991B1B',
-          700: '#7F1D1D',
-          800: '#661717',
-          900: '#450A0A',
-          950: '#2D0707',
+          500: '#ED2024',  // Primary brand red from logo
+          600: '#D31D21',  // Secondary brand red from logo
+          700: '#B91C1C',
+          800: '#991B1B',
+          900: '#7F1D1D',
+          950: '#450A0A',
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -37,15 +37,15 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#B91C1C",
+          DEFAULT: "#ED2024",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#991B1B",
+          DEFAULT: "#D31D21",
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#DC2626",
+          DEFAULT: "#ED2024",
           foreground: "#FFFFFF",
         },
         destructive: {

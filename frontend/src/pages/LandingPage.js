@@ -1,6 +1,6 @@
 import { MapPin, Store, ShoppingBag, Zap, Search, ArrowRight, Users, Briefcase, Star, ShoppingCart } from 'lucide-react';
 
-const LOGO_URL = 'https://customer-assets.emergentagent.com/job_red-auth-connect/artifacts/8q0yhhg8_image.png';
+const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecde96f6-7675-4ac5-b409-37ffab40ae06/artifacts/erx8klhi_task_01kdpqhwsmffxsgnf3qpxjd2p1_1767068237_img_1%20%281%29.webp';
 
 const LandingPage = () => {
   const handleLogin = () => {
