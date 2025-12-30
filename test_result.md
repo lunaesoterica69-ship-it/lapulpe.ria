@@ -172,6 +172,30 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Cart structure validation passed. Minimal localStorage structure with required fields (product_id, name, price, quantity, pulperia_id, pulperia_name) keeps size under 5KB to prevent QuotaExceededError."
 
+  - task: "Order Notification System"
+    implemented: false
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL: GET /api/notifications endpoint is NOT IMPLEMENTED. The backend does not have a notifications endpoint to return notifications for logged-in users. This is required for the order notification system."
+
+  - task: "Order Customer Name Display"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Order customer name functionality working correctly. GET /api/orders returns orders with customer_name field and all required fields (order_id, customer_name, items, total, status, created_at). POST /api/orders successfully accepts customer_name field and creates orders with proper customer name display."
+
 frontend:
   - task: "Landing Page with Custom SVG Logo"
     implemented: true
