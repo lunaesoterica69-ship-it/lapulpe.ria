@@ -17,16 +17,14 @@ import UserTypeSelector from './pages/UserTypeSelector';
 import JobsServices from './pages/JobsServices';
 import OrderHistory from './pages/OrderHistory';
 import Advertising from './pages/Advertising';
+import AdminPanel from './pages/AdminPanel';
+import AdAssignmentLog from './pages/AdAssignmentLog';
 import './App.css';
 
-// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
 function AppRouter() {
   const location = useLocation();
   
-  // Check URL fragment for session_id synchronously during render
-  // This prevents race conditions by processing new session_id FIRST
   if (location.hash?.includes('session_id=')) {
-    console.log('[App] Session ID detected in hash, rendering AuthCallback');
     return <AuthCallback />;
   }
   
@@ -45,14 +43,13 @@ function AppRouter() {
       <Route path="/jobs-services" element={<ProtectedRoute><JobsServices /></ProtectedRoute>} />
       <Route path="/order-history" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
       <Route path="/advertising" element={<ProtectedRoute><Advertising /></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+      <Route path="/ad-log" element={<AdAssignmentLog />} />
     </Routes>
   );
 }
 
 function App() {
-  console.log('[App] Starting application');
-  console.log('[App] Backend URL:', process.env.REACT_APP_BACKEND_URL);
-  
   return (
     <div className="App">
       <BrowserRouter>
@@ -63,7 +60,7 @@ function App() {
             richColors 
             toastOptions={{
               style: {
-                background: '#B91C1C',
+                background: '#DC2626',
                 color: 'white',
                 border: 'none'
               }
