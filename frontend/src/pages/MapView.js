@@ -166,17 +166,17 @@ const MapView = () => {
 
   if (loading || !userLocation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-pulpo-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-pulpo-200 rounded-full animate-spin border-t-pulpo-600 mx-auto"></div>
-          <p className="mt-4 text-pulpo-600 font-medium">Cargando mapa...</p>
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
+          <p className="mt-4 text-white/80 font-medium">Cargando mapa...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-pulpo-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
@@ -185,7 +185,7 @@ const MapView = () => {
       />
 
       {/* Search and Filters */}
-      <div className="bg-gradient-to-b from-pulpo-600 to-pulpo-700 text-white px-4 pb-4">
+      <div className="bg-gradient-to-b from-stone-800 to-transparent text-white px-4 pb-4">
         {/* Radius Selector */}
         <div className="mb-3">
           <div className="flex gap-2">
@@ -195,8 +195,8 @@ const MapView = () => {
                 onClick={() => setRadius(r)}
                 className={`flex-1 py-2 rounded-xl font-bold text-sm transition-all ${
                   radius === r 
-                    ? 'bg-white text-pulpo-600 shadow-md' 
-                    : 'bg-white/20 hover:bg-white/30 text-white'
+                    ? 'bg-red-500 text-white shadow-lg shadow-red-900/50' 
+                    : 'bg-stone-700/50 hover:bg-stone-600 text-stone-300 border border-stone-600'
                 }`}
               >
                 {r} km
@@ -214,12 +214,12 @@ const MapView = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="Buscar pulpería..."
-            className="flex-1 bg-white/90 text-stone-800 border-0 focus:ring-2 focus:ring-white rounded-xl py-3 px-4 placeholder:text-stone-400"
+            className="flex-1 bg-stone-700/50 text-white border border-stone-600 focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-400"
           />
           <button
             data-testid="search-button"
             onClick={handleSearch}
-            className="bg-white text-pulpo-600 hover:bg-pulpo-50 font-bold px-5 rounded-xl transition-all"
+            className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400 font-bold px-5 rounded-xl transition-all shadow-lg shadow-red-900/30"
           >
             Buscar
           </button>
@@ -230,8 +230,8 @@ const MapView = () => {
       {featuredPulperias.length > 0 && (
         <div className="px-4 pt-4">
           <div className="flex items-center gap-2 mb-3">
-            <Crown className="w-5 h-5 text-yellow-500" />
-            <h2 className="text-lg font-bold text-stone-800">Destacadas</h2>
+            <Crown className="w-5 h-5 text-amber-400" />
+            <h2 className="text-lg font-bold text-white">Destacadas</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide">
             {featuredPulperias.map((pulperia) => {
@@ -240,32 +240,32 @@ const MapView = () => {
                 <div
                   key={pulperia.pulperia_id}
                   onClick={() => navigate(`/pulperia/${pulperia.pulperia_id}`)}
-                  className="flex-shrink-0 w-52 rounded-2xl p-4 text-white cursor-pointer shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
-                  style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}dd 100%)` }}
+                  className="flex-shrink-0 w-52 rounded-2xl p-4 text-white cursor-pointer shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] border border-white/10"
+                  style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}99 100%)` }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     {pulperia.logo_url ? (
                       <img
                         src={pulperia.logo_url}
                         alt={pulperia.name}
-                        className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white/30"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                         <StoreIcon className="w-5 h-5" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold truncate text-sm">{pulperia.name}</h3>
                       <div className="flex items-center gap-1">
-                        {pulperia.ad_plan === 'premium' && <Crown className="w-3 h-3 text-yellow-300" />}
+                        {pulperia.ad_plan === 'premium' && <Crown className="w-3 h-3 text-amber-300" />}
                         {pulperia.ad_plan === 'destacado' && <Sparkles className="w-3 h-3" />}
                       </div>
                     </div>
                   </div>
                   {pulperia.rating > 0 && (
                     <div className="flex items-center gap-1 text-xs">
-                      <Star className="w-3 h-3 fill-yellow-300 text-yellow-300" />
+                      <Star className="w-3 h-3 fill-amber-300 text-amber-300" />
                       <span className="font-bold">{pulperia.rating.toFixed(1)}</span>
                     </div>
                   )}
@@ -278,19 +278,19 @@ const MapView = () => {
 
       {/* Mini Map with Expand Toggle */}
       <div className="px-4 py-3">
-        <div className={`rounded-2xl overflow-hidden shadow-md border border-pulpo-100 relative transition-all duration-300 ${
-          isMapFullscreen ? 'h-[70vh]' : 'h-40'
+        <div className={`rounded-2xl overflow-hidden shadow-lg border border-stone-700 relative transition-all duration-300 ${
+          isMapFullscreen ? 'h-[70vh]' : 'h-44'
         }`}>
           {/* Expand/Collapse Button */}
           <button
             onClick={() => setIsMapFullscreen(!isMapFullscreen)}
-            className="absolute top-2 right-2 z-[1000] bg-white/90 hover:bg-white p-2 rounded-xl shadow-lg border border-pulpo-100 transition-all hover:scale-105"
+            className="absolute top-2 right-2 z-[1000] bg-stone-800/90 hover:bg-stone-700 p-2 rounded-xl shadow-lg border border-stone-600 transition-all hover:scale-105"
             title={isMapFullscreen ? 'Reducir mapa' : 'Ampliar mapa'}
           >
             {isMapFullscreen ? (
-              <Minimize2 className="w-5 h-5 text-pulpo-600" />
+              <Minimize2 className="w-5 h-5 text-red-400" />
             ) : (
-              <Maximize2 className="w-5 h-5 text-pulpo-600" />
+              <Maximize2 className="w-5 h-5 text-red-400" />
             )}
           </button>
 
