@@ -555,10 +555,9 @@ print('Cleaned up test data for user: {self.user_id}');
         if not self.create_test_user_and_session():
             print("❌ Failed to create test user. Skipping auth tests.")
         
-        # Test auth endpoints
+        # Test auth endpoints (except logout)
         self.test_auth_session_endpoint()
         self.test_auth_me_endpoint()
-        self.test_auth_logout_endpoint()
         
         # Test basic endpoints
         self.test_pulperias_endpoint()
@@ -568,8 +567,11 @@ print('Cleaned up test data for user: {self.user_id}');
         # Test CORS
         self.test_cors_headers()
         
-        # Test shopping cart functionality
+        # Test shopping cart functionality (before logout to maintain session)
         self.test_shopping_cart_functionality()
+        
+        # Test logout last
+        self.test_auth_logout_endpoint()
         
         # Cleanup
         self.cleanup_test_data()
