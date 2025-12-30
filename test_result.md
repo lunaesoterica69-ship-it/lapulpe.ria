@@ -203,20 +203,20 @@ frontend:
         agent: "testing"
         comment: "✅ TESTED: Auth callback processing working correctly with dark theme. Verified: 1) Dark theme background (from-pulpo-900 via-pulpo-800 to-pulpo-950), 2) Animated logo with pulpo colors (from-pulpo-500 to-pulpo-700), 3) White text on dark background for readability, 4) Proper session_id extraction from URL hash, 5) Correct error handling for invalid sessions with redirect to landing page, 6) Loading animations and progress indicators working. Auth flow processes correctly and redirects appropriately."
 
-  - task: "User Type Selector"
+  - task: "Dark Theme UI Consistency"
     implemented: true
     working: true
-    file: "frontend/src/pages/UserTypeSelector.js"
+    file: "frontend/src/pages/LandingPage.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Updated with rojo pulpo colors and uses setUserType from AuthContext"
+        comment: "Updated entire app with consistent dark theme using stone-900/stone-800 backgrounds, red accents (#ED2024), and glass-morphism effects"
       - working: true
         agent: "testing"
-        comment: "✅ TESTED: User type selector working with dark elegant theme. Verified: 1) Dark theme background (from-pulpo-900 via-pulpo-800 to-pulpo-950), 2) Glass-morphism cards with bg-white/5 backdrop-blur-xl styling, 3) Both selection buttons (cliente and pulperia) visible with proper data-testid attributes, 4) Gradient icons with pulpo colors, 5) White text on dark backgrounds, 6) Hover effects and animations working, 7) Loading states appear correctly after button clicks. All interactive elements properly styled with dark elegant theme."
+        comment: "✅ TESTED: Dark theme UI consistency is EXCELLENT across all screen sizes. Verified: 1) Background image displays correctly with proper cover sizing, 2) Logo is visible and properly centered with beautiful dark background integration, 3) 'Comenzar con Google' button visible with correct white background and red text styling, 4) Features section displays correctly with 4 feature cards and glass-morphism effects, 5) Dark theme consistency confirmed with dark backgrounds and light text elements, 6) Glass-morphism effects (backdrop-blur) working across 9+ elements, 7) Google OAuth login flow redirects correctly to auth.emergentagent.com, 8) Responsive design verified on Desktop (1920x1080), Mobile (390x844), and Tablet (768x1024) with proper layout adaptations, 9) CTA cards section displays correctly on all screen sizes. The app demonstrates excellent UI consistency with professional dark theme featuring red accents (#ED2024) and glass-morphism effects throughout."
 
 metadata:
   created_by: "main_agent"
