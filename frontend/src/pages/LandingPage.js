@@ -1,6 +1,7 @@
 import { MapPin, Store, ShoppingBag, Zap, Search, ArrowRight, Users, Briefcase, Star, ShoppingCart } from 'lucide-react';
 
 const LOGO_URL = 'https://customer-assets.emergentagent.com/job_ecde96f6-7675-4ac5-b409-37ffab40ae06/artifacts/erx8klhi_task_01kdpqhwsmffxsgnf3qpxjd2p1_1767068237_img_1%20%281%29.webp';
+const BG_IMAGE = 'https://customer-assets.emergentagent.com/job_ecde96f6-7675-4ac5-b409-37ffab40ae06/artifacts/puislxng_task_01kdpthgcfevxsh9hz1k6vqg5r_1767071380_img_1.webp';
 
 const LandingPage = () => {
   const handleLogin = () => {
@@ -9,12 +10,14 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#b91c1c] via-[#991b1b] to-[#7f1d1d] overflow-hidden">
-      {/* Subtle animated background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-red-400/10 rounded-full blur-[100px]"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-red-300/10 rounded-full blur-[80px]"></div>
-      </div>
+    <div className="min-h-screen overflow-hidden relative">
+      {/* Background Image */}
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${BG_IMAGE})` }}
+      />
+      {/* Dark overlay for better text visibility */}
+      <div className="fixed inset-0 bg-black/30" />
 
       {/* Hero Section */}
       <div className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-16">
@@ -24,10 +27,9 @@ const LandingPage = () => {
             <img 
               src={LOGO_URL} 
               alt="La Pulpería" 
-              className="w-64 md:w-80 h-auto mx-auto transform hover:scale-105 transition-transform duration-500"
+              className="w-56 md:w-72 h-auto mx-auto transform hover:scale-105 transition-transform duration-500"
               style={{ 
-                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))',
-                mixBlendMode: 'normal'
+                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))'
               }}
             />
           </div>
@@ -36,7 +38,7 @@ const LandingPage = () => {
           <button
             data-testid="login-button"
             onClick={handleLogin}
-            className="group relative inline-flex items-center gap-3 bg-white text-red-700 font-black py-4 px-10 rounded-2xl text-lg shadow-2xl shadow-black/30 hover:shadow-red-900/40 hover:scale-105 transition-all duration-300"
+            className="group relative inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm text-red-700 font-black py-4 px-10 rounded-2xl text-lg shadow-2xl shadow-black/40 hover:bg-white hover:scale-105 transition-all duration-300"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -48,37 +50,37 @@ const LandingPage = () => {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
           
-          <p className="mt-8 text-white/70 text-base md:text-lg max-w-md mx-auto">
+          <p className="mt-8 text-white/80 text-base md:text-lg max-w-md mx-auto drop-shadow-lg">
             Conectando comunidades hondureñas con sus pulperías favoritas
           </p>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="relative z-10 px-6 py-20 bg-black/20 backdrop-blur-sm">
+      <div className="relative z-10 px-6 py-20 bg-black/40 backdrop-blur-md">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-3">
+            <h2 className="text-2xl md:text-4xl font-black text-white mb-3 drop-shadow-lg">
               ¿Cómo funciona?
             </h2>
-            <p className="text-white/60 text-base max-w-md mx-auto">
+            <p className="text-white/70 text-base max-w-md mx-auto">
               Simple, rápido y diseñado para Honduras
             </p>
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { icon: MapPin, title: 'Encuentra', desc: 'Pulperías cercanas', color: 'from-red-500 to-red-600' },
-              { icon: Search, title: 'Busca', desc: 'Productos en tu zona', color: 'from-red-600 to-red-700' },
-              { icon: ShoppingCart, title: 'Ordena', desc: 'Desde tu celular', color: 'from-red-700 to-red-800' },
-              { icon: Zap, title: 'Recoge', desc: 'Cuando esté listo', color: 'from-red-800 to-red-900' }
+              { icon: MapPin, title: 'Encuentra', desc: 'Pulperías cercanas' },
+              { icon: Search, title: 'Busca', desc: 'Productos en tu zona' },
+              { icon: ShoppingCart, title: 'Ordena', desc: 'Desde tu celular' },
+              { icon: Zap, title: 'Recoge', desc: 'Cuando esté listo' }
             ].map((item, i) => (
-              <div key={i} className="group bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-white/30 hover:bg-white/10 transition-all duration-300">
-                <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+              <div key={i} className="group bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-red-400/50 hover:bg-white/20 transition-all duration-300">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform">
                   <item.icon className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-1">{item.title}</h3>
-                <p className="text-white/50 text-sm">{item.desc}</p>
+                <p className="text-white/60 text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -96,8 +98,8 @@ const LandingPage = () => {
               { num: '4.9', label: 'Rating', icon: Star }
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-2xl md:text-4xl font-black text-white mb-1">{stat.num}</div>
-                <div className="text-white/50 text-xs md:text-sm flex items-center justify-center gap-1">
+                <div className="text-2xl md:text-4xl font-black text-white mb-1 drop-shadow-lg">{stat.num}</div>
+                <div className="text-white/60 text-xs md:text-sm flex items-center justify-center gap-1">
                   {stat.icon && <stat.icon className="w-3 h-3 fill-current text-amber-400" />}
                   {stat.label}
                 </div>
@@ -108,15 +110,15 @@ const LandingPage = () => {
       </div>
 
       {/* CTA Cards */}
-      <div className="relative z-10 px-6 py-16 bg-black/20 backdrop-blur-sm">
+      <div className="relative z-10 px-6 py-16 bg-black/40 backdrop-blur-md">
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20">
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-5">
                 <Users className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Para Clientes</h3>
-              <p className="text-white/60 text-sm mb-5">
+              <p className="text-white/70 text-sm mb-5">
                 Encuentra productos, compara precios y ordena fácil.
               </p>
               <button
@@ -127,12 +129,12 @@ const LandingPage = () => {
               </button>
             </div>
 
-            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20">
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-5">
                 <Store className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">¿Tienes Pulpería?</h3>
-              <p className="text-white/60 text-sm mb-5">
+              <p className="text-white/70 text-sm mb-5">
                 Digitaliza tu negocio y recibe órdenes en tiempo real.
               </p>
               <button
@@ -146,32 +148,9 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Support */}
-      <div className="relative z-10 px-6 py-12">
-        <div className="max-w-2xl mx-auto text-center">
-          <h3 className="text-lg font-bold text-white mb-3">💝 Apoya al Creador</h3>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <a 
-              href="mailto:onol4sco05@gmail.com"
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/10 text-white/80 text-sm hover:bg-white/20 transition-all"
-            >
-              onol4sco05@gmail.com
-            </a>
-            <a 
-              href="https://paypal.me/alejandronolasco979?locale.x=es_XC&country.x=HN"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-xl text-white text-sm font-medium hover:bg-blue-500 transition-all"
-            >
-              PayPal
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-6 border-t border-white/10">
-        <p className="text-center text-white/40 text-xs">
+      <footer className="relative z-10 px-6 py-6 border-t border-white/10 bg-black/30">
+        <p className="text-center text-white/50 text-xs">
           © 2024 La Pulpería — Honduras
         </p>
       </footer>
