@@ -173,7 +173,7 @@ backend:
         comment: "✅ TESTED: Cart structure validation passed. Minimal localStorage structure with required fields (product_id, name, price, quantity, pulperia_id, pulperia_name) keeps size under 5KB to prevent QuotaExceededError."
 
 frontend:
-  - task: "Landing Page with Google Login"
+  - task: "Landing Page with Custom SVG Logo"
     implemented: true
     working: true
     file: "frontend/src/pages/LandingPage.js"
@@ -183,10 +183,10 @@ frontend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Updated LandingPage with professional rojo pulpo design and Google OAuth button"
+        comment: "Updated LandingPage with custom SVG logo (pulpería building), professional rojo pulpo design and Google OAuth button"
       - working: true
         agent: "testing"
-        comment: "✅ TESTED: Landing page dark elegant theme working perfectly. Verified: 1) Dark red gradient background (from-[#b91c1c] via-[#991b1b] to-[#7f1d1d]), 2) Logo blends nicely with red background using drop-shadow and mixBlendMode, 3) 'Comenzar con Google' button visible with white background and red text, 4) Features section displays correctly with dark theme (bg-black/20 backdrop-blur-sm), 5) White text on dark backgrounds for excellent readability, 6) Google login button redirects correctly to auth.emergentagent.com, 7) Responsive design works on mobile (390x844) and tablet (768x1024) with proper grid layouts. Glass-morphism effects and backdrop-blur working as expected."
+        comment: "✅ TESTED: Custom SVG logo landing page working perfectly. Verified: 1) Custom SVG logo (pulpería building) displays correctly with proper dimensions (208x228px) featuring red roof, striped awning, windows, door, and decorative elements, 2) 'La Pulpería' title with gradient text clearly visible, 3) 'Comenzar con Google' button functional with Google icon, 4) Features section displays all 4 cards (Encuentra, Busca, Ordena, Recoge), 5) Stats section shows all values (100+, 5,000+, 10K+, 4.9), 6) CTA cards 'Soy Cliente' and 'Tengo una Pulpería' both functional, 7) Mobile responsive design (390x844) works perfectly, 8) Login flow redirects correctly to auth.emergentagent.com, 9) Dark gradient background with floating particles, 10) Glass-morphism effects working throughout. Landing page demonstrates excellent design quality with custom SVG logo perfectly integrated."
 
   - task: "Auth Callback Processing"
     implemented: true
