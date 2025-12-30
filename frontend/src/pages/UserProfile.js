@@ -75,24 +75,24 @@ const UserProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-orange-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin border-t-red-600 mx-auto"></div>
-          <p className="mt-4 text-red-600 font-medium">Cargando...</p>
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
+          <p className="mt-4 text-white/80 font-medium">Cargando...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       {/* Header */}
-      <div className="bg-gradient-to-br from-red-600 to-orange-500 text-white px-6 py-10 text-center">
+      <div className="bg-gradient-to-br from-red-800 to-red-900 text-white px-6 py-10 text-center">
         {user?.picture ? (
           <img
             src={user.picture}
             alt={user.name}
-            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white shadow-xl"
+            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-white/30 shadow-xl"
           />
         ) : (
           <div className="w-24 h-24 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -100,7 +100,7 @@ const UserProfile = () => {
           </div>
         )}
         <h1 className="text-2xl font-black mb-1">{user?.name}</h1>
-        <p className="text-white/80 text-sm">{user?.email}</p>
+        <p className="text-white/70 text-sm">{user?.email}</p>
         <div className="inline-flex items-center gap-2 mt-3 bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium">
           {user?.user_type === 'cliente' ? (
             <><ShoppingBag className="w-4 h-4" /> Cliente</>
@@ -111,7 +111,7 @@ const UserProfile = () => {
         
         {/* Admin Badge */}
         {user?.is_admin && (
-          <div className="inline-flex items-center gap-2 mt-2 ml-2 bg-yellow-500 px-3 py-1 rounded-full text-sm font-bold text-yellow-900">
+          <div className="inline-flex items-center gap-2 mt-2 ml-2 bg-amber-500 px-3 py-1 rounded-full text-sm font-bold text-amber-900">
             <Shield className="w-4 h-4" /> Admin
           </div>
         )}
@@ -123,10 +123,10 @@ const UserProfile = () => {
         {user?.is_admin && (
           <button
             onClick={() => navigate('/admin')}
-            className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl shadow-lg p-4 flex items-center gap-4 hover:from-yellow-600 hover:to-orange-600 transition-all"
+            className="w-full bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl shadow-lg p-4 flex items-center gap-4 hover:from-amber-500 hover:to-amber-400 transition-all"
           >
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-              <Shield className="w-6 h-6 text-yellow-600" />
+              <Shield className="w-6 h-6 text-amber-600" />
             </div>
             <div className="flex-1 text-left">
               <p className="font-bold text-white">Panel de Administrador</p>
@@ -138,14 +138,14 @@ const UserProfile = () => {
         {/* View Ad Assignment Log */}
         <button
           onClick={() => navigate('/ad-log')}
-          className="w-full bg-white rounded-2xl shadow-sm border border-red-100 p-4 flex items-center gap-4 hover:bg-red-50 transition-all active:scale-[0.99]"
+          className="w-full bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-4 flex items-center gap-4 hover:border-blue-500/50 transition-all active:scale-[0.99]"
         >
-          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-            <Eye className="w-6 h-6 text-blue-600" />
+          <div className="w-12 h-12 bg-blue-900/50 rounded-xl flex items-center justify-center border border-blue-700">
+            <Eye className="w-6 h-6 text-blue-400" />
           </div>
           <div className="flex-1 text-left">
-            <p className="font-bold text-stone-800">Registro de Anuncios</p>
-            <p className="text-sm text-stone-500">Ve cómo se asignan los perks</p>
+            <p className="font-bold text-white">Registro de Anuncios</p>
+            <p className="text-sm text-stone-400">Ve cómo se asignan los perks</p>
           </div>
         </button>
 
@@ -153,16 +153,16 @@ const UserProfile = () => {
         <button
           onClick={handleChangeUserType}
           disabled={changingType}
-          className="w-full bg-white rounded-2xl shadow-sm border border-red-100 p-4 flex items-center gap-4 hover:bg-red-50 transition-all active:scale-[0.99] disabled:opacity-50"
+          className="w-full bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-4 flex items-center gap-4 hover:border-orange-500/50 transition-all active:scale-[0.99] disabled:opacity-50"
         >
-          <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-            <ArrowRightLeft className="w-6 h-6 text-orange-600" />
+          <div className="w-12 h-12 bg-orange-900/50 rounded-xl flex items-center justify-center border border-orange-700">
+            <ArrowRightLeft className="w-6 h-6 text-orange-400" />
           </div>
           <div className="flex-1 text-left">
-            <p className="font-bold text-stone-800">
+            <p className="font-bold text-white">
               {changingType ? 'Cambiando...' : 'Cambiar Tipo de Cuenta'}
             </p>
-            <p className="text-sm text-stone-500">
+            <p className="text-sm text-stone-400">
               Actualmente: {user?.user_type === 'cliente' ? 'Cliente' : 'Pulpería'} → {user?.user_type === 'cliente' ? 'Pulpería' : 'Cliente'}
             </p>
           </div>
@@ -171,33 +171,33 @@ const UserProfile = () => {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full bg-white rounded-2xl shadow-sm border border-red-100 p-4 flex items-center gap-4 hover:bg-red-50 transition-all active:scale-[0.99]"
+          className="w-full bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-4 flex items-center gap-4 hover:border-red-500/50 transition-all active:scale-[0.99]"
         >
-          <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-            <LogOut className="w-6 h-6 text-red-600" />
+          <div className="w-12 h-12 bg-red-900/50 rounded-xl flex items-center justify-center border border-red-700">
+            <LogOut className="w-6 h-6 text-red-400" />
           </div>
           <div className="flex-1 text-left">
-            <p className="font-bold text-stone-800">Cerrar Sesión</p>
-            <p className="text-sm text-stone-500">Salir de tu cuenta</p>
+            <p className="font-bold text-white">Cerrar Sesión</p>
+            <p className="text-sm text-stone-400">Salir de tu cuenta</p>
           </div>
         </button>
 
         {/* Support Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-5">
+        <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Heart className="w-5 h-5 text-red-500" />
-            <h3 className="font-bold text-stone-800">Apoya al Creador</h3>
+            <Heart className="w-5 h-5 text-red-400" />
+            <h3 className="font-bold text-white">Apoya al Creador</h3>
           </div>
           
           <div className="space-y-3">
             <a 
               href="mailto:onol4sco05@gmail.com"
-              className="flex items-center gap-3 p-3 bg-red-50 rounded-xl hover:bg-red-100 transition-all"
+              className="flex items-center gap-3 p-3 bg-stone-700/30 rounded-xl hover:bg-stone-700/50 transition-all border border-stone-600"
             >
-              <Mail className="w-5 h-5 text-red-600" />
+              <Mail className="w-5 h-5 text-red-400" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-stone-600">Contacto</p>
-                <p className="text-xs text-red-600 truncate">onol4sco05@gmail.com</p>
+                <p className="text-sm font-medium text-stone-300">Contacto</p>
+                <p className="text-xs text-red-400 truncate">onol4sco05@gmail.com</p>
               </div>
             </a>
 
@@ -205,25 +205,25 @@ const UserProfile = () => {
               href="https://paypal.me/alejandronolasco979?locale.x=es_XC&country.x=HN"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all"
+              className="flex items-center gap-3 p-3 bg-blue-900/30 rounded-xl hover:bg-blue-900/50 transition-all border border-blue-700"
             >
-              <CreditCard className="w-5 h-5 text-blue-600" />
+              <CreditCard className="w-5 h-5 text-blue-400" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-stone-600">PayPal</p>
-                <p className="text-xs text-blue-600 truncate">paypal.me/alejandronolasco979</p>
+                <p className="text-sm font-medium text-stone-300">PayPal</p>
+                <p className="text-xs text-blue-400 truncate">paypal.me/alejandronolasco979</p>
               </div>
             </a>
           </div>
 
-          <p className="text-center text-xs text-stone-400 mt-4">
+          <p className="text-center text-xs text-stone-500 mt-4">
             Tu apoyo ayuda a mantener la plataforma 🙏
           </p>
         </div>
 
         {/* Footer */}
         <div className="text-center pt-4">
-          <p className="text-sm text-stone-500 font-medium">La Pulpería v2.0</p>
-          <p className="text-xs text-stone-400 mt-1">© 2024 - Conectando comunidades hondureñas</p>
+          <p className="text-sm text-stone-400 font-medium">La Pulpería v2.0</p>
+          <p className="text-xs text-stone-500 mt-1">© 2024 - Conectando comunidades hondureñas</p>
         </div>
       </div>
 
