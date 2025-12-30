@@ -1,65 +1,27 @@
 import { MapPin, Store, ShoppingBag, Zap, Search, ArrowRight, Users, Star, ShoppingCart, Package, Sparkles } from 'lucide-react';
 
-// Custom SVG Logo Component - La Pulpería
+// Custom SVG Logo Component - La Pulpería (Minimalist)
 const PulperiaLogo = ({ className = "" }) => (
-  <svg viewBox="0 0 200 220" className={className} xmlns="http://www.w3.org/2000/svg">
-    {/* Store roof/awning */}
+  <svg viewBox="0 0 60 60" className={className} xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#DC2626" />
-        <stop offset="100%" stopColor="#991B1B" />
+      <linearGradient id="roofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#EF4444" />
+        <stop offset="100%" stopColor="#DC2626" />
       </linearGradient>
-      <linearGradient id="buildingGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#FECACA" />
-        <stop offset="100%" stopColor="#FCA5A5" />
-      </linearGradient>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#000" floodOpacity="0.3"/>
-      </filter>
     </defs>
-    
-    {/* Main building */}
-    <rect x="30" y="70" width="140" height="120" rx="8" fill="url(#buildingGradient)" filter="url(#shadow)"/>
-    
-    {/* Roof/Awning */}
-    <path d="M20 75 L100 25 L180 75 Z" fill="url(#roofGradient)" filter="url(#shadow)"/>
-    
+    {/* Store body */}
+    <rect x="10" y="28" width="40" height="28" rx="3" fill="#FEE2E2"/>
+    {/* Roof */}
+    <path d="M6 30 L30 12 L54 30 Z" fill="url(#roofGrad)"/>
     {/* Awning stripes */}
-    <g>
-      <rect x="30" y="70" width="20" height="25" fill="#DC2626"/>
-      <rect x="50" y="70" width="20" height="25" fill="white"/>
-      <rect x="70" y="70" width="20" height="25" fill="#DC2626"/>
-      <rect x="90" y="70" width="20" height="25" fill="white"/>
-      <rect x="110" y="70" width="20" height="25" fill="#DC2626"/>
-      <rect x="130" y="70" width="20" height="25" fill="white"/>
-      <rect x="150" y="70" width="20" height="25" fill="#DC2626"/>
-    </g>
-    
-    {/* Awning wave bottom */}
-    <path d="M30 95 Q40 105 50 95 Q60 85 70 95 Q80 105 90 95 Q100 85 110 95 Q120 105 130 95 Q140 85 150 95 Q160 105 170 95" 
-          fill="none" stroke="#991B1B" strokeWidth="3"/>
-    
+    <rect x="10" y="28" width="8" height="8" fill="#DC2626"/>
+    <rect x="18" y="28" width="8" height="8" fill="#FECACA"/>
+    <rect x="26" y="28" width="8" height="8" fill="#DC2626"/>
+    <rect x="34" y="28" width="8" height="8" fill="#FECACA"/>
+    <rect x="42" y="28" width="8" height="8" fill="#DC2626"/>
     {/* Door */}
-    <rect x="75" y="130" width="50" height="60" rx="4" fill="#7F1D1D"/>
-    <circle cx="115" cy="160" r="4" fill="#FCD34D"/>
-    
-    {/* Windows */}
-    <rect x="40" y="110" width="25" height="30" rx="3" fill="#0EA5E9"/>
-    <rect x="135" y="110" width="25" height="30" rx="3" fill="#0EA5E9"/>
-    
-    {/* Window frames */}
-    <line x1="52.5" y1="110" x2="52.5" y2="140" stroke="white" strokeWidth="2"/>
-    <line x1="40" y1="125" x2="65" y2="125" stroke="white" strokeWidth="2"/>
-    <line x1="147.5" y1="110" x2="147.5" y2="140" stroke="white" strokeWidth="2"/>
-    <line x1="135" y1="125" x2="160" y2="125" stroke="white" strokeWidth="2"/>
-    
-    {/* Chimney */}
-    <rect x="140" y="30" width="20" height="35" fill="#991B1B"/>
-    
-    {/* Stars/sparkles */}
-    <circle cx="25" cy="50" r="3" fill="#FCD34D"/>
-    <circle cx="175" cy="45" r="2" fill="#FCD34D"/>
-    <circle cx="185" cy="60" r="2.5" fill="#FCD34D"/>
+    <rect x="23" y="42" width="14" height="14" rx="2" fill="#991B1B"/>
+    <circle cx="34" cy="50" r="1.5" fill="#FCD34D"/>
   </svg>
 );
 
