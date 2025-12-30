@@ -265,10 +265,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Custom SVG Logo Landing Page Testing"
-    - "Mobile Responsive Design Verification"
-    - "Login Flow Authentication"
-  stuck_tasks: []
+    - "Order Notification System"
+    - "Order Customer Name Display"
+  stuck_tasks:
+    - "Order Notification System"
   test_all: false
   test_priority: "high_first"
 
