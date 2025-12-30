@@ -123,30 +123,30 @@ const MyOrders = () => {
 
   const getStatusStyle = (status) => {
     const styleMap = {
-      pending: 'bg-amber-100 text-amber-700 border-amber-200',
-      accepted: 'bg-blue-100 text-blue-700 border-blue-200',
-      ready: 'bg-green-100 text-green-700 border-green-200 animate-pulse',
-      completed: 'bg-stone-100 text-stone-600 border-stone-200',
-      cancelled: 'bg-red-100 text-red-700 border-red-200'
+      pending: 'bg-amber-900/50 text-amber-400 border-amber-700',
+      accepted: 'bg-blue-900/50 text-blue-400 border-blue-700',
+      ready: 'bg-green-900/50 text-green-400 border-green-700 animate-pulse',
+      completed: 'bg-stone-700/50 text-stone-400 border-stone-600',
+      cancelled: 'bg-red-900/50 text-red-400 border-red-700'
     };
-    return styleMap[status] || 'bg-stone-100 text-stone-600';
+    return styleMap[status] || 'bg-stone-700/50 text-stone-400';
   };
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-orange-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-200 rounded-full animate-spin border-t-red-600 mx-auto"></div>
-          <p className="mt-4 text-red-600 font-medium">Cargando órdenes...</p>
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
+          <p className="mt-4 text-white/80 font-medium">Cargando órdenes...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-orange-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       <Header 
         user={user} 
         title="Mis Órdenes" 
@@ -156,28 +156,28 @@ const MyOrders = () => {
       <div className="px-4 py-6">
         {orders.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ShoppingBag className="w-10 h-10 text-red-400" />
+            <div className="w-20 h-20 bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingBag className="w-10 h-10 text-stone-600" />
             </div>
-            <p className="text-red-600 text-lg font-semibold">No tienes órdenes aún</p>
-            <p className="text-red-400 text-sm mt-2">¡Explora las pulperías cercanas!</p>
+            <p className="text-white text-lg font-semibold">No tienes órdenes aún</p>
+            <p className="text-stone-400 text-sm mt-2">¡Explora las pulperías cercanas!</p>
           </div>
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
               <div
                 key={order.order_id}
-                className={`bg-white rounded-2xl shadow-md border border-red-100 overflow-hidden transition-all
+                className={`bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden transition-all
                   ${order.status === 'ready' ? 'ring-2 ring-green-500' : ''}`}
               >
                 {/* Order Header */}
-                <div className="px-5 py-4 border-b border-red-100 flex justify-between items-center">
+                <div className="px-5 py-4 border-b border-stone-700/50 flex justify-between items-center">
                   <div>
-                    <div className="flex items-center gap-2 text-red-600 mb-1">
+                    <div className="flex items-center gap-2 text-red-400 mb-1">
                       <User className="w-4 h-4" />
                       <span className="font-bold">{order.customer_name || 'Sin nombre'}</span>
                     </div>
-                    <p className="text-stone-400 text-xs">
+                    <p className="text-stone-500 text-xs">
                       {new Date(order.created_at).toLocaleDateString('es-HN', {
                         month: 'short',
                         day: 'numeric',
@@ -185,7 +185,7 @@ const MyOrders = () => {
                         minute: '2-digit'
                       })}
                     </p>
-                    <p className="text-stone-500 text-sm font-medium">#{order.order_id.slice(-8)}</p>
+                    <p className="text-stone-400 text-sm font-medium">#{order.order_id.slice(-8)}</p>
                   </div>
                   
                   <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${getStatusStyle(order.status)}`}>
@@ -198,22 +198,22 @@ const MyOrders = () => {
                 <div className="px-5 py-4 space-y-3">
                   {order.items && order.items.map((item, index) => (
                     <div key={index} className="flex items-center gap-3">
-                      <div className="w-14 h-14 bg-red-100 rounded-xl overflow-hidden flex-shrink-0">
+                      <div className="w-14 h-14 bg-stone-700 rounded-xl overflow-hidden flex-shrink-0">
                         {item.image_url ? (
                           <img src={item.image_url} alt={item.product_name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Package className="w-6 h-6 text-red-300" />
+                            <Package className="w-6 h-6 text-stone-500" />
                           </div>
                         )}
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <p className="text-stone-800 font-medium truncate">{item.product_name}</p>
+                        <p className="text-white font-medium truncate">{item.product_name}</p>
                         <p className="text-stone-500 text-sm">x{item.quantity}</p>
                       </div>
                       
-                      <p className="text-stone-800 font-bold">
+                      <p className="text-white font-bold">
                         L{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -221,15 +221,15 @@ const MyOrders = () => {
                 </div>
 
                 {/* Order Footer */}
-                <div className="px-5 py-4 bg-red-50 border-t border-red-100">
+                <div className="px-5 py-4 bg-stone-700/30 border-t border-stone-700/50">
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-red-500 text-sm">
+                    <div className="flex items-center gap-2 text-red-400 text-sm">
                       <Package className="w-4 h-4" />
                       {order.order_type === 'pickup' ? 'Recoger' : 'Envío'}
                     </div>
                     <div className="text-right">
-                      <p className="text-red-400 text-xs">Total</p>
-                      <p className="text-2xl font-black text-red-600">
+                      <p className="text-stone-500 text-xs">Total</p>
+                      <p className="text-2xl font-black text-red-400">
                         L{order.total?.toFixed(2) || '0.00'}
                       </p>
                     </div>
