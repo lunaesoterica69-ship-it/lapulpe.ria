@@ -112,6 +112,66 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: All pulperia CRUD endpoints working correctly. GET /api/pulperias returns proper JSON array. POST /api/pulperias successfully creates pulperias with proper authentication. Product creation and management also working. All endpoints properly handle authentication and authorization."
 
+  - task: "Shopping Cart - Get Pulperias List"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "GET /api/pulperias endpoint returns list of pulperias with required fields for shopping cart"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: GET /api/pulperias successfully returns 2 pulperias with all required fields (pulperia_id, name, address) for shopping cart functionality."
+
+  - task: "Shopping Cart - Get Pulperia Products"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "GET /api/pulperias/{id}/products endpoint returns products for specific pulperia"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: GET /api/pulperias/{id}/products successfully returns products with all required fields (product_id, name, price, pulperia_id) for shopping cart functionality."
+
+  - task: "Shopping Cart - Order Creation"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/orders endpoint creates orders with multi-store items support"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: POST /api/orders correctly rejects unauthorized requests with 401 status. Successfully creates orders with multi-store items when authenticated. Order schema accepts all required fields: customer_name, pulperia_id, items array with product details, total, and order_type."
+
+  - task: "Shopping Cart - localStorage Structure"
+    implemented: true
+    working: true
+    file: "frontend/localStorage"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Cart stores minimal data in localStorage to avoid QuotaExceededError"
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Cart structure validation passed. Minimal localStorage structure with required fields (product_id, name, price, quantity, pulperia_id, pulperia_name) keeps size under 5KB to prevent QuotaExceededError."
+
 frontend:
   - task: "Landing Page with Google Login"
     implemented: true
@@ -152,7 +212,7 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 2
+  test_sequence: 3
   run_ui: false
 
 test_plan:
@@ -171,3 +231,5 @@ agent_communication:
     message: "✅ BACKEND TESTING COMPLETE: All high-priority auth endpoints and pulperia CRUD operations are working correctly. Successfully tested: 1) Auth session validation with Emergent Auth, 2) User authentication via session tokens, 3) Protected endpoint access control, 4) Pulperia and product CRUD operations, 5) Proper error handling and unauthorized access rejection. Minor: CORS headers not visible in OPTIONS requests but actual API calls work fine. All core backend functionality is operational and ready for production."
   - agent: "main"
     message: "Fixed: 1) Updated logo to new brand logo from user, 2) Updated tailwind colors to match new logo (#ED2024 primary, #D31D21 secondary), 3) Added thefuzz dependencies to requirements.txt. Need to test: Shopping cart functionality with multi-store items and localStorage quota handling."
+  - agent: "testing"
+    message: "✅ SHOPPING CART BACKEND TESTING COMPLETE: All shopping cart functionality is working correctly. Successfully tested: 1) GET /api/pulperias returns pulperias list with required fields, 2) GET /api/pulperias/{id}/products returns products with cart-required fields, 3) POST /api/orders correctly handles authentication (401 without auth), 4) Order creation schema accepts multi-store items with all required fields (customer_name, pulperia_id, items array, total, order_type), 5) localStorage cart structure validation passed with minimal data size (0.32KB) to prevent QuotaExceededError. Minor: CORS OPTIONS method returns 405 but actual API calls work fine. All shopping cart backend endpoints are operational and ready for frontend integration."
