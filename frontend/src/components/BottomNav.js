@@ -21,7 +21,7 @@ const BottomNav = ({ user, cartCount = 0 }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-pulpo-100 shadow-lg safe-bottom z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-stone-900/95 backdrop-blur-xl border-t border-stone-800 shadow-2xl safe-bottom z-50">
       <div className="flex justify-around items-center py-2 px-4">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -34,14 +34,14 @@ const BottomNav = ({ user, cartCount = 0 }) => {
               onClick={() => navigate(item.path)}
               className={`flex flex-col items-center justify-center relative transition-all py-1 px-3 rounded-xl ${
                 active 
-                  ? 'text-pulpo-600 bg-pulpo-50' 
-                  : 'text-stone-500 hover:text-pulpo-600 hover:bg-pulpo-50/50'
+                  ? 'text-red-400 bg-red-500/10' 
+                  : 'text-stone-500 hover:text-red-400 hover:bg-stone-800'
               }`}
             >
               <Icon className="w-6 h-6" strokeWidth={active ? 2.5 : 2} />
               <span className="text-xs mt-1 font-semibold">{item.label}</span>
               {item.badge > 0 && (
-                <span className="absolute -top-1 right-0 bg-pulpo-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
                   {item.badge}
                 </span>
               )}
