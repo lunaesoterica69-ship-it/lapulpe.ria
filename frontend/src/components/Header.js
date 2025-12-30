@@ -104,11 +104,11 @@ const Header = ({ user, title, subtitle }) => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-pulpo-600 to-pulpo-700 text-white px-6 py-6 shadow-lg">
+    <div className="bg-gradient-to-r from-stone-900 via-red-900 to-stone-900 text-white px-6 py-6 shadow-lg">
       <div className="flex justify-between items-start">
         <div className="flex-1">
           {title && <h1 className="text-2xl font-black mb-1">{title}</h1>}
-          {subtitle && <p className="text-white/90 text-sm">{subtitle}</p>}
+          {subtitle && <p className="text-white/70 text-sm">{subtitle}</p>}
         </div>
 
         {/* Profile Icon with Dropdown */}
@@ -139,24 +139,24 @@ const Header = ({ user, title, subtitle }) => {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-pulpo-100 overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-80 bg-stone-800 rounded-2xl shadow-2xl border border-stone-700 overflow-hidden z-50">
               {/* User Info Header */}
-              <div className="bg-gradient-to-r from-pulpo-600 to-pulpo-700 text-white p-4">
+              <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4">
                 <div className="flex items-center gap-3">
                   {user?.picture ? (
                     <img
                       src={user.picture}
                       alt={user.name}
-                      className="w-12 h-12 rounded-full border-2 border-white"
+                      className="w-12 h-12 rounded-full border-2 border-white/30"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                       <User className="w-6 h-6" />
                     </div>
                   )}
                   <div>
                     <p className="font-bold">{user?.name}</p>
-                    <p className="text-sm opacity-90 flex items-center gap-1">
+                    <p className="text-sm opacity-80 flex items-center gap-1">
                       {user?.user_type === 'pulperia' ? (
                         <>
                           <Store className="w-3 h-3" /> Dueño de Pulpería
@@ -173,8 +173,8 @@ const Header = ({ user, title, subtitle }) => {
 
               {/* Notifications Section */}
               <div className="max-h-64 overflow-y-auto">
-                <div className="px-4 py-2 bg-pulpo-50 border-b border-pulpo-100 flex justify-between items-center">
-                  <p className="text-xs font-bold text-pulpo-600 uppercase">
+                <div className="px-4 py-2 bg-stone-700/50 border-b border-stone-700 flex justify-between items-center">
+                  <p className="text-xs font-bold text-red-400 uppercase">
                     {user?.user_type === 'pulperia' ? 'Órdenes Pendientes' : 'Mis Órdenes'}
                   </p>
                   <button
@@ -182,16 +182,16 @@ const Header = ({ user, title, subtitle }) => {
                       e.stopPropagation();
                       fetchNotifications();
                     }}
-                    className="p-1 hover:bg-pulpo-100 rounded transition-colors"
+                    className="p-1 hover:bg-stone-600 rounded transition-colors"
                     title="Actualizar"
                   >
-                    <RefreshCw className={`w-4 h-4 text-pulpo-500 ${loading ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`w-4 h-4 text-stone-400 ${loading ? 'animate-spin' : ''}`} />
                   </button>
                 </div>
 
                 {loading ? (
                   <div className="p-4 text-center">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-pulpo-500 border-r-transparent"></div>
+                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-red-500 border-r-transparent"></div>
                   </div>
                 ) : notifications.length === 0 ? (
                   <div className="p-6 text-center text-stone-500">
@@ -199,7 +199,7 @@ const Header = ({ user, title, subtitle }) => {
                     <p className="text-sm">No hay notificaciones</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-stone-100">
+                  <div className="divide-y divide-stone-700">
                     {notifications.map((notification) => (
                       <div
                         key={notification.id}
@@ -207,15 +207,15 @@ const Header = ({ user, title, subtitle }) => {
                           setShowDropdown(false);
                           navigate(user?.user_type === 'pulperia' ? '/dashboard' : '/orders');
                         }}
-                        className="p-3 hover:bg-pulpo-50 cursor-pointer transition-colors"
+                        className="p-3 hover:bg-stone-700/50 cursor-pointer transition-colors"
                       >
                         <div className="flex items-start gap-3">
                           <div className="mt-1">
                             {getStatusIcon(notification.status)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-bold text-stone-800 text-sm">{notification.title}</p>
-                            <p className="text-xs text-stone-600 truncate">{notification.message}</p>
+                            <p className="font-bold text-white text-sm">{notification.title}</p>
+                            <p className="text-xs text-stone-400 truncate">{notification.message}</p>
                           </div>
                           <span className={`text-xs px-2 py-1 rounded-full font-bold ${getStatusBadgeColor(notification.status)}`}>
                             {notification.status === 'pending' ? 'Nuevo' : 
@@ -230,20 +230,20 @@ const Header = ({ user, title, subtitle }) => {
               </div>
 
               {/* Actions */}
-              <div className="border-t border-pulpo-100 p-2">
+              <div className="border-t border-stone-700 p-2">
                 <button
                   onClick={() => {
                     setShowDropdown(false);
                     navigate('/profile');
                   }}
-                  className="w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-pulpo-50 rounded-lg flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm text-stone-300 hover:bg-stone-700 rounded-lg flex items-center gap-2"
                 >
                   <User className="w-4 h-4" />
                   Ver Perfil
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-pulpo-600 hover:bg-pulpo-50 rounded-lg flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-stone-700 rounded-lg flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                   Cerrar Sesión
