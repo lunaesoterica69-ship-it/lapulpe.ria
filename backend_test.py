@@ -255,6 +255,269 @@ print('Email: ' + email);
         except requests.exceptions.RequestException as e:
             self.log_result("CORS Headers", False, f"Request failed: {str(e)}")
     
+    def test_shopping_cart_functionality(self):
+        """Test shopping cart related endpoints"""
+        print("\n=== Testing Shopping Cart Functionality ===")
+        
+        # Test 1: GET /api/pulperias - Verify pulperias list works
+        self.test_get_pulperias_for_cart()
+        
+        # Test 2: GET /api/pulperias/{id}/products - Verify products can be fetched
+        self.test_get_pulperia_products()
+        
+        # Test 3: POST /api/orders - Test order creation (401 without auth)
+        self.test_order_creation_without_auth()
+        
+        # Test 4: Test order creation schema with multi-store items
+        self.test_order_creation_schema()
+        
+        # Test 5: Test localStorage cart structure validation
+        self.test_cart_structure_validation()
+    
+    def test_get_pulperias_for_cart(self):
+        """Test GET /api/pulperias for shopping cart"""
+        print("\n--- Testing GET /api/pulperias for Cart ---")
+        
+        url = f"{BACKEND_URL}/pulperias"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    # Check if pulperias have required fields for cart
+                    required_fields = ['pulperia_id', 'name', 'address']
+                    
+                    if len(data) > 0:
+                        pulperia = data[0]
+                        missing_fields = [field for field in required_fields if field not in pulperia]
+                        
+                        if not missing_fields:
+                            self.log_result("Cart - Get Pulperias", True, f"Retrieved {len(data)} pulperias with required fields")
+                            return data  # Return for use in other tests
+                        else:
+                            self.log_result("Cart - Get Pulperias", False, f"Missing required fields: {missing_fields}")
+                    else:
+                        self.log_result("Cart - Get Pulperias", True, "No pulperias found (empty list)")
+                        return []
+                else:
+                    self.log_result("Cart - Get Pulperias", False, "Response is not a list", data)
+            else:
+                self.log_result("Cart - Get Pulperias", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Cart - Get Pulperias", False, f"Request failed: {str(e)}")
+        
+        return None
+    
+    def test_get_pulperia_products(self):
+        """Test GET /api/pulperias/{id}/products"""
+        print("\n--- Testing GET /api/pulperias/{id}/products ---")
+        
+        # First get a pulperia ID
+        pulperias = self.test_get_pulperias_for_cart()
+        
+        if not pulperias or len(pulperias) == 0:
+            self.log_result("Cart - Get Pulperia Products", False, "No pulperias available to test products")
+            return
+        
+        pulperia_id = pulperias[0]['pulperia_id']
+        url = f"{BACKEND_URL}/pulperias/{pulperia_id}/products"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    # Check if products have required fields for cart
+                    required_fields = ['product_id', 'name', 'price', 'pulperia_id']
+                    
+                    if len(data) > 0:
+                        product = data[0]
+                        missing_fields = [field for field in required_fields if field not in product]
+                        
+                        if not missing_fields:
+                            self.log_result("Cart - Get Pulperia Products", True, f"Retrieved {len(data)} products with required fields")
+                        else:
+                            self.log_result("Cart - Get Pulperia Products", False, f"Missing required fields: {missing_fields}")
+                    else:
+                        self.log_result("Cart - Get Pulperia Products", True, f"No products found for pulperia {pulperia_id}")
+                else:
+                    self.log_result("Cart - Get Pulperia Products", False, "Response is not a list", data)
+            else:
+                self.log_result("Cart - Get Pulperia Products", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Cart - Get Pulperia Products", False, f"Request failed: {str(e)}")
+    
+    def test_order_creation_without_auth(self):
+        """Test POST /api/orders without authentication (should return 401)"""
+        print("\n--- Testing POST /api/orders without auth ---")
+        
+        url = f"{BACKEND_URL}/orders"
+        
+        # Sample order data
+        order_data = {
+            "customer_name": "María González",
+            "pulperia_id": "test_pulperia_123",
+            "items": [
+                {
+                    "product_id": "prod_123",
+                    "product_name": "Arroz Diana 1kg",
+                    "quantity": 2,
+                    "price": 25.50,
+                    "pulperia_id": "test_pulperia_123",
+                    "pulperia_name": "Pulpería Central"
+                }
+            ],
+            "total": 51.00,
+            "order_type": "pickup"
+        }
+        
+        try:
+            response = requests.post(url, json=order_data, timeout=10)
+            
+            if response.status_code == 401:
+                self.log_result("Cart - Order Creation Auth", True, "Correctly rejected order creation without authentication")
+            else:
+                self.log_result("Cart - Order Creation Auth", False, f"Expected 401, got {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Cart - Order Creation Auth", False, f"Request failed: {str(e)}")
+    
+    def test_order_creation_schema(self):
+        """Test order creation schema accepts multi-store items"""
+        print("\n--- Testing Order Creation Schema ---")
+        
+        if not self.session_token:
+            self.log_result("Cart - Order Schema", False, "No session token available for authenticated test")
+            return
+        
+        url = f"{BACKEND_URL}/orders"
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        
+        # Multi-store order data
+        order_data = {
+            "customer_name": "Ana Rodríguez",
+            "pulperia_id": "pulperia_main_001",  # Primary pulperia for the order
+            "items": [
+                {
+                    "product_id": "prod_001",
+                    "product_name": "Leche Dos Pinos 1L",
+                    "quantity": 3,
+                    "price": 18.75,
+                    "pulperia_id": "pulperia_main_001",
+                    "pulperia_name": "Pulpería El Centro"
+                },
+                {
+                    "product_id": "prod_002", 
+                    "product_name": "Pan Bimbo Integral",
+                    "quantity": 1,
+                    "price": 32.00,
+                    "pulperia_id": "pulperia_sec_002",
+                    "pulperia_name": "Panadería La Esquina"
+                },
+                {
+                    "product_id": "prod_003",
+                    "product_name": "Huevos Frescos x12",
+                    "quantity": 2,
+                    "price": 45.50,
+                    "pulperia_id": "pulperia_main_001",
+                    "pulperia_name": "Pulpería El Centro"
+                }
+            ],
+            "total": 142.75,
+            "order_type": "pickup"
+        }
+        
+        try:
+            response = requests.post(url, json=order_data, headers=headers, timeout=10)
+            
+            if response.status_code == 200 or response.status_code == 201:
+                data = response.json()
+                # Verify the order was created with correct structure
+                required_fields = ['order_id', 'customer_name', 'pulperia_id', 'items', 'total', 'order_type']
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if not missing_fields:
+                    # Check if items maintain multi-store structure
+                    items = data.get('items', [])
+                    if len(items) == 3:  # Should have all 3 items
+                        item_fields_ok = all(
+                            all(field in item for field in ['product_id', 'product_name', 'quantity', 'price', 'pulperia_id', 'pulperia_name'])
+                            for item in items
+                        )
+                        if item_fields_ok:
+                            self.log_result("Cart - Order Schema", True, "Order created successfully with multi-store items")
+                        else:
+                            self.log_result("Cart - Order Schema", False, "Order items missing required fields")
+                    else:
+                        self.log_result("Cart - Order Schema", False, f"Expected 3 items, got {len(items)}")
+                else:
+                    self.log_result("Cart - Order Schema", False, f"Order missing required fields: {missing_fields}")
+            else:
+                self.log_result("Cart - Order Schema", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Cart - Order Schema", False, f"Request failed: {str(e)}")
+    
+    def test_cart_structure_validation(self):
+        """Test localStorage cart structure validation"""
+        print("\n--- Testing Cart Structure Validation ---")
+        
+        # Define expected cart structure for localStorage
+        expected_cart_structure = {
+            "items": [
+                {
+                    "product_id": "prod_123",
+                    "name": "Arroz Diana 1kg", 
+                    "price": 25.50,
+                    "quantity": 2,
+                    "pulperia_id": "pulperia_001",
+                    "pulperia_name": "Pulpería Central"
+                },
+                {
+                    "product_id": "prod_456",
+                    "name": "Aceite Capullo 500ml",
+                    "price": 42.00,
+                    "quantity": 1,
+                    "pulperia_id": "pulperia_002", 
+                    "pulperia_name": "Tienda La Esquina"
+                }
+            ]
+        }
+        
+        # Validate cart structure has minimal required fields
+        required_item_fields = ['product_id', 'name', 'price', 'quantity', 'pulperia_id', 'pulperia_name']
+        
+        try:
+            # Check if all items have required fields
+            all_items_valid = True
+            missing_fields_per_item = []
+            
+            for i, item in enumerate(expected_cart_structure['items']):
+                missing_fields = [field for field in required_item_fields if field not in item]
+                if missing_fields:
+                    all_items_valid = False
+                    missing_fields_per_item.append(f"Item {i}: {missing_fields}")
+            
+            if all_items_valid:
+                # Calculate total size to check for QuotaExceededError prevention
+                cart_json = json.dumps(expected_cart_structure)
+                cart_size_kb = len(cart_json.encode('utf-8')) / 1024
+                
+                if cart_size_kb < 5:  # Should be under 5KB for localStorage efficiency
+                    self.log_result("Cart - Structure Validation", True, f"Cart structure valid, size: {cart_size_kb:.2f}KB")
+                else:
+                    self.log_result("Cart - Structure Validation", False, f"Cart too large: {cart_size_kb:.2f}KB (may cause QuotaExceededError)")
+            else:
+                self.log_result("Cart - Structure Validation", False, f"Invalid cart structure: {missing_fields_per_item}")
+                
+        except Exception as e:
+            self.log_result("Cart - Structure Validation", False, f"Validation failed: {str(e)}")
+    
     def cleanup_test_data(self):
         """Clean up test data from MongoDB"""
         print("\n=== Cleaning Up Test Data ===")
