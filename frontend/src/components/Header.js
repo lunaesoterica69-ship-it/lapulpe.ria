@@ -102,10 +102,6 @@ const Header = ({ user, title, subtitle }) => {
         return 'bg-stone-700 text-stone-400';
     }
   };
-      default:
-        return 'bg-stone-100 text-stone-800';
-    }
-  };
 
   return (
     <div className="bg-gradient-to-r from-stone-900 via-red-900 to-stone-900 text-white px-6 py-6 shadow-lg">
