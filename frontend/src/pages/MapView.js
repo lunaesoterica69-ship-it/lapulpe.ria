@@ -339,12 +339,12 @@ const MapView = () => {
 
       {/* Pulperias List */}
       <div className="px-4 pb-4">
-        <h2 className="text-lg font-bold mb-3 text-stone-800">Pulperías Cercanas</h2>
+        <h2 className="text-lg font-bold mb-3 text-white">Pulperías Cercanas</h2>
         {pulperias.length === 0 ? (
-          <div className="text-center py-10 bg-white rounded-2xl">
-            <StoreIcon className="w-12 h-12 text-pulpo-200 mx-auto mb-3" />
-            <p className="text-stone-500">No hay pulperías en este radio</p>
-            <p className="text-stone-400 text-sm">Intenta ampliar el radio de búsqueda</p>
+          <div className="text-center py-10 bg-stone-800/50 rounded-2xl border border-stone-700">
+            <StoreIcon className="w-12 h-12 text-stone-600 mx-auto mb-3" />
+            <p className="text-stone-400">No hay pulperías en este radio</p>
+            <p className="text-stone-500 text-sm">Intenta ampliar el radio de búsqueda</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -355,7 +355,7 @@ const MapView = () => {
                   key={pulperia.pulperia_id}
                   data-testid={`pulperia-card-${pulperia.pulperia_id}`}
                   onClick={() => navigate(`/pulperia/${pulperia.pulperia_id}`)}
-                  className="bg-white rounded-2xl shadow-sm p-4 cursor-pointer border border-pulpo-50 hover:shadow-md hover:border-pulpo-200 transition-all active:scale-[0.99]"
+                  className="bg-stone-800/50 backdrop-blur-sm rounded-2xl p-4 cursor-pointer border border-stone-700/50 hover:border-red-500/50 transition-all active:scale-[0.99]"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex-shrink-0">
@@ -363,37 +363,35 @@ const MapView = () => {
                         <img
                           src={pulperia.logo_url}
                           alt={pulperia.name}
-                          className="w-14 h-14 rounded-xl object-cover border-2"
-                          style={{ borderColor: `${bgColor}30` }}
+                          className="w-14 h-14 rounded-xl object-cover border-2 border-stone-600"
                         />
                       ) : (
                         <div 
-                          className="w-14 h-14 rounded-xl flex items-center justify-center"
-                          style={{ backgroundColor: `${bgColor}15` }}
+                          className="w-14 h-14 rounded-xl flex items-center justify-center bg-stone-700"
                         >
-                          <StoreIcon className="w-7 h-7" style={{ color: bgColor }} />
+                          <StoreIcon className="w-7 h-7 text-red-400" />
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-stone-800 truncate">{pulperia.name}</h3>
+                      <h3 className="font-bold text-white truncate">{pulperia.name}</h3>
                       
                       {pulperia.rating > 0 && (
                         <div className="flex items-center gap-1 mt-0.5">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-semibold text-stone-600">
+                          <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                          <span className="text-sm font-semibold text-white">
                             {pulperia.rating.toFixed(1)}
                           </span>
-                          <span className="text-xs text-stone-400">({pulperia.review_count})</span>
+                          <span className="text-xs text-stone-500">({pulperia.review_count})</span>
                         </div>
                       )}
                       
-                      <p className="text-stone-500 text-sm flex items-center gap-1 mt-1 truncate">
-                        <MapPin className="w-3 h-3 flex-shrink-0" /> 
+                      <p className="text-stone-400 text-sm flex items-center gap-1 mt-1 truncate">
+                        <MapPin className="w-3 h-3 flex-shrink-0 text-red-400" /> 
                         <span className="truncate">{pulperia.address}</span>
                       </p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-stone-300 flex-shrink-0" />
+                    <ChevronRight className="w-5 h-5 text-stone-500 flex-shrink-0" />
                   </div>
                 </div>
               );
