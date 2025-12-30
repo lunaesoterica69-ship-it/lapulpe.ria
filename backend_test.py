@@ -567,6 +567,9 @@ print('Cleaned up test data for user: {self.user_id}');
         # Test CORS
         self.test_cors_headers()
         
+        # Test shopping cart functionality
+        self.test_shopping_cart_functionality()
+        
         # Cleanup
         self.cleanup_test_data()
         
