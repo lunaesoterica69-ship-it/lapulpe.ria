@@ -10,7 +10,7 @@ from datetime import datetime
 
 class CriticalEndpointsTest:
     def __init__(self):
-        self.base_url = "https://red-auth-connect.preview.emergentagent.com"
+        self.base_url = "https://market-makeover.preview.emergentagent.com"
         self.pulperia_token = "-VQBIlnpDEMpfon3aq3vZAlmk0n-bkvQSixYRttrn78"  # Valid pulperia token
         self.tests_run = 0
         self.tests_passed = 0

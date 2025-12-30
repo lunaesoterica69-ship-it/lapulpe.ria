@@ -93,7 +93,7 @@ def test_websocket_with_curl():
             "-H", "Upgrade: websocket", 
             "-H", "Sec-WebSocket-Version: 13",
             "-H", "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==",
-            "https://red-auth-connect.preview.emergentagent.com/ws/orders/test_user_123"
+            "https://market-makeover.preview.emergentagent.com/ws/orders/test_user_123"
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)

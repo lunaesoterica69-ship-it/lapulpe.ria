@@ -286,9 +286,9 @@
 
 ### URLs de Acceso
 ```
-Frontend: https://red-auth-connect.preview.emergentagent.com
-Backend API: https://red-auth-connect.preview.emergentagent.com/api
-API Docs: https://red-auth-connect.preview.emergentagent.com/api/docs
+Frontend: https://market-makeover.preview.emergentagent.com
+Backend API: https://market-makeover.preview.emergentagent.com/api
+API Docs: https://market-makeover.preview.emergentagent.com/api/docs
 ```
 
 ### Post-Lanzamiento Inmediato
