@@ -91,13 +91,17 @@ const Header = ({ user, title, subtitle }) => {
   const getStatusBadgeColor = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-900/50 text-amber-400';
       case 'accepted':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-900/50 text-blue-400';
       case 'ready':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-900/50 text-green-400';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-900/50 text-red-400';
+      default:
+        return 'bg-stone-700 text-stone-400';
+    }
+  };
       default:
         return 'bg-stone-100 text-stone-800';
     }
