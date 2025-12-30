@@ -226,9 +226,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Dark Theme UI Consistency Testing"
-    - "Landing Page Background and Logo Integration"
-    - "Responsive Design Verification"
+    - "Custom SVG Logo Landing Page Testing"
+    - "Mobile Responsive Design Verification"
+    - "Login Flow Authentication"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
