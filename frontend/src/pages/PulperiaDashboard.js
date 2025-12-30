@@ -844,13 +844,19 @@ const PulperiaDashboard = () => {
                     className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border-2 border-red-600 p-6 cursor-pointer hover:border-red-400 transition-all transform hover:-translate-y-1"
                   >
                     {/* Ticket Style Header */}
-                    <div className="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-2 -mx-6 -mt-6 mb-4 rounded-t-xl">
+                    <div className="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-3 -mx-6 -mt-6 mb-4 rounded-t-xl">
                       <div className="flex justify-between items-center">
                         <span className="font-black text-lg">ORDEN #{order.order_id.slice(-6)}</span>
                         <div className={`${getStatusColor(order.status)} px-3 py-1 rounded-full text-xs font-black`}>
                           {getStatusText(order.status)}
                         </div>
                       </div>
+                      {/* Customer Name */}
+                      {order.customer_name && (
+                        <div className="mt-2 flex items-center gap-2 text-white/90 text-sm">
+                          <span className="bg-white/20 px-2 py-0.5 rounded-full">👤 {order.customer_name}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Order Items */}
@@ -954,7 +960,13 @@ const PulperiaDashboard = () => {
           {selectedOrder && (
             <div>
               <div className="bg-gradient-to-br from-red-600 to-red-700 text-white px-6 py-4 -mx-6 -mt-6 mb-6 rounded-t-xl">
-                <h2 className="text-2xl font-black mb-2">ORDEN #{selectedOrder.order_id.slice(-8)}</h2>
+                <h2 className="text-2xl font-black mb-1">ORDEN #{selectedOrder.order_id.slice(-8)}</h2>
+                {/* Customer Name */}
+                {selectedOrder.customer_name && (
+                  <p className="text-white/90 font-bold flex items-center gap-2 mb-2">
+                    <span className="bg-white/20 px-3 py-1 rounded-full">👤 {selectedOrder.customer_name}</span>
+                  </p>
+                )}
                 <p className="text-sm opacity-90">{new Date(selectedOrder.created_at).toLocaleString('es-HN')}</p>
                 {/* Current Status Badge */}
                 <div className={`mt-2 inline-block px-3 py-1 rounded-full text-sm font-black ${

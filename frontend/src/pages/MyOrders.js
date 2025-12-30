@@ -195,27 +195,28 @@ const MyOrders = () => {
                 </div>
 
                 {/* Order Items */}
-                <div className="px-5 py-4 space-y-3">
+                <div className="px-5 py-4 space-y-4">
                   {order.items && order.items.map((item, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className="w-14 h-14 bg-stone-700 rounded-xl overflow-hidden flex-shrink-0">
+                    <div key={index} className="flex flex-col items-center bg-stone-700/30 rounded-xl p-4">
+                      {/* Centered Product Image */}
+                      <div className="w-24 h-24 bg-stone-700 rounded-2xl overflow-hidden mb-3 shadow-lg">
                         {item.image_url ? (
                           <img src={item.image_url} alt={item.product_name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Package className="w-6 h-6 text-stone-500" />
+                            <Package className="w-10 h-10 text-stone-500" />
                           </div>
                         )}
                       </div>
                       
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium truncate">{item.product_name}</p>
-                        <p className="text-stone-500 text-sm">x{item.quantity}</p>
+                      {/* Product Info */}
+                      <div className="text-center">
+                        <p className="text-white font-bold text-lg">{item.product_name}</p>
+                        <p className="text-stone-400 text-sm">Cantidad: {item.quantity}</p>
+                        <p className="text-red-400 font-black text-xl mt-1">
+                          L{(item.price * item.quantity).toFixed(2)}
+                        </p>
                       </div>
-                      
-                      <p className="text-white font-bold">
-                        L{(item.price * item.quantity).toFixed(2)}
-                      </p>
                     </div>
                   ))}
                 </div>

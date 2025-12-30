@@ -139,7 +139,7 @@ const Header = ({ user, title, subtitle }) => {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-80 bg-stone-800 rounded-2xl shadow-2xl border border-stone-700 overflow-hidden z-50">
+            <div className="absolute right-0 mt-2 w-80 bg-stone-800 rounded-2xl shadow-2xl border border-stone-700 overflow-hidden z-[9999]">
               {/* User Info Header */}
               <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4">
                 <div className="flex items-center gap-3">
