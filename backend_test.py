@@ -544,6 +544,135 @@ print('Cleaned up test data for user: {self.user_id}');
         except Exception as e:
             self.log_result("Cleanup", False, f"Error during cleanup: {str(e)}")
     
+    def test_notifications_endpoint(self):
+        """Test GET /api/notifications endpoint"""
+        print("\n=== Testing Notifications Endpoint ===")
+        
+        if not self.session_token:
+            self.log_result("Notifications - No Auth", False, "No session token available")
+            return
+        
+        url = f"{BACKEND_URL}/notifications"
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 404:
+                self.log_result("Notifications - Endpoint Missing", False, "GET /api/notifications endpoint not implemented")
+            elif response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_result("Notifications - Success", True, f"Retrieved {len(data)} notifications")
+                else:
+                    self.log_result("Notifications - Invalid Format", False, "Response is not a list", data)
+            else:
+                self.log_result("Notifications - Error", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Notifications - Request Failed", False, f"Request failed: {str(e)}")
+    
+    def test_orders_with_customer_name(self):
+        """Test GET /api/orders returns orders with customer_name field"""
+        print("\n=== Testing Orders with Customer Name ===")
+        
+        if not self.session_token:
+            self.log_result("Orders - Customer Name", False, "No session token available")
+            return
+        
+        url = f"{BACKEND_URL}/orders"
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    if len(data) > 0:
+                        # Check if orders have required fields including customer_name
+                        required_fields = ['order_id', 'customer_name', 'items', 'total', 'status', 'created_at']
+                        order = data[0]
+                        missing_fields = [field for field in required_fields if field not in order]
+                        
+                        if not missing_fields:
+                            self.log_result("Orders - Customer Name Field", True, f"Orders contain customer_name field. Found {len(data)} orders")
+                        else:
+                            self.log_result("Orders - Customer Name Field", False, f"Orders missing required fields: {missing_fields}")
+                    else:
+                        self.log_result("Orders - Customer Name Field", True, "No orders found (empty list)")
+                else:
+                    self.log_result("Orders - Customer Name Field", False, "Response is not a list", data)
+            else:
+                self.log_result("Orders - Customer Name Field", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Orders - Customer Name Field", False, f"Request failed: {str(e)}")
+    
+    def test_order_creation_with_customer_name(self):
+        """Test POST /api/orders accepts customer_name field"""
+        print("\n=== Testing Order Creation with Customer Name ===")
+        
+        if not self.session_token:
+            self.log_result("Order Creation - Customer Name", False, "No session token available")
+            return
+        
+        url = f"{BACKEND_URL}/orders"
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        
+        # Order data with customer_name field
+        order_data = {
+            "customer_name": "Carmen Delgado",
+            "pulperia_id": "pulperia_test_001",
+            "items": [
+                {
+                    "product_id": "prod_test_001",
+                    "product_name": "Frijoles Rojos 1lb",
+                    "quantity": 2,
+                    "price": 28.50,
+                    "pulperia_id": "pulperia_test_001",
+                    "pulperia_name": "La Pulpería de Carmen"
+                }
+            ],
+            "total": 57.00,
+            "order_type": "pickup"
+        }
+        
+        try:
+            response = requests.post(url, json=order_data, headers=headers, timeout=10)
+            
+            if response.status_code == 200 or response.status_code == 201:
+                data = response.json()
+                # Verify the order was created with customer_name
+                if 'customer_name' in data and data['customer_name'] == order_data['customer_name']:
+                    required_fields = ['order_id', 'customer_name', 'items', 'total', 'status', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in data]
+                    
+                    if not missing_fields:
+                        self.log_result("Order Creation - Customer Name", True, f"Order created successfully with customer_name: {data['customer_name']}")
+                    else:
+                        self.log_result("Order Creation - Customer Name", False, f"Order missing required fields: {missing_fields}")
+                else:
+                    self.log_result("Order Creation - Customer Name", False, "Order created but customer_name field missing or incorrect")
+            else:
+                self.log_result("Order Creation - Customer Name", False, f"Status: {response.status_code}", response.text)
+                
+        except requests.exceptions.RequestException as e:
+            self.log_result("Order Creation - Customer Name", False, f"Request failed: {str(e)}")
+    
+    def test_notification_system_requirements(self):
+        """Test the order notification system requirements"""
+        print("\n=== Testing Order Notification System ===")
+        
+        # Test 1: Check if notifications endpoint exists
+        self.test_notifications_endpoint()
+        
+        # Test 2: Verify orders include customer_name field
+        self.test_orders_with_customer_name()
+        
+        # Test 3: Test order creation with customer_name
+        self.test_order_creation_with_customer_name()
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🧪 Starting La Pulpería Backend API Tests")
@@ -568,6 +697,9 @@ print('Cleaned up test data for user: {self.user_id}');
         
         # Test shopping cart functionality (before logout to maintain session)
         self.test_shopping_cart_functionality()
+        
+        # Test notification system requirements
+        self.test_notification_system_requirements()
         
         # Test logout last
         self.test_auth_logout_endpoint()
