@@ -391,9 +391,8 @@ print('Email: ' + email);
         """Test order creation schema accepts multi-store items"""
         print("\n--- Testing Order Creation Schema ---")
         
-        # Create a fresh session for this test since logout invalidated the previous one
-        if not self.create_test_user_and_session():
-            self.log_result("Cart - Order Schema", False, "Failed to create test session for order creation")
+        if not self.session_token:
+            self.log_result("Cart - Order Schema", False, "No session token available for authenticated test")
             return
         
         url = f"{BACKEND_URL}/orders"
