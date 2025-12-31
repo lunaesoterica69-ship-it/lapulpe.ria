@@ -796,25 +796,70 @@ const PulperiaDashboard = () => {
             Crear Mi Pulpería
           </Button>
         ) : (
-          <div className="bg-stone-900 rounded-xl p-4 flex items-center gap-4 border border-stone-800">
-            {selectedPulperia.logo_url && (
-              <img
-                src={selectedPulperia.logo_url}
-                alt={selectedPulperia.name}
-                className="w-12 h-12 rounded-full object-cover border-2 border-red-500"
-              />
-            )}
-            <div className="flex-1">
-              <p className="text-xs text-stone-500 mb-0.5">Pulpería Activa</p>
-              <p className="text-lg font-bold text-white">{selectedPulperia?.name}</p>
+          <div className="bg-stone-900 rounded-xl p-4 border border-stone-800">
+            <div className="flex items-center gap-4">
+              {selectedPulperia.logo_url && (
+                <img
+                  src={selectedPulperia.logo_url}
+                  alt={selectedPulperia.name}
+                  className="w-12 h-12 rounded-full object-cover border-2 border-red-500"
+                />
+              )}
+              <div className="flex-1">
+                <p className="text-xs text-stone-500 mb-0.5">Pulpería Activa</p>
+                <p className="text-lg font-bold text-white">{selectedPulperia?.name}</p>
+              </div>
+              <Button
+                onClick={handleEditPulperia}
+                className="bg-stone-800 hover:bg-stone-700 text-white border border-stone-700"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Editar
+              </Button>
             </div>
-            <Button
-              onClick={handleEditPulperia}
-              className="bg-stone-800 hover:bg-stone-700 text-white border border-stone-700"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Editar
-            </Button>
+            
+            {/* Share Link Section */}
+            <div className="mt-4 pt-4 border-t border-stone-800">
+              <div className="flex items-center gap-2 mb-2">
+                <Share2 className="w-4 h-4 text-red-400" />
+                <p className="text-sm font-medium text-white">Compartir Mi Pulpería</p>
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1 bg-stone-800 rounded-lg px-3 py-2 text-sm text-stone-400 truncate border border-stone-700">
+                  {window.location.origin}/p/{selectedPulperia.pulperia_id}
+                </div>
+                <Button
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/p/${selectedPulperia.pulperia_id}`;
+                    navigator.clipboard.writeText(shareUrl);
+                    toast.success('¡Link copiado!');
+                  }}
+                  className="bg-red-600 hover:bg-red-500 text-white px-3"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+                <Button
+                  onClick={() => {
+                    const shareUrl = `${window.location.origin}/p/${selectedPulperia.pulperia_id}`;
+                    if (navigator.share) {
+                      navigator.share({
+                        title: selectedPulperia.name,
+                        text: `¡Visita ${selectedPulperia.name} en La Pulpería!`,
+                        url: shareUrl
+                      });
+                    } else {
+                      window.open(shareUrl, '_blank');
+                    }
+                  }}
+                  className="bg-stone-800 hover:bg-stone-700 text-white border border-stone-700 px-3"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-stone-500 mt-2">
+                Comparte este link con tus clientes. Al abrirlo, podrán ver tu pulpería e iniciar sesión.
+              </p>
+            </div>
           </div>
         )}
       </div>
