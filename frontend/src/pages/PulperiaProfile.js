@@ -566,6 +566,15 @@ const PulperiaProfile = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Image Viewer Modal */}
+      {viewingImage && (
+        <ImageViewerModal 
+          imageUrl={viewingImage.url} 
+          productName={viewingImage.name} 
+          onClose={() => setViewingImage(null)} 
+        />
+      )}
+
       <BottomNav user={user} cartCount={cartCount} />
     </div>
   );
