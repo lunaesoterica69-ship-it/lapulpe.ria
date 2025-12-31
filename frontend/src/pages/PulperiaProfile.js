@@ -202,21 +202,74 @@ const PulperiaProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
-      {/* Header */}
-      <div className="relative h-56" style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}cc 50%, #1c1917 100%)` }}>
-        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-black/30 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-black/50 transition-all">
+      {/* Banner - estilo X/Facebook */}
+      <div className="relative h-40 md:h-48 overflow-hidden">
+        {pulperia.banner_url ? (
+          <img 
+            src={pulperia.banner_url} 
+            alt="Banner" 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div 
+            className="w-full h-full"
+            style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}99 50%, #1c1917 100%)` }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent" />
+        
+        <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-black/60 transition-all z-10">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        
-        {pulperia.logo_url && (
-          <div className="absolute -bottom-14 left-6">
-            <img src={pulperia.logo_url} alt={pulperia.name} className="w-28 h-28 rounded-2xl border-4 border-stone-800 shadow-2xl object-cover" />
+      </div>
+
+      {/* Profile Photo - Clickeable */}
+      <div className="relative px-6 -mt-16">
+        {pulperia.logo_url ? (
+          <button 
+            onClick={() => setShowLogoModal(true)}
+            className="relative group"
+          >
+            <img 
+              src={pulperia.logo_url} 
+              alt={pulperia.name} 
+              className="w-28 h-28 rounded-2xl border-4 border-stone-800 shadow-2xl object-cover cursor-pointer hover:scale-105 transition-transform"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-2xl transition-colors flex items-center justify-center">
+              <Image className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+          </button>
+        ) : (
+          <div 
+            className="w-28 h-28 rounded-2xl border-4 border-stone-800 shadow-2xl flex items-center justify-center"
+            style={{ backgroundColor: bgColor }}
+          >
+            <Package className="w-12 h-12 text-white/70" />
           </div>
         )}
       </div>
 
+      {/* Logo Modal */}
+      <Dialog open={showLogoModal} onOpenChange={setShowLogoModal}>
+        <DialogContent className="bg-transparent border-0 shadow-none max-w-3xl">
+          <div className="relative">
+            <button 
+              onClick={() => setShowLogoModal(false)}
+              className="absolute -top-12 right-0 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img 
+              src={pulperia.logo_url} 
+              alt={pulperia.name} 
+              className="w-full max-h-[80vh] object-contain rounded-2xl"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Info */}
-      <div className="px-6 pt-18 pb-4" style={{ paddingTop: pulperia.logo_url ? '4.5rem' : '1.5rem' }}>
+      <div className="px-6 pt-4 pb-4">
         <h1 className={`text-2xl ${fontClass} text-white`}>{pulperia.name}</h1>
         
         {pulperia.rating > 0 && (
