@@ -61,6 +61,7 @@ const PulperiaDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
+  const [adminMessages, setAdminMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPulperiaDialog, setShowPulperiaDialog] = useState(false);
   const [showProductDialog, setShowProductDialog] = useState(false);
@@ -71,6 +72,7 @@ const PulperiaDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [announcementForm, setAnnouncementForm] = useState({ content: '', image_url: '', tags: '' });
+  const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
   
   // WebSocket message handler - Silencioso, solo actualiza datos
   const handleWebSocketMessage = useCallback((data) => {
