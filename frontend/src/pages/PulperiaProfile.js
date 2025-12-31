@@ -292,18 +292,19 @@ const PulperiaProfile = () => {
 
       {/* Tabs */}
       <div className="px-4 mb-4">
-        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50">
-          {['products', 'empleos', 'reviews'].map(tab => (
+        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50 overflow-x-auto">
+          {['products', 'anuncios', 'empleos', 'reviews'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-bold transition-all ${
+              className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
                 activeTab === tab ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' : 'text-stone-400 hover:text-white'
               }`}
             >
-              {tab === 'products' ? `Productos (${products.length})` : 
-               tab === 'empleos' ? `Empleos (${jobs.length})` : 
-               `Reviews (${reviews.length})`}
+              {tab === 'products' ? `Productos` : 
+               tab === 'anuncios' ? `Anuncios` :
+               tab === 'empleos' ? `Empleos` : 
+               `Reviews`}
             </button>
           ))}
         </div>
