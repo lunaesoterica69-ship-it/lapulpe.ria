@@ -629,6 +629,42 @@ const PulperiaDashboard = () => {
     }
   };
 
+  const handleCreateAnnouncement = async (e) => {
+    e.preventDefault();
+    try {
+      const tagsArray = announcementForm.tags ? announcementForm.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+      await axios.post(
+        `${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}/announcements`,
+        null,
+        { 
+          params: {
+            content: announcementForm.content,
+            image_url: announcementForm.image_url || null,
+            tags: tagsArray
+          },
+          withCredentials: true 
+        }
+      );
+      toast.success('Anuncio publicado');
+      setShowAnnouncementDialog(false);
+      await fetchPulperiaData(selectedPulperia.pulperia_id);
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+      toast.error(getErrorMessage(error, 'Error al publicar anuncio'));
+    }
+  };
+
+  const handleDeleteAnnouncement = async (announcementId) => {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/announcements/${announcementId}`, { withCredentials: true });
+      toast.success('Anuncio eliminado');
+      await fetchPulperiaData(selectedPulperia.pulperia_id);
+    } catch (error) {
+      console.error('Error deleting announcement:', error);
+      toast.error('Error al eliminar anuncio');
+    }
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       pending: 'bg-yellow-400',
