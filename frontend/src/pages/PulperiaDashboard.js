@@ -956,6 +956,72 @@ const PulperiaDashboard = () => {
               </div>
             )}
           </div>
+
+          {/* Announcements Section - Muro de Anuncios */}
+          <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-black text-white flex items-center gap-2">
+                <Megaphone className="w-5 h-5 text-orange-400" />
+                Muro de Anuncios
+              </h2>
+              <Button
+                onClick={() => {
+                  setAnnouncementForm({ content: '', image_url: '', tags: '' });
+                  setShowAnnouncementDialog(true);
+                }}
+                size="sm"
+                className="bg-orange-600 text-white hover:bg-orange-500"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Publicar
+              </Button>
+            </div>
+            
+            <p className="text-sm text-stone-400 mb-4">
+              Publica anuncios con fotos que aparecerán en tu perfil. Promociona ofertas, eventos o novedades.
+            </p>
+            
+            {announcements.length === 0 ? (
+              <div className="text-center py-8 bg-stone-700/30 rounded-xl border border-stone-600">
+                <Megaphone className="w-12 h-12 mx-auto text-stone-500 mb-3" />
+                <p className="text-stone-400">No tienes anuncios publicados</p>
+                <Button
+                  onClick={() => {
+                    setAnnouncementForm({ content: '', image_url: '', tags: '' });
+                    setShowAnnouncementDialog(true);
+                  }}
+                  className="mt-3 bg-orange-600 text-white hover:bg-orange-500"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Anuncio
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {announcements.map(announcement => (
+                  <div key={announcement.announcement_id} className="bg-stone-700/30 rounded-xl overflow-hidden border border-stone-600">
+                    {announcement.image_url && (
+                      <img src={announcement.image_url} alt="Anuncio" className="w-full h-40 object-cover" />
+                    )}
+                    <div className="p-4">
+                      <p className="text-white">{announcement.content}</p>
+                      <div className="flex justify-between items-center mt-3">
+                        <span className="text-xs text-stone-500">
+                          {new Date(announcement.created_at).toLocaleDateString('es-HN')}
+                        </span>
+                        <button
+                          onClick={() => handleDeleteAnnouncement(announcement.announcement_id)}
+                          className="p-2 text-red-400 hover:bg-stone-600 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
