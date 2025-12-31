@@ -1,4 +1,4 @@
-import { ArrowRight, Store } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import AnimatedBackground from '../components/AnimatedBackground';
 
 // Logo minimalista
@@ -24,10 +24,21 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 overflow-hidden">
+    <div className="min-h-screen bg-stone-950 overflow-hidden relative">
+      {/* Nebula Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Red nebula glow */}
+        <div className="absolute top-1/4 left-1/4 w-[800px] h-[800px] bg-red-600/20 rounded-full blur-[150px]"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-red-500/15 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-orange-600/10 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-red-800/10 rounded-full blur-[80px]"></div>
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-red-700/10 rounded-full blur-[60px]"></div>
+      </div>
+
+      {/* Animated Particles */}
       <AnimatedBackground />
 
-      {/* Main Content - Centered */}
+      {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
         <div className="text-center">
           {/* Logo + Title */}
@@ -64,7 +75,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Footer simple */}
+      {/* Footer */}
       <footer className="absolute bottom-0 left-0 right-0 z-10 px-6 py-4">
         <div className="flex items-center justify-center gap-4 text-stone-600 text-xs">
           <span>© 2024 La Pulpería</span>
