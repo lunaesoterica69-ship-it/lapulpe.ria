@@ -787,6 +787,60 @@ async def toggle_product_availability(product_id: str, authorization: Optional[s
     return await db.products.find_one({"product_id": product_id}, {"_id": 0})
 
 # ============================================
+# FAVORITES ENDPOINTS
+# ============================================
+
+@api_router.get("/favorites")
+async def get_favorites(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get user's favorite pulperias"""
+    user = await get_current_user(authorization, session_token)
+    
+    favorites = await db.favorites.find({"user_id": user.user_id}, {"_id": 0}).to_list(100)
+    pulperia_ids = [f["pulperia_id"] for f in favorites]
+    
+    if not pulperia_ids:
+        return []
+    
+    pulperias = await db.pulperias.find({"pulperia_id": {"$in": pulperia_ids}}, {"_id": 0}).to_list(100)
+    return pulperias
+
+@api_router.post("/favorites/{pulperia_id}")
+async def add_favorite(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Add a pulperia to favorites"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    existing = await db.favorites.find_one({"user_id": user.user_id, "pulperia_id": pulperia_id})
+    if existing:
+        return {"message": "Ya está en favoritos", "is_favorite": True}
+    
+    await db.favorites.insert_one({
+        "user_id": user.user_id,
+        "pulperia_id": pulperia_id,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    })
+    
+    return {"message": "Agregado a favoritos", "is_favorite": True}
+
+@api_router.delete("/favorites/{pulperia_id}")
+async def remove_favorite(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Remove a pulperia from favorites"""
+    user = await get_current_user(authorization, session_token)
+    
+    await db.favorites.delete_one({"user_id": user.user_id, "pulperia_id": pulperia_id})
+    return {"message": "Eliminado de favoritos", "is_favorite": False}
+
+@api_router.get("/favorites/{pulperia_id}/check")
+async def check_favorite(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Check if a pulperia is in favorites"""
+    user = await get_current_user(authorization, session_token)
+    
+    existing = await db.favorites.find_one({"user_id": user.user_id, "pulperia_id": pulperia_id})
+    return {"is_favorite": existing is not None}
+
 # ORDER ENDPOINTS
 # ============================================
 
