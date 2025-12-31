@@ -1112,9 +1112,9 @@ async def delete_service(service_id: str, authorization: Optional[str] = Header(
 # ============================================
 
 AD_PLANS = {
-    "basico": {"price": 50, "duration": 7, "name": "Básico", "features": ["Aparece en lista destacada"]},
-    "destacado": {"price": 100, "duration": 15, "name": "Destacado", "features": ["Aparece primero en búsquedas", "Badge destacado"]},
-    "premium": {"price": 200, "duration": 30, "name": "Premium", "features": ["Aparece primero", "Badge premium", "Banner en inicio"]}
+    "basico": {"price": 200, "duration": 7, "name": "Básico", "features": ["Aparece en lista destacada"]},
+    "destacado": {"price": 400, "duration": 15, "name": "Destacado", "features": ["Aparece primero en búsquedas", "Badge destacado"]},
+    "premium": {"price": 600, "duration": 30, "name": "Premium", "features": ["Aparece primero", "Badge premium", "Banner en inicio"]}
 }
 
 @api_router.get("/ads/plans")
