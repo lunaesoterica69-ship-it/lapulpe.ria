@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image } from 'lucide-react';
+import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import AnimatedBackground from '../components/AnimatedBackground';
@@ -37,6 +37,37 @@ const PulperiaProfile = () => {
   const [activeTab, setActiveTab] = useState('products');
   const [showLogoModal, setShowLogoModal] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [togglingFavorite, setTogglingFavorite] = useState(false);
+
+  // Check if favorite
+  const checkFavorite = useCallback(async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/favorites/${id}/check`, { withCredentials: true });
+      setIsFavorite(response.data.is_favorite);
+    } catch (e) { /* ignore */ }
+  }, [id]);
+
+  // Toggle favorite
+  const toggleFavorite = async () => {
+    if (togglingFavorite) return;
+    setTogglingFavorite(true);
+    try {
+      if (isFavorite) {
+        await axios.delete(`${BACKEND_URL}/api/favorites/${id}`, { withCredentials: true });
+        setIsFavorite(false);
+        toast.success('Eliminado de favoritos');
+      } else {
+        await axios.post(`${BACKEND_URL}/api/favorites/${id}`, {}, { withCredentials: true });
+        setIsFavorite(true);
+        toast.success('Agregado a favoritos');
+      }
+    } catch (error) {
+      toast.error('Error al actualizar favoritos');
+    } finally {
+      setTogglingFavorite(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +93,9 @@ const PulperiaProfile = () => {
         } catch (e) {
           setAnnouncements([]);
         }
+        
+        // Check if favorite
+        checkFavorite();
         
         const userReview = reviewsRes.data.find(r => r.user_id === userRes.data.user_id);
         setHasReviewed(!!userReview);
