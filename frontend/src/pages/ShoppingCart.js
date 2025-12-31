@@ -5,6 +5,7 @@ import { ShoppingCart, Trash2, Plus, Minus, Package, Store, User } from 'lucide-
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

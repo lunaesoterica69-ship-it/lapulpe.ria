@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Package, Clock, CheckCircle, XCircle, ShoppingBag, User } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
+import AnimatedBackground from '../components/AnimatedBackground';
 import useWebSocket from '../hooks/useWebSocket';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
