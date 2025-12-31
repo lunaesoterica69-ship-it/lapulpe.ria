@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
-// Simple floating dots animation - Grok style
-// Clean, minimal, elegant floating particles
+// Starfield animation - Grok style
+// Clean, minimal, elegant floating stars with twinkle effect
 const AnimatedBackground = ({ variant = "default", color = "red" }) => {
   const canvasRef = useRef(null);
 
-  const colorConfig = {
+  const colorConfig = useMemo(() => ({
     red: { r: 239, g: 68, b: 68 },
-    blue: { r: 59, g: 130, b: 246 }
-  };
+    blue: { r: 59, g: 130, b: 246 },
+    white: { r: 255, g: 255, b: 255 }
+  }), []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,7 +17,7 @@ const AnimatedBackground = ({ variant = "default", color = "red" }) => {
 
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    let particles = [];
+    const particles = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -25,28 +26,63 @@ const AnimatedBackground = ({ variant = "default", color = "red" }) => {
     resize();
     window.addEventListener('resize', resize);
 
-    class Particle {
+    // Star particle class
+    class Star {
       constructor() {
+        this.reset();
+      }
+
+      reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.5 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.15;
-        this.speedY = (Math.random() - 0.5) * 0.15;
-        this.opacity = Math.random() * 0.4 + 0.1;
+        this.size = Math.random() * 1.8 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.08;
+        this.speedY = (Math.random() - 0.5) * 0.08;
+        this.baseOpacity = Math.random() * 0.5 + 0.2;
+        this.opacity = this.baseOpacity;
+        this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+        this.twinklePhase = Math.random() * Math.PI * 2;
+        this.isStar = Math.random() > 0.7; // 30% are stars with twinkle
       }
 
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
 
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
+        // Wrap around screen
+        if (this.x < -10) this.x = canvas.width + 10;
+        if (this.x > canvas.width + 10) this.x = -10;
+        if (this.y < -10) this.y = canvas.height + 10;
+        if (this.y > canvas.height + 10) this.y = -10;
+
+        // Twinkle effect for stars
+        if (this.isStar) {
+          this.twinklePhase += this.twinkleSpeed;
+          this.opacity = this.baseOpacity + Math.sin(this.twinklePhase) * 0.3;
+        }
       }
 
       draw() {
-        const baseColor = colorConfig[color] || colorConfig.red;
+        const baseColor = colorConfig[color] || colorConfig.white;
+        
+        if (this.isStar && this.size > 1) {
+          // Draw star shape for larger particles
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.beginPath();
+          for (let i = 0; i < 4; i++) {
+            ctx.moveTo(0, 0);
+            const angle = (i * Math.PI) / 2;
+            const len = this.size * 2;
+            ctx.lineTo(Math.cos(angle) * len, Math.sin(angle) * len);
+          }
+          ctx.strokeStyle = `rgba(${baseColor.r}, ${baseColor.g}, ${baseColor.b}, ${this.opacity * 0.5})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          ctx.restore();
+        }
+        
+        // Draw dot
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${baseColor.r}, ${baseColor.g}, ${baseColor.b}, ${this.opacity})`;
@@ -54,12 +90,21 @@ const AnimatedBackground = ({ variant = "default", color = "red" }) => {
       }
     }
 
-    const count = variant === 'minimal' ? 50 : 100;
+    // Create particles - fewer for better performance
+    const count = variant === 'minimal' ? 40 : 70;
     for (let i = 0; i < count; i++) {
-      particles.push(new Particle());
+      particles.push(new Star());
     }
 
-    const animate = () => {
+    let lastTime = 0;
+    const animate = (timestamp) => {
+      // Throttle to ~30fps for better performance
+      if (timestamp - lastTime < 33) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         p.update();
@@ -67,18 +112,20 @@ const AnimatedBackground = ({ variant = "default", color = "red" }) => {
       });
       animationFrameId = requestAnimationFrame(animate);
     };
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [color, variant]);
+  }, [color, variant, colorConfig]);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <canvas ref={canvasRef} className="absolute inset-0" />
-    </div>
+    <canvas 
+      ref={canvasRef} 
+      className="fixed inset-0 pointer-events-none z-0"
+      style={{ willChange: 'auto' }}
+    />
   );
 };
 
