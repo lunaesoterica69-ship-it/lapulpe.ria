@@ -58,19 +58,16 @@ export const useWebSocket = (userId, onMessage) => {
           // Send browser notifications for important events
           if (data.type === 'order_update') {
             const { event: orderEvent, order, target } = data;
+            const pulperiaName = order.pulperia_name || 'tu pulpería';
             
             // Notification for pulperia owners - new order
             if (orderEvent === 'new_order' && target === 'owner') {
-              notifyNewOrder(
-                order.customer_name,
-                order.total?.toFixed(0) || '0',
-                order.pulperia_name || 'tu pulpería'
-              );
+              notifyNewOrder(order, pulperiaName);
             }
             
             // Notification for customers - status changes
             if (target === 'customer' && ['accepted', 'ready', 'completed'].includes(order.status)) {
-              notifyOrderStatusChange(order.status, order.pulperia_name || 'La Pulpería');
+              notifyOrderStatusChange(order.status, pulperiaName, order);
             }
           }
           
