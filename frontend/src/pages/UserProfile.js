@@ -87,6 +87,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+      <AnimatedBackground variant="minimal" />
       {/* Header */}
       <div className="bg-gradient-to-br from-red-800 to-red-900 text-white px-6 py-10 text-center">
         {user?.picture ? (
