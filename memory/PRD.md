@@ -7,11 +7,11 @@ Aplicación web para conectar pulperías hondureñas con clientes locales. Permi
 https://pulpito-delivery.preview.emergentagent.com
 
 ## Design System
-- **Fondo**: stone-950 con efecto nebulosa roja (blur gradients)
-- **Animación**: Estrellas flotantes con efecto twinkle (estilo Grok) - 30fps optimizado
-- **Scrollbar**: Personalizado oscuro
+- **Fondo**: stone-950 con efecto nebulosa roja (CSS puro, sin JavaScript)
+- **Estrellas**: CSS gradients estáticos - ultra ligero
+- **Lazy Loading**: Todas las páginas excepto LandingPage cargan bajo demanda
+- **Tiempo de carga**: ~0.7 segundos en landing page
 - **Colores primarios**: Red-500/600 para acentos, stone tones para fondos
-- **z-index**: Notificaciones en 9999 para siempre estar visibles
 
 ## Mascota "Pulpero"
 - Componente animado SVG: `/app/frontend/src/components/Pulpero.js`
