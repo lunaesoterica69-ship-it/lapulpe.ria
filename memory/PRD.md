@@ -1,127 +1,90 @@
 # La Pulpería - Product Requirements Document
 
 ## Original Problem Statement
-Crear una aplicación web para pulperías hondureñas con las siguientes características:
-- Google OAuth para autenticación
-- Sistema de roles (clientes y pulperías)
-- Mapa interactivo para localizar pulperías
-- Catálogo de productos con búsqueda
-- Sistema de pedidos y carrito de compras
-- Panel de administración para gestión de la plataforma
-- Sistema de empleos y servicios ("Chamba")
-- Anuncios y promociones para pulperías
+Aplicación web para pulperías hondureñas con Google OAuth, sistema de roles, mapa interactivo, catálogo de productos, sistema de pedidos, panel de administración, y sección de empleos/servicios ("Chamba").
 
-## User Personas
-1. **Cliente**: Persona que busca productos en pulperías cercanas
-2. **Pulpería**: Dueño de tienda que quiere vender sus productos
-3. **Admin**: Administrador de la plataforma (onol4sco05@gmail.com)
+## Design System - Estilo Grok
+- **Fondo**: stone-950 (oscuro sólido, sin gradientes)
+- **Animación**: Partículas flotantes simples (puntitos, sin brillo)
+- **Colores**: Rojo para app general, Azul para sección Chamba
+- **UI**: Minimalista, limpia, sin sombras excesivas
+- **Tipografía**: Pesos normales, sin negritas excesivas
 
-## Core Requirements
+## Core Features
 
 ### Authentication
-- Google OAuth integration
-- Session-based authentication with cookies
-- Role-based access (client/pulperia/admin)
-- **Admin password protection**: AlEjA127
+- Google OAuth
+- Admin panel protegido con contraseña: `AlEjA127`
+
+### Admin Features (solo onol4sco05@gmail.com)
+- Precios: L.200 (básico), L.400 (destacado), L.600 (premium)
+- Baneo temporal: 1, 3, 7, 30 días
+- Badges en español: Novato, En Ascenso, En Llamas, Élite, Campeón, Legendario, Verificado, Socio Oficial
+- Mensajes a pulperías (pestaña especial en dashboard)
 
 ### Pulperia Features
-- Profile with logo, banner (adjusted for visibility), and description
-- Product catalog management
-- Order management dashboard
-- Announcements wall
-- Reviews system
-- **Admin messages tab** in notifications
-
-### Client Features
-- Search products across all pulperias
-- Interactive map to find nearby stores
-- Shopping cart and checkout
-- Order history
-- Notifications system
-
-### Admin Features
-- View all pulperias
-- Activate/deactivate advertising plans (L.200, L.400, L.600)
-- **Temporary ban/unban** stores with reason and duration
-- **Gaming-style badges in Spanish**: Novato, En Ascenso, En Llamas, Élite, Campeón, Legendario, Verificado, Socio Oficial
-- Send direct messages to pulperias (received in special tab)
-- **Password protected panel**
+- Banner visible en dashboard (como lo ve el cliente)
+- Pestaña "Mensajes del Admin" en notificaciones
 
 ---
 
-## What's Been Implemented
+## Implemented (December 31, 2025)
 
-### Session: December 31, 2025
+### UI Refresh - Estilo Grok
+- [x] AnimatedBackground: Partículas simples flotantes (sin brillo)
+- [x] Landing page: Minimalista, centrada, limpia
+- [x] Header: Simplificado, backdrop-blur-sm
+- [x] BottomNav: Simplificado, iconos más pequeños
+- [x] MapView: Fondo sólido, botones simples
+- [x] SearchProducts: Estilo consistente
+- [x] JobsServices: Tema azul con partículas azules
 
-#### Latest Changes
-- [x] **Badges en español**: 8 badges gaming-style traducidos
-- [x] **Banner visible para dueño**: Preview del banner en dashboard
-- [x] **Animaciones**: Rojo para app general, Azul para sección de empleos
-- [x] **Precios actualizados**: L.200, L.400, L.600
-- [x] **Admin panel con contraseña**: AlEjA127
-- [x] **Mensajes del admin**: Pestaña especial en notificaciones de pulpería
-- [x] **Baneo temporal**: Con duración en días (1, 3, 7, 30)
-- [x] **Banner ajustado**: object-center para mejor visualización
-- [x] **Eliminado**: Concepto de buscador de chamba/toggle
+### Admin Panel
+- [x] Contraseña requerida: AlEjA127
+- [x] Badges en español
+- [x] Baneo temporal con duración
+- [x] Mensajes a pulperías
+- [x] Precios actualizados
 
-#### Previous Session
-- [x] **Banner URL Fix**: Fixed bug where `banner_url` wasn't saving
-- [x] **Advanced Admin Panel**: Complete rewrite with gaming-style badges
-- [x] **Jobs/Services Page Redesign**: Blue theme
-
----
-
-## API Endpoints
-
-### Public
-- `GET /api/pulperias` - List all stores
-- `GET /api/products` - List all products
-- `GET /api/jobs` - List all jobs
-- `GET /api/services` - List all services
-- `GET /api/ads/plans` - Get ad plans (200, 400, 600 HNL)
-
-### Admin Only (password protected)
-- `GET /api/admin/pulperias` - All stores
-- `POST /api/admin/pulperias/{id}/suspend?reason=X&days=7` - Temp ban
-- `POST /api/admin/pulperias/{id}/unsuspend` - Remove ban
-- `POST /api/admin/pulperias/{id}/badge?badge=novato` - Assign badge
-- `POST /api/admin/pulperias/{id}/message?message=X` - Send message
-
-### Pulperia
-- `GET /api/pulperias/{id}/admin-messages` - Get admin messages
+### Pulperia Dashboard
+- [x] Preview del banner visible
+- [x] Pestaña "Mensajes del Admin"
 
 ---
+
+## API Pricing
+- Básico: L.200 / 7 días
+- Destacado: L.400 / 15 días  
+- Premium: L.600 / 30 días
 
 ## Badge System (Spanish)
-| ID | Name | Description |
-|----|------|-------------|
-| novato | Novato | Nuevo en la plataforma |
-| en_ascenso | En Ascenso | Creciendo rápidamente |
-| en_llamas | En Llamas | Muy activo |
-| elite | Élite | Vendedor destacado |
-| campeon | Campeón | Top vendedor |
-| legendario | Legendario | Leyenda viviente |
-| verificado | Verificado | Verificado oficialmente |
-| socio | Socio Oficial | Socio de La Pulpería |
+| ID | Name | Icon |
+|----|------|------|
+| novato | Novato | Star |
+| en_ascenso | En Ascenso | Zap |
+| en_llamas | En Llamas | Flame |
+| elite | Élite | Gem |
+| campeon | Campeón | Trophy |
+| legendario | Legendario | Crown |
+| verificado | Verificado | Check |
+| socio | Socio Oficial | Target |
 
 ---
 
-## Prioritized Backlog
+## Backlog
 
-### P1 - Next Priority
-- [ ] Edit/Delete Announcements for pulperias
+### P1
+- [ ] Editar/Eliminar Anuncios
 
-### P2 - Medium Priority
-- [ ] Map fullscreen/resize button
+### P2
+- [ ] Botón fullscreen mapa
 
-### P3 - Future Features
+### P3
 - [ ] Push notifications
-- [ ] Payment integration
-- [ ] Analytics dashboard
+- [ ] Pagos integrados
 
 ---
 
 ## Credentials
-- Admin Email: `onol4sco05@gmail.com`
-- Admin Panel Password: `AlEjA127`
-- Authentication: Google OAuth
+- Admin: onol4sco05@gmail.com
+- Admin Password: AlEjA127
