@@ -167,19 +167,20 @@ const MapView = () => {
 
   if (loading || !userLocation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-red-900">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
-          <p className="mt-4 text-white/80 font-medium">Cargando mapa...</p>
+      <div className="min-h-screen flex items-center justify-center bg-stone-950">
+        <AnimatedBackground />
+        <div className="text-center relative z-10">
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-red-500 mx-auto"></div>
+          <p className="mt-4 text-stone-500 font-medium">Cargando mapa...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+    <div className="min-h-screen bg-stone-950 pb-24">
       <AnimatedBackground variant="minimal" />
-      {/* Header with Profile Dropdown */}
+      
       <Header 
         user={user} 
         title="Pulperías Cercanas" 
@@ -187,7 +188,7 @@ const MapView = () => {
       />
 
       {/* Search and Filters */}
-      <div className="bg-gradient-to-b from-stone-800 to-transparent text-white px-4 pb-4">
+      <div className="relative z-10 px-4 py-4">
         {/* Radius Selector */}
         <div className="mb-3">
           <div className="flex gap-2">
@@ -195,10 +196,10 @@ const MapView = () => {
               <button
                 key={r}
                 onClick={() => setRadius(r)}
-                className={`flex-1 py-2 rounded-xl font-bold text-sm transition-all ${
+                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
                   radius === r 
-                    ? 'bg-red-500 text-white shadow-lg shadow-red-900/50' 
-                    : 'bg-stone-700/50 hover:bg-stone-600 text-stone-300 border border-stone-600'
+                    ? 'bg-red-600 text-white' 
+                    : 'bg-stone-900 border border-stone-800 text-stone-400 hover:text-white'
                 }`}
               >
                 {r} km
@@ -216,12 +217,12 @@ const MapView = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="Buscar pulpería..."
-            className="flex-1 bg-stone-700/50 text-white border border-stone-600 focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-400"
+            className="flex-1 bg-stone-900 text-white border border-stone-800 focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-600"
           />
           <button
             data-testid="search-button"
             onClick={handleSearch}
-            className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400 font-bold px-5 rounded-xl transition-all shadow-lg shadow-red-900/30"
+            className="bg-red-600 hover:bg-red-500 text-white font-medium px-5 rounded-xl transition-colors"
           >
             Buscar
           </button>
