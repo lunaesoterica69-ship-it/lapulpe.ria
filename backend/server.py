@@ -1318,8 +1318,49 @@ async def admin_deactivate_ad(ad_id: str, authorization: Optional[str] = Header(
     return {"message": "Anuncio desactivado"}
 
 @api_router.post("/admin/pulperias/{pulperia_id}/suspend")
-async def admin_suspend_pulperia(pulperia_id: str, reason: str = "", authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    """Admin: Suspend a pulperia"""
+async def admin_suspend_pulperia(pulperia_id: str, reason: str = "", days: int = 7, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Suspend a pulperia temporarily"""
+    admin = await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    suspend_until = datetime.now(timezone.utc) + timedelta(days=days)
+    
+    await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": {
+            "is_suspended": True, 
+            "suspension_reason": reason, 
+            "suspended_by": admin.email, 
+            "suspended_at": datetime.now(timezone.utc).isoformat(),
+            "suspend_until": suspend_until.isoformat(),
+            "suspend_days": days
+        }}
+    )
+    
+    # Create admin message to notify pulperia
+    message_id = f"msg_{uuid.uuid4().hex[:12]}"
+    message_doc = {
+        "message_id": message_id,
+        "pulperia_id": pulperia_id,
+        "pulperia_name": pulperia["name"],
+        "from_admin": True,
+        "sender": admin.email,
+        "message": f"Tu pulpería ha sido suspendida por {days} días. Razón: {reason or 'No especificada'}. Podrás volver a operar el {suspend_until.strftime('%d/%m/%Y')}.",
+        "read": False,
+        "is_system_message": True,
+        "message_type": "suspension",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.admin_messages.insert_one(message_doc)
+    
+    return {"message": f"Pulpería suspendida por {days} días"}
+
+@api_router.post("/admin/pulperias/{pulperia_id}/unsuspend")
+async def admin_unsuspend_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Unsuspend a pulperia"""
     admin = await get_admin_user(authorization, session_token)
     
     pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
@@ -1328,20 +1369,24 @@ async def admin_suspend_pulperia(pulperia_id: str, reason: str = "", authorizati
     
     await db.pulperias.update_one(
         {"pulperia_id": pulperia_id},
-        {"$set": {"is_suspended": True, "suspension_reason": reason, "suspended_by": admin.email, "suspended_at": datetime.now(timezone.utc).isoformat()}}
+        {"$set": {"is_suspended": False, "suspension_reason": None, "suspend_until": None, "suspend_days": None}}
     )
     
-    return {"message": "Pulpería suspendida"}
-
-@api_router.post("/admin/pulperias/{pulperia_id}/unsuspend")
-async def admin_unsuspend_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    """Admin: Unsuspend a pulperia"""
-    await get_admin_user(authorization, session_token)
-    
-    await db.pulperias.update_one(
-        {"pulperia_id": pulperia_id},
-        {"$set": {"is_suspended": False, "suspension_reason": None}}
-    )
+    # Create admin message to notify pulperia
+    message_id = f"msg_{uuid.uuid4().hex[:12]}"
+    message_doc = {
+        "message_id": message_id,
+        "pulperia_id": pulperia_id,
+        "pulperia_name": pulperia["name"],
+        "from_admin": True,
+        "sender": admin.email,
+        "message": "¡Tu pulpería ha sido reactivada! Ya puedes volver a operar normalmente.",
+        "read": False,
+        "is_system_message": True,
+        "message_type": "reactivation",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.admin_messages.insert_one(message_doc)
     
     return {"message": "Pulpería reactivada"}
 
