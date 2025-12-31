@@ -146,6 +146,7 @@ const PulperiaDashboard = () => {
     lat: '',
     lng: '',
     logo_url: '',
+    banner_url: '',
     title_font: 'default',
     background_color: '#DC2626'
   });
