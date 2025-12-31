@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
+import AnimatedBackground from '../components/AnimatedBackground';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
@@ -202,6 +203,8 @@ const PulperiaProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+      <AnimatedBackground variant="minimal" />
+      
       {/* Banner - estilo X/Facebook */}
       <div className="relative h-40 md:h-48 overflow-hidden">
         {pulperia.banner_url ? (
