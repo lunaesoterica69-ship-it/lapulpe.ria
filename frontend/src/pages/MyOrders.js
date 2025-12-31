@@ -74,7 +74,7 @@ const MyOrders = () => {
           gainNode.gain.value = 0.15;
           oscillator.start();
           oscillator.stop(audioContext.currentTime + 0.2);
-        } catch (e) {}
+        } catch (e) { /* Audio might fail silently */ }
       }
       
       if (event === 'status_changed' || event === 'ready') {
