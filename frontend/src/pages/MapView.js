@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { MapPin, Store as StoreIcon, Phone, Star, Crown, Sparkles, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
+import AnimatedBackground from '../components/AnimatedBackground';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
