@@ -538,9 +538,15 @@ async def update_pulperia(pulperia_id: str, pulperia_data: PulperiaCreate, autho
     if pulperia["owner_user_id"] != user.user_id:
         raise HTTPException(status_code=403, detail="No tienes permiso para editar esta pulpería")
     
+    # Get all data including None values to properly update
+    update_data = pulperia_data.model_dump(exclude_unset=False)
+    
+    # Log for debugging
+    logger.info(f"[PULPERIA UPDATE] Updating {pulperia_id} with banner_url: {update_data.get('banner_url', 'NOT SET')}")
+    
     await db.pulperias.update_one(
         {"pulperia_id": pulperia_id},
-        {"$set": pulperia_data.model_dump()}
+        {"$set": update_data}
     )
     
     return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
