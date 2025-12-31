@@ -32,8 +32,8 @@ export const sendBrowserNotification = (title, options = {}) => {
       ...options
     });
 
-    // Auto-cerrar después de 5 segundos
-    setTimeout(() => notification.close(), 5000);
+    // Auto-cerrar después de 8 segundos
+    setTimeout(() => notification.close(), 8000);
 
     // Click handler
     notification.onclick = () => {
@@ -47,35 +47,50 @@ export const sendBrowserNotification = (title, options = {}) => {
 };
 
 // Notificaciones específicas para La Pulpería
-export const notifyNewOrder = (customerName, total, pulperiaName) => {
-  sendBrowserNotification(`🛒 ¡Nuevo Pedido!`, {
-    body: `${customerName} hizo un pedido por L${total} en ${pulperiaName}`,
+export const notifyNewOrder = (order, pulperiaName) => {
+  const items = order.items || [];
+  const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const itemSummary = items.slice(0, 3).map(i => `${i.quantity || 1}x ${i.product_name}`).join(', ');
+  const extraItems = items.length > 3 ? ` +${items.length - 3} más` : '';
+  
+  sendBrowserNotification(`🛒 ¡Nuevo Pedido en ${pulperiaName}!`, {
+    body: `${order.customer_name || 'Cliente'}: ${itemSummary}${extraItems}\nTotal: L${(order.total || 0).toFixed(0)} (${totalItems} productos)`,
     tag: 'new-order',
     renotify: true
   });
 };
 
-export const notifyOrderReady = (pulperiaName) => {
+export const notifyOrderReady = (pulperiaName, order) => {
+  const items = order?.items || [];
+  const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  
   sendBrowserNotification(`✅ ¡Tu orden está lista!`, {
-    body: `${pulperiaName} tiene tu pedido listo para recoger`,
+    body: `${pulperiaName} tiene tu pedido listo para recoger\n${totalItems} productos • L${(order?.total || 0).toFixed(0)}`,
     tag: 'order-ready',
     renotify: true
   });
 };
 
-export const notifyOrderAccepted = (pulperiaName) => {
+export const notifyOrderAccepted = (pulperiaName, order) => {
+  const items = order?.items || [];
+  const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  
   sendBrowserNotification(`👨‍🍳 Preparando tu orden`, {
-    body: `${pulperiaName} está preparando tu pedido`,
+    body: `${pulperiaName} está preparando tu pedido\n${totalItems} productos • L${(order?.total || 0).toFixed(0)}`,
     tag: 'order-accepted',
     renotify: true
   });
 };
 
-export const notifyOrderStatusChange = (status, pulperiaName) => {
+export const notifyOrderStatusChange = (status, pulperiaName, order) => {
+  const items = order?.items || [];
+  const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const totalStr = `${totalItems} productos • L${(order?.total || 0).toFixed(0)}`;
+  
   const messages = {
-    accepted: { title: '👨‍🍳 Preparando tu orden', body: `${pulperiaName} está preparando tu pedido` },
-    ready: { title: '✅ ¡Tu orden está lista!', body: `${pulperiaName} tiene tu pedido listo para recoger` },
-    completed: { title: '🎉 Orden completada', body: `Gracias por tu compra en ${pulperiaName}` }
+    accepted: { title: '👨‍🍳 Preparando tu orden', body: `${pulperiaName} está preparando tu pedido\n${totalStr}` },
+    ready: { title: '✅ ¡Tu orden está lista!', body: `${pulperiaName} tiene tu pedido listo para recoger\n${totalStr}` },
+    completed: { title: '🎉 Orden completada', body: `Gracias por tu compra en ${pulperiaName}\n${totalStr}` }
   };
 
   const msg = messages[status];
