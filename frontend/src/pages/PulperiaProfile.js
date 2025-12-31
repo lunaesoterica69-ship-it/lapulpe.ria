@@ -398,9 +398,17 @@ const PulperiaProfile = () => {
               const qty = getCartQuantity(product.product_id);
               return (
                 <div key={product.product_id} className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden hover:border-stone-700 transition-all group">
-                  <div className="h-36 bg-stone-800 flex items-center justify-center overflow-hidden">
+                  <div 
+                    className="h-36 bg-stone-800 flex items-center justify-center overflow-hidden relative cursor-pointer"
+                    onClick={() => product.image_url && setViewingImage({ url: product.image_url, name: product.name })}
+                  >
                     {product.image_url ? (
-                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <>
+                        <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                          <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                      </>
                     ) : (
                       <Package className="w-10 h-10 text-stone-700" />
                     )}
