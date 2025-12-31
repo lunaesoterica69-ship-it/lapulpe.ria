@@ -611,8 +611,13 @@ async def get_pulperia_announcements(pulperia_id: str):
     announcements = await db.announcements.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(50)
     return announcements
 
+class AnnouncementCreate(BaseModel):
+    content: str = ""
+    image_url: Optional[str] = None
+    tags: Optional[List[str]] = None
+
 @api_router.post("/pulperias/{pulperia_id}/announcements")
-async def create_announcement(pulperia_id: str, content: str = "", image_url: Optional[str] = None, tags: Optional[List[str]] = None, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+async def create_announcement(pulperia_id: str, data: AnnouncementCreate, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
     """Create an announcement for a pulperia"""
     user = await get_current_user(authorization, session_token)
     
@@ -627,9 +632,9 @@ async def create_announcement(pulperia_id: str, content: str = "", image_url: Op
     announcement_doc = {
         "announcement_id": announcement_id,
         "pulperia_id": pulperia_id,
-        "content": content,
-        "image_url": image_url,
-        "tags": tags or [],
+        "content": data.content,
+        "image_url": data.image_url,
+        "tags": data.tags or [],
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
