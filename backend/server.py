@@ -187,8 +187,12 @@ class PulperiaCreate(BaseModel):
     hours: Optional[str] = None
     image_url: Optional[str] = None
     logo_url: Optional[str] = None
+    banner_url: Optional[str] = None
     title_font: Optional[str] = "default"
     background_color: Optional[str] = "#DC2626"
+    badge: Optional[str] = None
+    is_suspended: Optional[bool] = False
+    suspension_reason: Optional[str] = None
 
 class ProductCreate(BaseModel):
     name: str
