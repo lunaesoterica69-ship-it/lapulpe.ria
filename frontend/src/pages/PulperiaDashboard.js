@@ -728,6 +728,8 @@ const PulperiaDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+      <AnimatedBackground variant="minimal" />
+      
       {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
@@ -735,8 +737,23 @@ const PulperiaDashboard = () => {
         subtitle={selectedPulperia ? `${newOrdersCount} orden(es) pendiente(s)` : 'Panel de Control'}
       />
       
+      {/* Banner Preview - Like customer sees it */}
+      {selectedPulperia?.banner_url && (
+        <div className="relative w-full h-40 overflow-hidden">
+          <img 
+            src={selectedPulperia.banner_url} 
+            alt="Banner" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
+          <div className="absolute bottom-3 left-4 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-lg">
+            <p className="text-xs text-white/70">Vista previa del banner</p>
+          </div>
+        </div>
+      )}
+      
       {/* Pulperia Info Section */}
-      <div className="bg-gradient-to-b from-stone-800 to-transparent text-white px-6 pb-6">
+      <div className={`bg-gradient-to-b from-stone-800 to-transparent text-white px-6 pb-6 ${selectedPulperia?.banner_url ? '-mt-8 relative z-10' : ''}`}>
         {pulperias.length === 0 ? (
           <Button
             data-testid="create-pulperia-button"
