@@ -202,7 +202,7 @@ const PulperiaProfile = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+    <div className="min-h-screen bg-stone-950 pb-24">
       <AnimatedBackground variant="minimal" />
       
       {/* Banner - estilo X/Facebook con imagen ajustada */}
