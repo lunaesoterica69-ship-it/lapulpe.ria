@@ -87,10 +87,9 @@ const SearchProducts = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+    <div className="min-h-screen bg-stone-950 pb-24">
       <AnimatedBackground variant="minimal" />
       
-      {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
         title="Buscar Productos" 
@@ -98,8 +97,7 @@ const SearchProducts = () => {
       />
       
       {/* Search Section */}
-      <div className="bg-gradient-to-b from-stone-800 to-transparent text-white px-4 pb-6">
-        {/* Search Bar */}
+      <div className="relative z-10 px-4 py-4">
         <div className="flex gap-2">
           <input
             data-testid="product-search-input"
@@ -108,13 +106,13 @@ const SearchProducts = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             placeholder="¿Qué estás buscando?"
-            className="flex-1 bg-stone-700/50 text-white border border-stone-600 focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-400"
+            className="flex-1 bg-stone-900 text-white border border-stone-800 focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-600"
           />
           <button
             data-testid="product-search-button"
             onClick={handleSearch}
             disabled={loading}
-            className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400 font-bold px-5 rounded-xl transition-all disabled:opacity-50 shadow-lg shadow-red-900/30"
+            className="bg-red-600 hover:bg-red-500 text-white font-medium px-5 rounded-xl transition-colors disabled:opacity-50"
           >
             {loading ? '...' : 'Buscar'}
           </button>
