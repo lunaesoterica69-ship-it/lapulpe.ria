@@ -33,7 +33,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/notifications`, { withCredentials: true });
         setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
-      } catch (error) {}
+      } catch (error) { /* Silently ignore notification fetch errors */ }
     };
     fetchCount();
     const interval = setInterval(fetchCount, 15000);
