@@ -1622,6 +1622,64 @@ const PulperiaDashboard = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Create Announcement Dialog */}
+      <Dialog open={showAnnouncementDialog} onOpenChange={setShowAnnouncementDialog}>
+        <DialogContent className="max-w-md bg-stone-900 border-stone-700">
+          <DialogHeader>
+            <DialogTitle className="text-white flex items-center gap-2">
+              <Megaphone className="w-5 h-5 text-orange-400" />
+              Crear Anuncio
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateAnnouncement} className="space-y-4">
+            <div>
+              <Label className="text-white">Contenido del anuncio *</Label>
+              <Textarea
+                required
+                value={announcementForm.content}
+                onChange={(e) => setAnnouncementForm({ ...announcementForm, content: e.target.value })}
+                placeholder="Escribe tu anuncio aquí... ofertas, promociones, novedades"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
+                rows={4}
+              />
+            </div>
+            
+            <div>
+              <Label className="text-white">URL de imagen (opcional)</Label>
+              <Input
+                value={announcementForm.image_url}
+                onChange={(e) => setAnnouncementForm({ ...announcementForm, image_url: e.target.value })}
+                placeholder="https://ejemplo.com/imagen.jpg"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
+              />
+              <p className="text-xs text-stone-500 mt-1">Sube tu imagen a un servicio como imgur.com y pega el link aquí</p>
+            </div>
+            
+            <div>
+              <Label className="text-white">Tags (separados por coma)</Label>
+              <Input
+                value={announcementForm.tags}
+                onChange={(e) => setAnnouncementForm({ ...announcementForm, tags: e.target.value })}
+                placeholder="oferta, nuevo, promoción"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
+              />
+            </div>
+            
+            <div className="bg-orange-900/30 rounded-lg p-3 text-sm text-orange-300 border border-orange-700/50">
+              <p>📢 Tu anuncio aparecerá en:</p>
+              <ul className="list-disc list-inside mt-1 text-xs text-orange-400">
+                <li>Tu perfil de pulpería (sección Anuncios)</li>
+                <li>Visible para todos los clientes</li>
+              </ul>
+            </div>
+            
+            <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-500">
+              Publicar Anuncio
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <BottomNav user={user} />
     </div>
   );
