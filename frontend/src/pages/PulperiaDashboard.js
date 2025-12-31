@@ -275,6 +275,7 @@ const PulperiaDashboard = () => {
         website: pulperiaForm.website,
         hours: pulperiaForm.hours,
         logo_url: pulperiaForm.logo_url,
+        banner_url: pulperiaForm.banner_url,
         title_font: pulperiaForm.title_font,
         background_color: pulperiaForm.background_color,
         location: {
