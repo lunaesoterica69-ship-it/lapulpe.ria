@@ -119,7 +119,8 @@ const PulperiaProfile = () => {
         price: product.price,
         quantity: 1,
         pulperia_id: id,
-        pulperia_name: pulperia?.name || 'Pulpería'
+        pulperia_name: pulperia?.name || 'Pulpería',
+        image_url: product.image_url || null
       }];
     }
     
