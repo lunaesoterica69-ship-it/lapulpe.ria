@@ -932,7 +932,7 @@ const JobsServices = () => {
                   
                   {app.message && (
                     <p className="text-sm text-stone-400 mt-3 bg-stone-900/50 rounded-lg p-3 border border-stone-700">
-                      "{app.message}"
+                      &quot;{app.message}&quot;
                     </p>
                   )}
                   
