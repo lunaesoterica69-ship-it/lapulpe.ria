@@ -100,10 +100,6 @@ const AdminPanel = () => {
   const [selectedBadge, setSelectedBadge] = useState('');
   const [suspendReason, setSuspendReason] = useState('');
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
       const [userRes, pulperiasRes, adsRes, logsRes, messagesRes] = await Promise.all([
@@ -134,6 +130,11 @@ const AdminPanel = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleActivateAd = async (pulperiaId) => {
     try {
