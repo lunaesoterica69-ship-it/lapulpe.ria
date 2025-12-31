@@ -187,8 +187,12 @@ const ShoppingCartPage = () => {
                   <div className="divide-y divide-stone-800/50">
                     {group.items.map((item) => (
                       <div key={item.product_id} className="p-4 flex items-center gap-3">
-                        <div className="w-14 h-14 bg-stone-800 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Package className="w-6 h-6 text-stone-600" />
+                        <div className="w-16 h-16 bg-stone-800 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {item.image_url ? (
+                            <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <Package className="w-6 h-6 text-stone-600" />
+                          )}
                         </div>
                         
                         <div className="flex-1 min-w-0">
