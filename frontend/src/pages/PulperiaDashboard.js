@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
+import ImageUpload from '../components/ImageUpload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
