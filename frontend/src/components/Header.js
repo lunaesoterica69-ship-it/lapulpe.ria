@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
