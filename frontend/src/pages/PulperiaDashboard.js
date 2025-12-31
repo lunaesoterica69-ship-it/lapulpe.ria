@@ -1182,84 +1182,82 @@ const PulperiaDashboard = () => {
 
       {/* Create/Edit Pulperia Dialog */}
       <Dialog open={showPulperiaDialog} onOpenChange={setShowPulperiaDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-stone-900 border-stone-700">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black flex items-center gap-2">
-              <StoreIcon className="w-6 h-6 text-primary" />
+            <DialogTitle className="text-2xl font-black flex items-center gap-2 text-white">
+              <StoreIcon className="w-6 h-6 text-red-400" />
               {editingPulperia ? 'Editar Mi Pulpería' : 'Crear Nueva Pulpería'}
             </DialogTitle>
           </DialogHeader>
           
           <form onSubmit={handleCreatePulperia} className="space-y-6">
             {/* Section 1: Identidad del Negocio */}
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 border border-red-100">
-              <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2 text-lg">
+            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
+              <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-lg">
                 🏪 Identidad del Negocio
               </h3>
               
+              {/* Banner Upload con Vista Previa */}
+              <div className="mb-4">
+                <Label className="font-semibold text-white">Banner / Portada</Label>
+                <p className="text-xs text-stone-400 mb-2">Imagen rectangular para la cabecera de tu perfil (estilo Facebook/X)</p>
+                <ImageUpload
+                  value={pulperiaForm.banner_url}
+                  onChange={(url) => setPulperiaForm({ ...pulperiaForm, banner_url: url })}
+                  aspectRatio="banner"
+                  placeholder="Seleccionar banner"
+                  maxSize={5}
+                />
+              </div>
+              
               {/* Logo Upload */}
               <div className="mb-4">
-                <Label className="font-semibold">Logo de la Pulpería</Label>
-                <p className="text-xs text-stone-500 mb-2">Imagen cuadrada para mejor visualización</p>
+                <Label className="font-semibold text-white">Logo de la Pulpería</Label>
+                <p className="text-xs text-stone-400 mb-2">Imagen cuadrada para mejor visualización</p>
                 <div className="flex items-center gap-4">
-                  <div className="relative">
-                    {pulperiaForm.logo_url ? (
-                      <img
-                        src={pulperiaForm.logo_url}
-                        alt="Logo"
-                        className="w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 rounded-full bg-stone-200 flex items-center justify-center border-4 border-white shadow-lg">
-                        <span className="text-3xl">🏪</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      disabled={uploadingLogo}
-                      className="cursor-pointer"
-                    />
-                    {uploadingLogo && <p className="text-xs text-primary mt-1">Subiendo logo...</p>}
-                  </div>
+                  <ImageUpload
+                    value={pulperiaForm.logo_url}
+                    onChange={(url) => setPulperiaForm({ ...pulperiaForm, logo_url: url })}
+                    aspectRatio="square"
+                    placeholder="Seleccionar logo"
+                    maxSize={5}
+                  />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <Label className="font-semibold">Nombre del Negocio *</Label>
+                  <Label className="font-semibold text-white">Nombre del Negocio *</Label>
                   <Input
                     required
                     value={pulperiaForm.name}
                     onChange={(e) => setPulperiaForm({ ...pulperiaForm, name: e.target.value })}
                     placeholder="Ej: Pulpería Don José"
-                    className="text-lg"
+                    className="text-lg bg-stone-800 border-stone-600 text-white placeholder:text-stone-500"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <Label className="font-semibold">Descripción</Label>
+                  <Label className="font-semibold text-white">Descripción</Label>
                   <Textarea
                     value={pulperiaForm.description}
                     onChange={(e) => setPulperiaForm({ ...pulperiaForm, description: e.target.value })}
                     placeholder="Describe tu negocio, qué productos ofreces, qué te hace especial..."
                     rows={3}
+                    className="bg-stone-800 border-stone-600 text-white placeholder:text-stone-500"
                   />
                 </div>
               </div>
             </div>
 
             {/* Section 2: Ubicación y Contacto */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-100">
-              <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2 text-lg">
+            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
+              <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-lg">
                 📍 Ubicación y Contacto
               </h3>
               
               {/* Location */}
               <div className="mb-4">
-                <Label className="font-semibold">Ubicación GPS *</Label>
+                <Label className="font-semibold text-white">Ubicación GPS *</Label>
                 <div className="mt-2">
                   <Button
                     type="button"
