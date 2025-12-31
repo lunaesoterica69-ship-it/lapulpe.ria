@@ -1,22 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, RefreshCw, Shield, Sparkles } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, RefreshCw, Shield, Sparkles, ChevronRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const Header = ({ user, title, subtitle }) => {
+const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
+        setSelectedOrder(null);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -65,35 +69,44 @@ const Header = ({ user, title, subtitle }) => {
     }
   };
 
-  const getStatusIcon = (status, type) => {
-    if (type === 'admin_message') return <Shield className="w-4 h-4 text-blue-400" />;
-    switch (status) {
-      case 'pending': return <Clock className="w-4 h-4 text-amber-400" />;
-      case 'accepted': return <Sparkles className="w-4 h-4 text-blue-400" />;
-      case 'ready': return <CheckCircle className="w-4 h-4 text-green-400" />;
-      case 'cancelled': return <XCircle className="w-4 h-4 text-red-400" />;
-      default: return <Package className="w-4 h-4 text-stone-500" />;
+  const handleUpdateOrderStatus = async (orderId, newStatus) => {
+    setUpdatingStatus(true);
+    try {
+      await axios.put(`${BACKEND_URL}/api/orders/${orderId}/status`, 
+        { status: newStatus }, 
+        { withCredentials: true }
+      );
+      toast.success(`Orden ${newStatus === 'accepted' ? 'aceptada' : newStatus === 'ready' ? 'lista' : newStatus === 'completed' ? 'completada' : 'actualizada'}`);
+      setSelectedOrder(null);
+      fetchNotifications();
+      if (onOrderUpdate) onOrderUpdate();
+    } catch (error) {
+      toast.error('Error al actualizar');
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 
-  const getStatusText = (status, type) => {
-    if (type === 'admin_message') return 'Admin';
-    switch (status) {
-      case 'pending': return 'Nuevo';
-      case 'accepted': return 'Preparando';
-      case 'ready': return '¡Lista!';
-      default: return status;
-    }
+  const getStatusConfig = (status, type) => {
+    if (type === 'admin_message') return { icon: Shield, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30', label: 'Admin' };
+    const configs = {
+      pending: { icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30', label: 'Nueva' },
+      accepted: { icon: Sparkles, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30', label: 'Preparando' },
+      ready: { icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30', label: '¡Lista!' },
+      completed: { icon: CheckCircle, color: 'text-stone-400', bg: 'bg-stone-800', border: 'border-stone-700', label: 'Completada' },
+      cancelled: { icon: XCircle, color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30', label: 'Cancelada' }
+    };
+    return configs[status] || configs.pending;
   };
 
-  const getStatusBg = (status, type) => {
-    if (type === 'admin_message') return 'bg-blue-500/10 border-blue-500/30';
-    switch (status) {
-      case 'pending': return 'bg-amber-500/10 border-amber-500/30';
-      case 'accepted': return 'bg-blue-500/10 border-blue-500/30';
-      case 'ready': return 'bg-green-500/10 border-green-500/30';
-      default: return 'bg-stone-800 border-stone-700';
-    }
+  const getNextStatus = (currentStatus) => {
+    const flow = { pending: 'accepted', accepted: 'ready', ready: 'completed' };
+    return flow[currentStatus];
+  };
+
+  const getNextStatusLabel = (currentStatus) => {
+    const labels = { pending: 'Aceptar', accepted: 'Marcar Lista', ready: 'Completar' };
+    return labels[currentStatus];
   };
 
   return (
@@ -106,7 +119,7 @@ const Header = ({ user, title, subtitle }) => {
 
         <div className="relative" ref={dropdownRef}>
           <button
-            onClick={() => setShowDropdown(!showDropdown)}
+            onClick={() => { setShowDropdown(!showDropdown); setSelectedOrder(null); }}
             className="relative flex items-center gap-2 hover:bg-stone-800/50 rounded-full p-1.5 transition-all active:scale-95"
             data-testid="profile-dropdown-trigger"
           >
@@ -153,23 +166,79 @@ const Header = ({ user, title, subtitle }) => {
               </div>
 
               {/* Notifications */}
-              <div className="max-h-64 overflow-y-auto">
+              <div className="max-h-72 overflow-y-auto">
                 <div className="px-4 py-2 bg-stone-800/30 flex justify-between items-center sticky top-0 backdrop-blur-sm">
                   <p className="text-xs font-medium text-stone-400 flex items-center gap-1.5">
                     <Bell className="w-3 h-3" />
-                    Notificaciones
+                    {selectedOrder ? 'Gestionar Orden' : 'Notificaciones'}
                   </p>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); fetchNotifications(); }} 
-                    className="p-1.5 hover:bg-stone-700 rounded-lg transition-colors"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 text-stone-500 ${loading ? 'animate-spin' : ''}`} />
-                  </button>
+                  {selectedOrder ? (
+                    <button onClick={() => setSelectedOrder(null)} className="text-xs text-stone-500 hover:text-white">
+                      ← Volver
+                    </button>
+                  ) : (
+                    <button onClick={(e) => { e.stopPropagation(); fetchNotifications(); }} className="p-1.5 hover:bg-stone-700 rounded-lg transition-colors">
+                      <RefreshCw className={`w-3.5 h-3.5 text-stone-500 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
+                  )}
                 </div>
 
                 {loading ? (
                   <div className="p-6 text-center">
                     <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-red-500 border-r-transparent"></div>
+                  </div>
+                ) : selectedOrder ? (
+                  /* Order Detail View */
+                  <div className="p-4 space-y-4">
+                    <div className="text-center">
+                      <p className="text-white font-bold">Orden #{selectedOrder.order_id?.slice(-6)}</p>
+                      <p className="text-stone-500 text-xs">{selectedOrder.customer_name || 'Cliente'}</p>
+                    </div>
+                    
+                    {/* Items */}
+                    <div className="bg-stone-800/50 rounded-xl p-3 space-y-2">
+                      {selectedOrder.items?.slice(0, 3).map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-sm">
+                          <span className="text-stone-400">{item.quantity}x {item.product_name}</span>
+                          <span className="text-white">L{(item.price * item.quantity).toFixed(0)}</span>
+                        </div>
+                      ))}
+                      {selectedOrder.items?.length > 3 && (
+                        <p className="text-xs text-stone-500">+{selectedOrder.items.length - 3} más...</p>
+                      )}
+                      <div className="border-t border-stone-700 pt-2 flex justify-between">
+                        <span className="text-stone-400">Total</span>
+                        <span className="font-bold text-red-400">L{selectedOrder.total?.toFixed(0)}</span>
+                      </div>
+                    </div>
+
+                    {/* Status Actions */}
+                    {user?.user_type === 'pulperia' && getNextStatus(selectedOrder.status) && (
+                      <button
+                        onClick={() => handleUpdateOrderStatus(selectedOrder.order_id, getNextStatus(selectedOrder.status))}
+                        disabled={updatingStatus}
+                        className="w-full bg-red-600 hover:bg-red-500 disabled:bg-stone-700 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2"
+                      >
+                        {updatingStatus ? (
+                          <div className="w-4 h-4 border-2 border-white/30 rounded-full animate-spin border-t-white"></div>
+                        ) : (
+                          <>
+                            <CheckCircle className="w-4 h-4" />
+                            {getNextStatusLabel(selectedOrder.status)}
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {user?.user_type === 'pulperia' && selectedOrder.status === 'pending' && (
+                      <button
+                        onClick={() => handleUpdateOrderStatus(selectedOrder.order_id, 'cancelled')}
+                        disabled={updatingStatus}
+                        className="w-full bg-stone-800 hover:bg-stone-700 text-red-400 py-2 rounded-xl text-sm font-medium transition-all"
+                      >
+                        Cancelar Orden
+                      </button>
+                    )}
                   </div>
                 ) : notifications.length === 0 ? (
                   <div className="p-8 text-center">
@@ -180,49 +249,64 @@ const Header = ({ user, title, subtitle }) => {
                   </div>
                 ) : (
                   <div className="p-2 space-y-1.5">
-                    {notifications.slice(0, 6).map((n) => (
-                      <div
-                        key={n.id}
-                        onClick={() => { setShowDropdown(false); navigate(user?.user_type === 'pulperia' ? '/dashboard' : '/orders'); }}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] ${getStatusBg(n.status, n.type)}`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="mt-0.5">
-                            {getStatusIcon(n.status, n.type)}
+                    {notifications.slice(0, 6).map((n) => {
+                      const config = getStatusConfig(n.status, n.type);
+                      const Icon = config.icon;
+                      const isPulperia = user?.user_type === 'pulperia';
+                      const canManage = isPulperia && n.type !== 'admin_message' && ['pending', 'accepted', 'ready'].includes(n.status);
+                      
+                      return (
+                        <div
+                          key={n.id}
+                          onClick={() => {
+                            if (canManage) {
+                              setSelectedOrder(n);
+                            } else if (!isPulperia) {
+                              setShowDropdown(false);
+                              navigate('/orders');
+                            }
+                          }}
+                          className={`p-3 rounded-xl border cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] ${config.bg} ${config.border}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="mt-0.5">
+                              <Icon className={`w-4 h-4 ${config.color}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-white truncate">{n.title}</p>
+                              <p className="text-xs text-stone-400 truncate mt-0.5">{n.message}</p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full bg-stone-800 ${config.color}`}>
+                                {config.label}
+                              </span>
+                              {canManage && <ChevronRight className="w-3 h-3 text-stone-600" />}
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">{n.title}</p>
-                            <p className="text-xs text-stone-400 truncate mt-0.5">{n.message}</p>
-                          </div>
-                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                            n.status === 'ready' ? 'bg-green-500/20 text-green-400' :
-                            n.type === 'admin_message' ? 'bg-blue-500/20 text-blue-400' :
-                            'bg-stone-700 text-stone-400'
-                          }`}>
-                            {getStatusText(n.status, n.type)}
-                          </span>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
 
               {/* Actions */}
-              <div className="border-t border-stone-800 p-2 space-y-1">
-                <button
-                  onClick={() => { setShowDropdown(false); navigate('/profile'); }}
-                  className="w-full text-left px-3 py-2.5 text-sm text-stone-300 hover:bg-stone-800 rounded-xl flex items-center gap-2.5 transition-colors"
-                >
-                  <User className="w-4 h-4 text-stone-500" /> Mi Perfil
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 rounded-xl flex items-center gap-2.5 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" /> Cerrar Sesión
-                </button>
-              </div>
+              {!selectedOrder && (
+                <div className="border-t border-stone-800 p-2 space-y-1">
+                  <button
+                    onClick={() => { setShowDropdown(false); navigate('/profile'); }}
+                    className="w-full text-left px-3 py-2.5 text-sm text-stone-300 hover:bg-stone-800 rounded-xl flex items-center gap-2.5 transition-colors"
+                  >
+                    <User className="w-4 h-4 text-stone-500" /> Mi Perfil
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 rounded-xl flex items-center gap-2.5 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" /> Cerrar Sesión
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
