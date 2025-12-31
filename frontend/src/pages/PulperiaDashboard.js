@@ -889,71 +889,169 @@ const PulperiaDashboard = () => {
             )}
           </div>
 
-          {/* Orders Section */}
+          {/* Orders & Admin Messages Section */}
           <div>
-            <h2 className="text-2xl font-black text-white mb-4">Órdenes Recientes</h2>
+            <h2 className="text-2xl font-black text-white mb-4 flex items-center gap-2">
+              <Bell className="w-6 h-6 text-red-400" />
+              Notificaciones
+            </h2>
             
-            {orders.length === 0 ? (
-              <div className="text-center py-12 bg-stone-800/50 rounded-2xl border border-stone-700">
-                <Package className="w-16 h-16 mx-auto text-stone-600 mb-4" />
-                <p className="text-stone-400">No hay órdenes aún</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {orders.slice(0, 12).map((order) => (
-                  <div
-                    key={order.order_id}
-                    data-testid={`order-${order.order_id}`}
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      setShowOrderDialog(true);
-                    }}
-                    className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border-2 border-red-600 p-6 cursor-pointer hover:border-red-400 transition-all transform hover:-translate-y-1"
-                  >
-                    {/* Ticket Style Header */}
-                    <div className="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-3 -mx-6 -mt-6 mb-4 rounded-t-xl">
-                      <div className="flex justify-between items-center">
-                        <span className="font-black text-lg">ORDEN #{order.order_id.slice(-6)}</span>
-                        <div className={`${getStatusColor(order.status)} px-3 py-1 rounded-full text-xs font-black`}>
-                          {getStatusText(order.status)}
-                        </div>
-                      </div>
-                      {/* Customer Name */}
-                      {order.customer_name && (
-                        <div className="mt-2 flex items-center gap-2 text-white/90 text-sm">
-                          <span className="bg-white/20 px-2 py-0.5 rounded-full">👤 {order.customer_name}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Order Items */}
-                    <div className="space-y-2 mb-4">
-                      {order.items.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center border-b border-dashed border-stone-600 pb-2">
-                          <div>
-                            <span className="font-bold text-white">{item.quantity}x</span>
-                            <span className="ml-2 text-stone-300">{item.product_name}</span>
-                          </div>
-                          <span className="font-bold text-red-400">L{(item.price * item.quantity).toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Total */}
-                    <div className="bg-stone-700/50 rounded-lg p-3 mb-3 border border-stone-600">
-                      <div className="flex justify-between items-center">
-                        <span className="text-lg font-black text-white">TOTAL:</span>
-                        <span className="text-2xl font-black text-red-400">L {order.total.toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    {/* Time */}
-                    <div className="text-center text-xs text-stone-500">
-                      {new Date(order.created_at).toLocaleString('es-HN')}
-                    </div>
+            {/* Tabs for Orders and Admin Messages */}
+            <div className="flex bg-stone-800/50 rounded-xl p-1 mb-4 border border-stone-700/50">
+              <button
+                onClick={() => setActiveNotificationTab('orders')}
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+                  activeNotificationTab === 'orders'
+                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg'
+                    : 'text-stone-400 hover:text-white'
+                }`}
+              >
+                <Package className="w-4 h-4" />
+                Órdenes
+                {orders.filter(o => o.status === 'pending').length > 0 && (
+                  <span className="bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full font-bold">
+                    {orders.filter(o => o.status === 'pending').length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setActiveNotificationTab('admin')}
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+                  activeNotificationTab === 'admin'
+                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg'
+                    : 'text-stone-400 hover:text-white'
+                }`}
+              >
+                <Shield className="w-4 h-4" />
+                Mensajes del Admin
+                {adminMessages.filter(m => !m.read).length > 0 && (
+                  <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                    {adminMessages.filter(m => !m.read).length}
+                  </span>
+                )}
+              </button>
+            </div>
+            
+            {/* Orders Tab Content */}
+            {activeNotificationTab === 'orders' && (
+              <>
+                {orders.length === 0 ? (
+                  <div className="text-center py-12 bg-stone-800/50 rounded-2xl border border-stone-700">
+                    <Package className="w-16 h-16 mx-auto text-stone-600 mb-4" />
+                    <p className="text-stone-400">No hay órdenes aún</p>
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {orders.slice(0, 12).map((order) => (
+                      <div
+                        key={order.order_id}
+                        data-testid={`order-${order.order_id}`}
+                        onClick={() => {
+                          setSelectedOrder(order);
+                          setShowOrderDialog(true);
+                        }}
+                        className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border-2 border-red-600 p-6 cursor-pointer hover:border-red-400 transition-all transform hover:-translate-y-1"
+                      >
+                        {/* Ticket Style Header */}
+                        <div className="bg-gradient-to-r from-red-700 to-red-600 text-white px-4 py-3 -mx-6 -mt-6 mb-4 rounded-t-xl">
+                          <div className="flex justify-between items-center">
+                            <span className="font-black text-lg">ORDEN #{order.order_id.slice(-6)}</span>
+                            <div className={`${getStatusColor(order.status)} px-3 py-1 rounded-full text-xs font-black`}>
+                              {getStatusText(order.status)}
+                            </div>
+                          </div>
+                          {/* Customer Name */}
+                          {order.customer_name && (
+                            <div className="mt-2 flex items-center gap-2 text-white/90 text-sm">
+                              <span className="bg-white/20 px-2 py-0.5 rounded-full">👤 {order.customer_name}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Order Items */}
+                        <div className="space-y-2 mb-4">
+                          {order.items.map((item, index) => (
+                            <div key={index} className="flex justify-between items-center border-b border-dashed border-stone-600 pb-2">
+                              <div>
+                                <span className="font-bold text-white">{item.quantity}x</span>
+                                <span className="ml-2 text-stone-300">{item.product_name}</span>
+                              </div>
+                              <span className="font-bold text-red-400">L{(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Total */}
+                        <div className="bg-stone-700/50 rounded-lg p-3 mb-3 border border-stone-600">
+                          <div className="flex justify-between items-center">
+                            <span className="text-lg font-black text-white">TOTAL:</span>
+                            <span className="text-2xl font-black text-red-400">L {order.total.toFixed(2)}</span>
+                          </div>
+                        </div>
+
+                        {/* Time */}
+                        <div className="text-center text-xs text-stone-500">
+                          {new Date(order.created_at).toLocaleString('es-HN')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+            
+            {/* Admin Messages Tab Content */}
+            {activeNotificationTab === 'admin' && (
+              <>
+                {adminMessages.length === 0 ? (
+                  <div className="text-center py-12 bg-stone-800/50 rounded-2xl border border-stone-700">
+                    <MessageSquare className="w-16 h-16 mx-auto text-stone-600 mb-4" />
+                    <p className="text-stone-400">No hay mensajes del administrador</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {adminMessages.map((msg) => (
+                      <div
+                        key={msg.message_id}
+                        className={`bg-stone-800/50 backdrop-blur-sm rounded-2xl border p-5 transition-all ${
+                          msg.read ? 'border-stone-700/50' : 'border-blue-500/50 bg-blue-500/5'
+                        }`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            msg.message_type === 'suspension' ? 'bg-red-500/20' :
+                            msg.message_type === 'reactivation' ? 'bg-green-500/20' :
+                            'bg-blue-500/20'
+                          }`}>
+                            {msg.message_type === 'suspension' ? (
+                              <Shield className="w-6 h-6 text-red-400" />
+                            ) : msg.message_type === 'reactivation' ? (
+                              <Shield className="w-6 h-6 text-green-400" />
+                            ) : (
+                              <MessageSquare className="w-6 h-6 text-blue-400" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-bold text-white flex items-center gap-2">
+                                Administrador
+                                {!msg.read && (
+                                  <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">Nuevo</span>
+                                )}
+                              </span>
+                              <span className="text-xs text-stone-500 flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {new Date(msg.created_at).toLocaleString('es-HN')}
+                              </span>
+                            </div>
+                            <p className="text-stone-300">{msg.message}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
 
