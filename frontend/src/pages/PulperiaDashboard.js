@@ -1301,271 +1301,278 @@ const PulperiaDashboard = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Create/Edit Pulperia Dialog */}
+      {/* Create/Edit Pulperia Dialog - Panel de Personalización Renovado */}
       <Dialog open={showPulperiaDialog} onOpenChange={setShowPulperiaDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-stone-900 border-stone-700">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-stone-950 border-stone-800">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black flex items-center gap-2 text-white">
-              <StoreIcon className="w-6 h-6 text-red-400" />
-              {editingPulperia ? 'Editar Mi Pulpería' : 'Crear Nueva Pulpería'}
+            <DialogTitle className="text-xl font-bold flex items-center gap-3 text-white">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center">
+                <StoreIcon className="w-5 h-5 text-white" />
+              </div>
+              {editingPulperia ? 'Personalizar Mi Pulpería' : 'Crear Nueva Pulpería'}
             </DialogTitle>
           </DialogHeader>
           
-          <form onSubmit={handleCreatePulperia} className="space-y-6">
-            {/* Section 1: Identidad del Negocio */}
-            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
-              <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-lg">
-                🏪 Identidad del Negocio
-              </h3>
-              
-              {/* Banner Upload con Vista Previa */}
-              <div className="mb-4">
-                <Label className="font-semibold text-white">Banner / Portada</Label>
-                <p className="text-xs text-stone-400 mb-2">Imagen rectangular para la cabecera de tu perfil (estilo Facebook/X)</p>
-                <ImageUpload
-                  value={pulperiaForm.banner_url}
-                  onChange={(url) => setPulperiaForm({ ...pulperiaForm, banner_url: url })}
-                  aspectRatio="banner"
-                  placeholder="Seleccionar banner"
-                  maxSize={5}
-                />
+          <form onSubmit={handleCreatePulperia} className="space-y-5 mt-2">
+            
+            {/* Vista Previa en Vivo - Siempre visible arriba */}
+            <div className="rounded-2xl overflow-hidden border border-stone-800 bg-stone-900">
+              {/* Banner Preview */}
+              <div 
+                className="h-24 relative"
+                style={{ 
+                  backgroundColor: pulperiaForm.background_color || '#DC2626',
+                  backgroundImage: pulperiaForm.banner_url ? `url(${pulperiaForm.banner_url})` : 'none',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent" />
               </div>
               
-              {/* Logo Upload */}
-              <div className="mb-4">
-                <Label className="font-semibold text-white">Logo de la Pulpería</Label>
-                <p className="text-xs text-stone-400 mb-2">Imagen cuadrada para mejor visualización</p>
-                <div className="flex items-center gap-4">
-                  <ImageUpload
-                    value={pulperiaForm.logo_url}
-                    onChange={(url) => setPulperiaForm({ ...pulperiaForm, logo_url: url })}
-                    aspectRatio="square"
-                    placeholder="Seleccionar logo"
-                    maxSize={5}
-                  />
+              {/* Profile Section */}
+              <div className="px-4 pb-4 -mt-10 relative">
+                <div className="flex items-end gap-3">
+                  {pulperiaForm.logo_url ? (
+                    <img
+                      src={pulperiaForm.logo_url}
+                      alt="Logo"
+                      className="w-16 h-16 rounded-xl object-cover border-4 border-stone-900 shadow-lg"
+                    />
+                  ) : (
+                    <div 
+                      className="w-16 h-16 rounded-xl border-4 border-stone-900 flex items-center justify-center shadow-lg"
+                      style={{ backgroundColor: pulperiaForm.background_color || '#DC2626' }}
+                    >
+                      <StoreIcon className="w-7 h-7 text-white/80" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0 pb-1">
+                    <h3 className={`text-lg text-white truncate ${FONT_OPTIONS.find(f => f.value === pulperiaForm.title_font)?.preview || 'font-black'}`}>
+                      {pulperiaForm.name || 'Nombre de tu Pulpería'}
+                    </h3>
+                    <p className="text-xs text-stone-500 truncate">
+                      {pulperiaForm.address || 'Tu dirección aparecerá aquí'}
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Sección 1: Información Básica */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-red-500/20 flex items-center justify-center">
+                  <StoreIcon className="w-3.5 h-3.5 text-red-400" />
+                </div>
+                Información Básica
+              </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <Label className="font-semibold text-white">Nombre del Negocio *</Label>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <Label className="text-stone-300 text-sm">Nombre del Negocio *</Label>
                   <Input
                     required
                     value={pulperiaForm.name}
                     onChange={(e) => setPulperiaForm({ ...pulperiaForm, name: e.target.value })}
                     placeholder="Ej: Pulpería Don José"
-                    className="text-lg bg-stone-800 border-stone-600 text-white placeholder:text-stone-500"
+                    className="mt-1.5 bg-stone-900 border-stone-700 text-white placeholder:text-stone-600 focus:border-red-500 focus:ring-red-500/20"
                   />
                 </div>
-                <div className="md:col-span-2">
-                  <Label className="font-semibold text-white">Descripción</Label>
+                <div>
+                  <Label className="text-stone-300 text-sm">Descripción</Label>
                   <Textarea
                     value={pulperiaForm.description}
                     onChange={(e) => setPulperiaForm({ ...pulperiaForm, description: e.target.value })}
-                    placeholder="Describe tu negocio, qué productos ofreces, qué te hace especial..."
-                    rows={3}
-                    className="bg-stone-800 border-stone-600 text-white placeholder:text-stone-500"
+                    placeholder="Cuéntale a tus clientes qué te hace especial..."
+                    rows={2}
+                    className="mt-1.5 bg-stone-900 border-stone-700 text-white placeholder:text-stone-600 focus:border-red-500 resize-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Section 2: Ubicación y Contacto */}
-            <div className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
-              <h3 className="font-bold text-white mb-4 flex items-center gap-2 text-lg">
-                📍 Ubicación y Contacto
+            {/* Sección 2: Imágenes */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <Image className="w-3.5 h-3.5 text-blue-400" />
+                </div>
+                Imágenes
               </h3>
               
-              {/* Location */}
-              <div className="mb-4">
-                <Label className="font-semibold text-white">Ubicación GPS *</Label>
-                <div className="mt-2">
-                  <Button
-                    type="button"
-                    onClick={getCurrentLocation}
-                    disabled={gettingLocation}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-2"
-                  >
-                    {gettingLocation ? (
-                      <>
-                        <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
-                        Obteniendo ubicación...
-                      </>
-                    ) : (
-                      <>📍 {pulperiaForm.lat ? 'Actualizar' : 'Obtener'} Mi Ubicación Actual</>
-                    )}
-                  </Button>
-                  
-                  {pulperiaForm.lat && pulperiaForm.lng && (
-                    <div className="bg-green-100 border border-green-300 rounded-lg p-3">
-                      <p className="text-green-800 font-semibold flex items-center gap-2">
-                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        Ubicación obtenida correctamente
-                      </p>
-                      <p className="text-green-700 text-xs mt-1">
-                        📍 {parseFloat(pulperiaForm.lat).toFixed(6)}, {parseFloat(pulperiaForm.lng).toFixed(6)}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {!pulperiaForm.lat && !editingPulperia && (
-                    <p className="text-xs text-orange-600 mt-1">⚠️ Debes obtener tu ubicación para crear la pulpería</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <Label className="font-semibold">Dirección *</Label>
-                  <Input
-                    required
-                    value={pulperiaForm.address}
-                    onChange={(e) => setPulperiaForm({ ...pulperiaForm, address: e.target.value })}
-                    placeholder="Ej: Col. Kennedy, 3ra calle, casa #123"
-                  />
-                  <p className="text-xs text-stone-500 mt-1">Esta dirección se autocompleta al obtener tu ubicación</p>
-                </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="font-semibold">Teléfono</Label>
-                  <Input
-                    value={pulperiaForm.phone}
-                    onChange={(e) => setPulperiaForm({ ...pulperiaForm, phone: e.target.value })}
-                    placeholder="+504 9999-9999"
+                  <Label className="text-stone-300 text-sm mb-1.5 block">Logo</Label>
+                  <ImageUpload
+                    value={pulperiaForm.logo_url}
+                    onChange={(url) => setPulperiaForm({ ...pulperiaForm, logo_url: url })}
+                    aspectRatio="square"
+                    placeholder="Subir logo"
+                    maxSize={5}
                   />
                 </div>
                 <div>
-                  <Label className="font-semibold">Email</Label>
-                  <Input
-                    type="email"
-                    value={pulperiaForm.email}
-                    onChange={(e) => setPulperiaForm({ ...pulperiaForm, email: e.target.value })}
-                    placeholder="contacto@mipulperia.com"
-                  />
-                </div>
-                <div>
-                  <Label className="font-semibold">Página Web</Label>
-                  <Input
-                    type="url"
-                    value={pulperiaForm.website}
-                    onChange={(e) => setPulperiaForm({ ...pulperiaForm, website: e.target.value })}
-                    placeholder="https://www.mipulperia.com"
-                  />
-                </div>
-                <div>
-                  <Label className="font-semibold">Horario de Atención</Label>
-                  <Input
-                    value={pulperiaForm.hours}
-                    onChange={(e) => setPulperiaForm({ ...pulperiaForm, hours: e.target.value })}
-                    placeholder="Lun-Sáb 7am-8pm, Dom 8am-2pm"
+                  <Label className="text-stone-300 text-sm mb-1.5 block">Banner</Label>
+                  <ImageUpload
+                    value={pulperiaForm.banner_url}
+                    onChange={(url) => setPulperiaForm({ ...pulperiaForm, banner_url: url })}
+                    aspectRatio="banner"
+                    placeholder="Subir banner"
+                    maxSize={5}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Section 3: Personalización Visual */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
-              <h3 className="font-bold text-stone-800 mb-4 flex items-center gap-2 text-lg">
-                <Palette className="w-5 h-5" />
-                Personalización Visual
+            {/* Sección 3: Ubicación */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-green-500/20 flex items-center justify-center">
+                  <MapPin className="w-3.5 h-3.5 text-green-400" />
+                </div>
+                Ubicación
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Font Selection */}
-                <div>
-                  <Label className="font-semibold flex items-center gap-2">
-                    <Type className="w-4 h-4" />
-                    Estilo del Título
-                  </Label>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {FONT_OPTIONS.map(font => (
-                      <button
-                        key={font.value}
-                        type="button"
-                        onClick={() => setPulperiaForm({ ...pulperiaForm, title_font: font.value })}
-                        className={`p-3 rounded-lg border-2 transition-all text-left ${
-                          pulperiaForm.title_font === font.value
-                            ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200'
-                            : 'border-stone-200 hover:border-purple-300'
-                        }`}
-                      >
-                        <span className={`text-sm ${font.preview}`}>{font.label}</span>
-                      </button>
-                    ))}
+              <Button
+                type="button"
+                onClick={getCurrentLocation}
+                disabled={gettingLocation}
+                className="w-full bg-stone-800 hover:bg-stone-700 text-white border border-stone-700"
+              >
+                {gettingLocation ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    Obteniendo ubicación...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    {pulperiaForm.lat ? 'Actualizar Ubicación GPS' : 'Obtener Mi Ubicación'}
+                  </span>
+                )}
+              </Button>
+              
+              {pulperiaForm.lat && pulperiaForm.lng && (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                    <Check className="w-4 h-4 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-green-400 text-sm font-medium">Ubicación guardada</p>
+                    <p className="text-green-400/60 text-xs">
+                      {parseFloat(pulperiaForm.lat).toFixed(4)}, {parseFloat(pulperiaForm.lng).toFixed(4)}
+                    </p>
                   </div>
                 </div>
-                
-                {/* Color Selection */}
-                <div>
-                  <Label className="font-semibold flex items-center gap-2">
-                    <Palette className="w-4 h-4" />
-                    Color Principal
-                  </Label>
-                  <div className="grid grid-cols-4 gap-2 mt-2">
-                    {COLOR_OPTIONS.map(color => (
-                      <button
-                        key={color.value}
-                        type="button"
-                        onClick={() => setPulperiaForm({ ...pulperiaForm, background_color: color.value })}
-                        className={`p-2 rounded-lg border-2 transition-all flex flex-col items-center gap-1 ${
-                          pulperiaForm.background_color === color.value
-                            ? 'border-stone-800 ring-2 ring-offset-1 ring-stone-400'
-                            : 'border-stone-100 hover:border-stone-300'
-                        }`}
-                        title={color.label}
-                      >
-                        <div 
-                          className="w-8 h-8 rounded-full shadow-md"
-                          style={{ backgroundColor: color.value }}
-                        />
-                      </button>
-                    ))}
-                  </div>
+              )}
+              
+              {!pulperiaForm.lat && !editingPulperia && (
+                <p className="text-amber-400/80 text-xs flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                  Requerido para crear tu pulpería
+                </p>
+              )}
+              
+              <Input
+                required
+                value={pulperiaForm.address}
+                onChange={(e) => setPulperiaForm({ ...pulperiaForm, address: e.target.value })}
+                placeholder="Dirección completa"
+                className="bg-stone-900 border-stone-700 text-white placeholder:text-stone-600"
+              />
+            </div>
+
+            {/* Sección 4: Contacto */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                  <Phone className="w-3.5 h-3.5 text-purple-400" />
+                </div>
+                Contacto
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  value={pulperiaForm.phone}
+                  onChange={(e) => setPulperiaForm({ ...pulperiaForm, phone: e.target.value })}
+                  placeholder="Teléfono"
+                  className="bg-stone-900 border-stone-700 text-white placeholder:text-stone-600"
+                />
+                <Input
+                  value={pulperiaForm.hours}
+                  onChange={(e) => setPulperiaForm({ ...pulperiaForm, hours: e.target.value })}
+                  placeholder="Horario"
+                  className="bg-stone-900 border-stone-700 text-white placeholder:text-stone-600"
+                />
+              </div>
+            </div>
+
+            {/* Sección 5: Personalización Visual */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-pink-500/20 flex items-center justify-center">
+                  <Palette className="w-3.5 h-3.5 text-pink-400" />
+                </div>
+                Estilo Visual
+              </h3>
+              
+              {/* Color Selection */}
+              <div>
+                <Label className="text-stone-400 text-xs mb-2 block">Color de tu marca</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {COLOR_OPTIONS.map(color => (
+                    <button
+                      key={color.value}
+                      type="button"
+                      onClick={() => setPulperiaForm({ ...pulperiaForm, background_color: color.value })}
+                      className={`w-10 h-10 rounded-xl transition-all ${
+                        pulperiaForm.background_color === color.value
+                          ? 'ring-2 ring-white ring-offset-2 ring-offset-stone-950 scale-110'
+                          : 'hover:scale-105 opacity-70 hover:opacity-100'
+                      }`}
+                      style={{ backgroundColor: color.value }}
+                      title={color.label}
+                    />
+                  ))}
                 </div>
               </div>
               
-              {/* Live Preview */}
-              <div className="mt-4">
-                <Label className="font-semibold text-xs text-stone-500 mb-2 block">Vista Previa:</Label>
-                <div 
-                  className="rounded-xl p-6 text-white text-center shadow-lg"
-                  style={{ backgroundColor: pulperiaForm.background_color || '#DC2626' }}
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    {pulperiaForm.logo_url ? (
-                      <img
-                        src={pulperiaForm.logo_url}
-                        alt="Preview"
-                        className="w-16 h-16 rounded-full object-cover border-4 border-white/50"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
-                        <span className="text-2xl">🏪</span>
-                      </div>
-                    )}
-                    <h3 className={`text-2xl ${FONT_OPTIONS.find(f => f.value === pulperiaForm.title_font)?.preview || 'font-black'}`}>
-                      {pulperiaForm.name || 'Mi Pulpería'}
-                    </h3>
-                    {pulperiaForm.description && (
-                      <p className="text-sm text-white/80 max-w-xs">{pulperiaForm.description.slice(0, 50)}...</p>
-                    )}
-                  </div>
+              {/* Font Selection */}
+              <div>
+                <Label className="text-stone-400 text-xs mb-2 block">Estilo del nombre</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {FONT_OPTIONS.map(font => (
+                    <button
+                      key={font.value}
+                      type="button"
+                      onClick={() => setPulperiaForm({ ...pulperiaForm, title_font: font.value })}
+                      className={`p-3 rounded-xl border transition-all text-left ${
+                        pulperiaForm.title_font === font.value
+                          ? 'border-red-500 bg-red-500/10 text-white'
+                          : 'border-stone-800 bg-stone-900 text-stone-400 hover:border-stone-700'
+                      }`}
+                    >
+                      <span className={`text-sm ${font.preview}`}>{font.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
             
             {/* Submit Button */}
-            <div className="pt-4 border-t border-stone-200">
+            <div className="pt-4 border-t border-stone-800">
               <Button 
                 type="submit" 
-                className="w-full py-6 text-lg font-black"
+                className="w-full py-5 text-base font-bold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: pulperiaForm.background_color || '#DC2626' }}
                 disabled={(!editingPulperia && (!pulperiaForm.lat || !pulperiaForm.lng)) || uploadingLogo}
               >
-                {editingPulperia ? '✓ Guardar Cambios' : '🚀 Crear Mi Pulpería'}
+                {editingPulperia ? 'Guardar Cambios' : 'Crear Mi Pulpería'}
               </Button>
               {!editingPulperia && (!pulperiaForm.lat || !pulperiaForm.lng) && (
-                <p className="text-center text-xs text-orange-600 mt-2">
-                  ⚠️ Primero debes obtener tu ubicación GPS
+                <p className="text-center text-xs text-amber-400/60 mt-3">
+                  Primero obtén tu ubicación GPS
                 </p>
               )}
             </div>
