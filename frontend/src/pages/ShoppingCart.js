@@ -44,7 +44,8 @@ const ShoppingCartPage = () => {
         price: item.price,
         quantity: item.quantity,
         pulperia_id: item.pulperia_id,
-        pulperia_name: item.pulperia_name || 'Pulpería'
+        pulperia_name: item.pulperia_name || 'Pulpería',
+        image_url: item.image_url || null
       }));
       localStorage.setItem('cart', JSON.stringify(minimalCart));
     } catch (e) {
