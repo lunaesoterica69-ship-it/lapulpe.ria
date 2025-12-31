@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { Briefcase, Search, Plus, MapPin, DollarSign, Trash2, Users, Wrench, Send, FileText, Phone, Mail, Eye, X, Check } from 'lucide-react';
+import { 
+  Briefcase, Search, Plus, MapPin, DollarSign, Trash2, Users, Wrench, Send, 
+  FileText, Phone, Eye, X, Check, Sparkles, Building2, Clock, ChevronRight
+} from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
+import AnimatedBackground from '../components/AnimatedBackground';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -32,6 +35,7 @@ const JobsServices = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [cart, setCart] = useState([]);
+  const [activeTab, setActiveTab] = useState('jobs');
   
   const [jobForm, setJobForm] = useState({
     title: '',
@@ -304,10 +308,11 @@ const JobsServices = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-          <p className="mt-4 text-stone-600 font-semibold">Cargando...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-950 via-blue-950 to-stone-950">
+        <AnimatedBackground color="blue" />
+        <div className="text-center relative z-10">
+          <div className="w-20 h-20 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500 mx-auto"></div>
+          <p className="mt-4 text-white/70 font-medium">Cargando...</p>
         </div>
       </div>
     );
@@ -316,56 +321,81 @@ const JobsServices = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-stone-950 via-blue-950/30 to-stone-950 pb-24">
+      <AnimatedBackground color="blue" variant="minimal" />
+      
       {/* Header */}
       <Header 
         user={user} 
-        title="Empleos y Servicios" 
-        subtitle="Encuentra trabajo u ofrece tus servicios"
+        title="Chamba" 
+        subtitle="Empleos y Servicios"
       />
       
-      <div className="bg-gradient-to-b from-blue-600 to-blue-700 text-white px-6 pb-6">
+      {/* Hero Section */}
+      <div className="relative z-10 bg-gradient-to-b from-blue-900/50 to-transparent px-4 pb-6">
         {/* Disclaimer */}
-        <div className="bg-white/10 backdrop-blur rounded-lg p-3 text-xs mb-4">
-          ⚠️ <strong>Aviso importante:</strong> La comunicación y acuerdos entre usuarios son su responsabilidad. 
-          Verifique la información de contacto y use su criterio al contratar servicios o aceptar empleos.
+        <div className="bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-3 mb-4">
+          <p className="text-blue-300/80 text-xs">
+            <span className="text-blue-400 font-bold">Aviso:</span> La comunicación entre usuarios es su responsabilidad. Verifique la información antes de contratar.
+          </p>
         </div>
         
         {/* Search */}
         <div className="flex gap-2">
-          <Input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar..."
-            className="bg-white/90 text-stone-800 border-0"
-          />
-          <Button className="bg-white text-blue-600 hover:bg-white/90">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar empleos o servicios..."
+              className="w-full bg-stone-800/50 backdrop-blur-sm text-white border border-stone-700/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-xl py-3 pl-12 pr-4 placeholder:text-stone-500"
+            />
+          </div>
+          <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 rounded-xl hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-900/30">
             <Search className="w-5 h-5" />
-          </Button>
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="relative z-10 px-4 mb-4">
+        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50">
+          <button
+            onClick={() => { setActiveTab('jobs'); setSelectedCategory(''); }}
+            className={`flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'jobs' 
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30' 
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Briefcase className="w-4 h-4" />
+            Buscar Empleo
+          </button>
+          <button
+            onClick={() => { setActiveTab('services'); setSelectedCategory(''); }}
+            className={`flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'services' 
+                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30' 
+                : 'text-stone-400 hover:text-white'
+            }`}
+          >
+            <Wrench className="w-4 h-4" />
+            Buscar Servicios
+          </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-6 py-6">
-        <Tabs defaultValue="jobs" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="jobs" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-              <Briefcase className="w-4 h-4 mr-2" />
-              Buscar Empleo
-            </TabsTrigger>
-            <TabsTrigger value="services" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-              <Wrench className="w-4 h-4 mr-2" />
-              Buscar Servicios
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Jobs Tab */}
-          <TabsContent value="jobs">
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+      <div className="relative z-10 px-4">
+        {/* Jobs Tab */}
+        {activeTab === 'jobs' && (
+          <div className="space-y-4">
+            {/* Filters & Add */}
+            <div className="flex flex-wrap justify-between items-center gap-3">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-white border-2 border-blue-100 rounded-xl px-4 py-2 font-semibold text-stone-700"
+                className="bg-stone-800/50 backdrop-blur-sm border border-stone-700/50 rounded-xl px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Todas las categorías</option>
                 {CATEGORIES.jobs.map(cat => (
@@ -375,65 +405,78 @@ const JobsServices = () => {
               
               <Button
                 onClick={() => setShowJobDialog(true)}
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 shadow-lg shadow-blue-900/30"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Publicar Empleo
               </Button>
             </div>
 
+            {/* Jobs List */}
             <div className="space-y-4">
               {filterJobs().map(job => (
                 <div
                   key={job.job_id}
-                  className="bg-white rounded-2xl shadow-sm border border-blue-100 p-5 hover:shadow-md transition-all"
+                  className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden hover:border-blue-500/50 transition-all group"
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-stone-800 mb-1">{job.title}</h3>
-                      <span className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full mb-2">
-                        {job.category}
-                      </span>
-                      <p className="text-stone-600 text-sm mb-3">{job.description}</p>
-                      
-                      <div className="flex flex-wrap gap-3 text-sm">
-                        <span className="flex items-center gap-1 text-stone-600 bg-stone-100 px-2 py-1 rounded-lg">
-                          <MapPin className="w-4 h-4" /> {job.location}
-                        </span>
-                        <span className="flex items-center gap-1 font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
-                          <DollarSign className="w-4 h-4" /> 
-                          {job.pay_rate} {job.pay_currency}/hora
-                        </span>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="bg-blue-500/20 text-blue-400 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-500/30">
+                            {job.category}
+                          </span>
+                          {job.pulperia_name && (
+                            <span className="text-xs text-stone-500 flex items-center gap-1">
+                              <Building2 className="w-3 h-3" />
+                              {job.pulperia_name}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{job.title}</h3>
+                        <p className="text-stone-400 text-sm line-clamp-2">{job.description}</p>
                       </div>
+                      
+                      {user?.user_id === job.employer_user_id && (
+                        <div className="flex flex-col gap-2 ml-3">
+                          <button
+                            onClick={() => handleViewApplications(job)}
+                            className="p-2.5 text-blue-400 hover:bg-blue-500/20 rounded-xl transition-colors border border-blue-500/30"
+                            title="Ver aplicaciones"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteJob(job.job_id)}
+                            className="p-2.5 text-red-400 hover:bg-red-500/20 rounded-xl transition-colors border border-red-500/30"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                     
-                    {user?.user_id === job.employer_user_id && (
-                      <div className="flex flex-col gap-2 ml-3">
-                        <button
-                          onClick={() => handleViewApplications(job)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Ver aplicaciones"
-                        >
-                          <Eye className="w-5 h-5" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteJob(job.job_id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Eliminar"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-3 text-sm mb-4">
+                      <span className="flex items-center gap-1.5 text-stone-400 bg-stone-700/50 px-3 py-1.5 rounded-lg">
+                        <MapPin className="w-4 h-4 text-blue-400" /> {job.location}
+                      </span>
+                      <span className="flex items-center gap-1.5 font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/30">
+                        <DollarSign className="w-4 h-4" /> 
+                        {job.pay_rate} {job.pay_currency}/hora
+                      </span>
+                    </div>
                   </div>
                   
-                  <div className="bg-blue-50 rounded-xl p-3 flex justify-between items-center">
+                  <div className="bg-stone-900/50 px-5 py-4 flex justify-between items-center border-t border-stone-700/50">
                     <div>
-                      <p className="text-sm font-bold text-stone-700 flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                      <p className="text-sm font-bold text-white flex items-center gap-2">
+                        <Users className="w-4 h-4 text-blue-400" />
                         {job.employer_name}
                       </p>
-                      <p className="text-xs text-stone-600 mt-1">📞 {job.contact}</p>
+                      <p className="text-xs text-stone-500 mt-0.5 flex items-center gap-1">
+                        <Phone className="w-3 h-3" /> {job.contact}
+                      </p>
                     </div>
                     
                     {user?.user_id !== job.employer_user_id && (
@@ -443,7 +486,7 @@ const JobsServices = () => {
                           setApplyForm({ contact: user?.email || '', cv_url: '', message: '' });
                           setShowApplyDialog(true);
                         }}
-                        className="bg-blue-600 text-white hover:bg-blue-700"
+                        className="bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 shadow-lg shadow-blue-900/30"
                         size="sm"
                       >
                         <Send className="w-4 h-4 mr-1" />
@@ -455,21 +498,27 @@ const JobsServices = () => {
               ))}
               
               {filterJobs().length === 0 && (
-                <div className="text-center py-12 bg-white rounded-2xl">
-                  <Briefcase className="w-16 h-16 mx-auto text-stone-300 mb-4" />
-                  <p className="text-stone-500">No hay empleos disponibles</p>
+                <div className="text-center py-16 bg-stone-800/30 rounded-2xl border border-stone-700/50">
+                  <div className="w-20 h-20 bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Briefcase className="w-10 h-10 text-stone-600" />
+                  </div>
+                  <p className="text-stone-500 text-lg">No hay empleos disponibles</p>
+                  <p className="text-stone-600 text-sm mt-1">¡Sé el primero en publicar!</p>
                 </div>
               )}
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          {/* Services Tab */}
-          <TabsContent value="services">
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+        {/* Services Tab */}
+        {activeTab === 'services' && (
+          <div className="space-y-4">
+            {/* Filters & Add */}
+            <div className="flex flex-wrap justify-between items-center gap-3">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-white border-2 border-blue-100 rounded-xl px-4 py-2 font-semibold text-stone-700"
+                className="bg-stone-800/50 backdrop-blur-sm border border-stone-700/50 rounded-xl px-4 py-2.5 font-semibold text-white focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Todas las categorías</option>
                 {CATEGORIES.services.map(cat => (
@@ -479,27 +528,28 @@ const JobsServices = () => {
               
               <Button
                 onClick={() => setShowServiceDialog(true)}
-                className="bg-blue-600 text-white hover:bg-blue-700"
+                className="bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-500 hover:to-blue-400 shadow-lg shadow-blue-900/30"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Ofrecer Servicio
               </Button>
             </div>
 
+            {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filterServices().map(service => (
                 <div
                   key={service.service_id}
-                  className="bg-white rounded-2xl shadow-sm border border-blue-100 overflow-hidden hover:shadow-md transition-all"
+                  className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden hover:border-blue-500/50 transition-all group"
                 >
                   {service.images.length > 0 && (
-                    <div className="grid grid-cols-2 gap-1 max-h-48">
+                    <div className="grid grid-cols-2 gap-0.5 max-h-40 overflow-hidden">
                       {service.images.slice(0, 4).map((img, idx) => (
                         <img
                           key={idx}
                           src={img}
                           alt={`${service.title} ${idx + 1}`}
-                          className="w-full h-24 object-cover"
+                          className="w-full h-20 object-cover"
                         />
                       ))}
                     </div>
@@ -508,83 +558,91 @@ const JobsServices = () => {
                   <div className="p-5">
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-stone-800 mb-1">{service.title}</h3>
-                        <span className="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-full">
+                        <span className="inline-block bg-blue-500/20 text-blue-400 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-500/30 mb-2">
                           {service.category}
                         </span>
+                        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{service.title}</h3>
                       </div>
                       
                       {user?.user_id === service.provider_user_id && (
                         <button
                           onClick={() => handleDeleteService(service.service_id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-red-400 hover:bg-red-500/20 rounded-xl transition-colors border border-red-500/30"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       )}
                     </div>
                     
-                    <p className="text-stone-600 text-sm mb-3">{service.description}</p>
+                    <p className="text-stone-400 text-sm mb-4 line-clamp-2">{service.description}</p>
                     
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-black text-green-600">
-                        {service.hourly_rate} {service.rate_currency}/hora
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-2xl font-black text-emerald-400">
+                        {service.hourly_rate} {service.rate_currency}<span className="text-sm text-stone-500">/hora</span>
                       </span>
                     </div>
                     
-                    <div className="bg-blue-50 rounded-xl p-3">
-                      <p className="text-sm font-bold text-stone-700 flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                    <div className="bg-stone-900/50 rounded-xl p-3 border border-stone-700/50">
+                      <p className="text-sm font-bold text-white flex items-center gap-2">
+                        <Users className="w-4 h-4 text-blue-400" />
                         {service.provider_name}
                       </p>
-                      <p className="text-xs text-stone-600 mt-1 flex items-center gap-1">
+                      <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
                         {service.location}
                       </p>
-                      <p className="text-xs text-stone-600 mt-1">📞 {service.contact}</p>
+                      <p className="text-xs text-stone-500 mt-0.5 flex items-center gap-1">
+                        <Phone className="w-3 h-3" /> {service.contact}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
               
               {filterServices().length === 0 && (
-                <div className="col-span-2 text-center py-12 bg-white rounded-2xl">
-                  <Wrench className="w-16 h-16 mx-auto text-stone-300 mb-4" />
-                  <p className="text-stone-500">No hay servicios disponibles</p>
+                <div className="col-span-2 text-center py-16 bg-stone-800/30 rounded-2xl border border-stone-700/50">
+                  <div className="w-20 h-20 bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Wrench className="w-10 h-10 text-stone-600" />
+                  </div>
+                  <p className="text-stone-500 text-lg">No hay servicios disponibles</p>
+                  <p className="text-stone-600 text-sm mt-1">¡Ofrece tu servicio!</p>
                 </div>
               )}
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
 
       {/* Job Dialog */}
       <Dialog open={showJobDialog} onOpenChange={setShowJobDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-stone-900 border-stone-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-blue-600" />
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-white" />
+              </div>
               Publicar Oferta de Empleo
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateJob} className="space-y-4">
             <div>
-              <Label>Título del puesto *</Label>
+              <Label className="text-white">Título del puesto *</Label>
               <Input
                 required
                 value={jobForm.title}
                 onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
                 placeholder="Ej: Vendedor de mostrador"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Categoría *</Label>
+              <Label className="text-white">Categoría *</Label>
               <select
                 required
                 value={jobForm.category}
                 onChange={(e) => setJobForm({ ...jobForm, category: e.target.value })}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2"
+                className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-white"
               >
                 <option value="">Seleccionar...</option>
                 {CATEGORIES.jobs.map(cat => (
@@ -594,31 +652,33 @@ const JobsServices = () => {
             </div>
             
             <div>
-              <Label>Descripción *</Label>
+              <Label className="text-white">Descripción *</Label>
               <Textarea
                 required
                 value={jobForm.description}
                 onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
-                placeholder="Describe el trabajo..."
+                placeholder="Describe el trabajo, requisitos, horario..."
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Pago por hora *</Label>
+                <Label className="text-white">Pago por hora *</Label>
                 <Input
                   required
                   type="number"
                   value={jobForm.pay_rate}
                   onChange={(e) => setJobForm({ ...jobForm, pay_rate: e.target.value })}
+                  className="bg-stone-800 border-stone-700 text-white"
                 />
               </div>
               <div>
-                <Label>Moneda</Label>
+                <Label className="text-white">Moneda</Label>
                 <select
                   value={jobForm.pay_currency}
                   onChange={(e) => setJobForm({ ...jobForm, pay_currency: e.target.value })}
-                  className="w-full border border-stone-300 rounded-lg px-3 py-2"
+                  className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-white"
                 >
                   <option value="HNL">Lempiras (L)</option>
                   <option value="USD">Dólares ($)</option>
@@ -627,26 +687,28 @@ const JobsServices = () => {
             </div>
             
             <div>
-              <Label>Ubicación *</Label>
+              <Label className="text-white">Ubicación *</Label>
               <Input
                 required
                 value={jobForm.location}
                 onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
                 placeholder="Ciudad o zona"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Contacto *</Label>
+              <Label className="text-white">Contacto *</Label>
               <Input
                 required
                 value={jobForm.contact}
                 onChange={(e) => setJobForm({ ...jobForm, contact: e.target.value })}
                 placeholder="Teléfono o email"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-900/30">
               <Check className="w-4 h-4 mr-2" />
               Publicar Empleo
             </Button>
@@ -656,31 +718,34 @@ const JobsServices = () => {
 
       {/* Service Dialog */}
       <Dialog open={showServiceDialog} onOpenChange={setShowServiceDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-stone-900 border-stone-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-blue-600" />
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center">
+                <Wrench className="w-5 h-5 text-white" />
+              </div>
               Ofrecer un Servicio
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateService} className="space-y-4">
             <div>
-              <Label>Título del servicio *</Label>
+              <Label className="text-white">Título del servicio *</Label>
               <Input
                 required
                 value={serviceForm.title}
                 onChange={(e) => setServiceForm({ ...serviceForm, title: e.target.value })}
                 placeholder="Ej: Corte de césped profesional"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Categoría *</Label>
+              <Label className="text-white">Categoría *</Label>
               <select
                 required
                 value={serviceForm.category}
                 onChange={(e) => setServiceForm({ ...serviceForm, category: e.target.value })}
-                className="w-full border border-stone-300 rounded-lg px-3 py-2"
+                className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-white"
               >
                 <option value="">Seleccionar...</option>
                 {CATEGORIES.services.map(cat => (
@@ -690,31 +755,33 @@ const JobsServices = () => {
             </div>
             
             <div>
-              <Label>Descripción *</Label>
+              <Label className="text-white">Descripción *</Label>
               <Textarea
                 required
                 value={serviceForm.description}
                 onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
                 placeholder="Describe tu servicio..."
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Precio por hora *</Label>
+                <Label className="text-white">Precio por hora *</Label>
                 <Input
                   required
                   type="number"
                   value={serviceForm.hourly_rate}
                   onChange={(e) => setServiceForm({ ...serviceForm, hourly_rate: e.target.value })}
+                  className="bg-stone-800 border-stone-700 text-white"
                 />
               </div>
               <div>
-                <Label>Moneda</Label>
+                <Label className="text-white">Moneda</Label>
                 <select
                   value={serviceForm.rate_currency}
                   onChange={(e) => setServiceForm({ ...serviceForm, rate_currency: e.target.value })}
-                  className="w-full border border-stone-300 rounded-lg px-3 py-2"
+                  className="w-full bg-stone-800 border border-stone-700 rounded-lg px-3 py-2 text-white"
                 >
                   <option value="HNL">Lempiras (L)</option>
                   <option value="USD">Dólares ($)</option>
@@ -723,45 +790,47 @@ const JobsServices = () => {
             </div>
             
             <div>
-              <Label>Ubicación *</Label>
+              <Label className="text-white">Ubicación *</Label>
               <Input
                 required
                 value={serviceForm.location}
                 onChange={(e) => setServiceForm({ ...serviceForm, location: e.target.value })}
                 placeholder="Ciudad o zona donde ofreces el servicio"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Contacto *</Label>
+              <Label className="text-white">Contacto *</Label>
               <Input
                 required
                 value={serviceForm.contact}
                 onChange={(e) => setServiceForm({ ...serviceForm, contact: e.target.value })}
                 placeholder="Teléfono o email"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Fotos de tu trabajo (máx. 5)</Label>
+              <Label className="text-white">Fotos de tu trabajo (máx. 5)</Label>
               <Input
                 type="file"
                 accept="image/*"
                 multiple
                 onChange={handleImageUpload}
                 disabled={uploadingImages}
-                className="cursor-pointer"
+                className="cursor-pointer bg-stone-800 border-stone-700 text-white"
               />
               {serviceForm.images.length > 0 && (
                 <div className="flex gap-2 mt-2 flex-wrap">
                   {serviceForm.images.map((img, idx) => (
-                    <img key={idx} src={img} alt="" className="w-16 h-16 object-cover rounded-lg" />
+                    <img key={idx} src={img} alt="" className="w-16 h-16 object-cover rounded-lg border border-stone-700" />
                   ))}
                 </div>
               )}
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={uploadingImages}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-900/30" disabled={uploadingImages}>
               <Check className="w-4 h-4 mr-2" />
               Publicar Servicio
             </Button>
@@ -771,35 +840,38 @@ const JobsServices = () => {
 
       {/* Apply to Job Dialog */}
       <Dialog open={showApplyDialog} onOpenChange={setShowApplyDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-stone-900 border-stone-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Send className="w-5 h-5 text-blue-600" />
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center">
+                <Send className="w-5 h-5 text-white" />
+              </div>
               Aplicar a: {selectedJob?.title}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleApplyToJob} className="space-y-4">
             <div>
-              <Label>Tu contacto (teléfono o email) *</Label>
+              <Label className="text-white">Tu contacto (teléfono o email) *</Label>
               <Input
                 required
                 value={applyForm.contact}
                 onChange={(e) => setApplyForm({ ...applyForm, contact: e.target.value })}
                 placeholder="+504 9999-9999 o email@ejemplo.com"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
             <div>
-              <Label>Subir CV/Hoja de Vida (opcional)</Label>
+              <Label className="text-white">Subir CV/Hoja de Vida (opcional)</Label>
               <Input
                 type="file"
                 accept=".pdf,.doc,.docx,image/*"
                 onChange={handleCVUpload}
                 disabled={uploadingCV}
-                className="cursor-pointer"
+                className="cursor-pointer bg-stone-800 border-stone-700 text-white"
               />
               {applyForm.cv_url && (
-                <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                <p className="text-sm text-emerald-400 mt-1 flex items-center gap-1">
                   <FileText className="w-4 h-4" />
                   CV cargado ✓
                 </p>
@@ -808,16 +880,17 @@ const JobsServices = () => {
             </div>
             
             <div>
-              <Label>Mensaje para el empleador</Label>
+              <Label className="text-white">Mensaje para el empleador</Label>
               <Textarea
                 value={applyForm.message}
                 onChange={(e) => setApplyForm({ ...applyForm, message: e.target.value })}
-                placeholder="Preséntate brevemente y explica por qué eres buen candidato..."
+                placeholder="Preséntate brevemente..."
                 rows={4}
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
               />
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={uploadingCV}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-900/30" disabled={uploadingCV}>
               <Send className="w-4 h-4 mr-2" />
               Enviar Aplicación
             </Button>
@@ -827,27 +900,27 @@ const JobsServices = () => {
 
       {/* View Applications Dialog */}
       <Dialog open={showApplicationsDialog} onOpenChange={setShowApplicationsDialog}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-stone-900 border-stone-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-blue-600" />
-              Aplicaciones para: {selectedJob?.title}
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <Users className="w-5 h-5 text-blue-400" />
+              Aplicaciones: {selectedJob?.title}
             </DialogTitle>
           </DialogHeader>
           
           {applications.length === 0 ? (
             <div className="text-center py-8">
-              <Users className="w-12 h-12 mx-auto text-stone-300 mb-3" />
+              <Users className="w-12 h-12 mx-auto text-stone-600 mb-3" />
               <p className="text-stone-500">Aún no hay aplicaciones</p>
             </div>
           ) : (
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {applications.map(app => (
-                <div key={app.application_id} className="bg-blue-50 rounded-xl p-4">
+                <div key={app.application_id} className="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-bold text-stone-800">{app.applicant_name}</p>
-                      <p className="text-sm text-stone-600 flex items-center gap-1 mt-1">
+                      <p className="font-bold text-white">{app.applicant_name}</p>
+                      <p className="text-sm text-stone-400 flex items-center gap-1 mt-1">
                         <Phone className="w-3 h-3" />
                         {app.contact}
                       </p>
@@ -858,8 +931,8 @@ const JobsServices = () => {
                   </div>
                   
                   {app.message && (
-                    <p className="text-sm text-stone-600 mt-3 bg-white rounded-lg p-3">
-                      &quot;{app.message}&quot;
+                    <p className="text-sm text-stone-400 mt-3 bg-stone-900/50 rounded-lg p-3 border border-stone-700">
+                      "{app.message}"
                     </p>
                   )}
                   
@@ -868,7 +941,7 @@ const JobsServices = () => {
                       href={app.cv_url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:text-blue-800"
+                      className="inline-flex items-center gap-1 mt-3 text-sm text-blue-400 hover:text-blue-300"
                     >
                       <FileText className="w-4 h-4" />
                       Ver CV
