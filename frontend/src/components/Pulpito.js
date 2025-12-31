@@ -1,14 +1,42 @@
-// Pulpito - La mascota animada de La Pulpería
-// Un pequeño pulpo amigable que acompaña a los usuarios durante su espera
+// Pulpero - Tu amigo pulpero que te acompaña en cada pedido
+// Un personaje amigable y cercano que hace la espera más divertida
 
-const Pulpito = ({ status, size = 'md' }) => {
+const Pulpero = ({ status, size = 'md', showMessage = true }) => {
   const sizes = {
     sm: 'w-16 h-16',
     md: 'w-24 h-24',
     lg: 'w-32 h-32'
   };
 
-  // Pending: Pulpito está pensando/buscando
+  // Mensajes más humanos y variados para cada estado
+  const messages = {
+    pending: [
+      "Dame un momento, ya te busco todo...",
+      "Revisando tu pedido, ¡ya casi!",
+      "Un segundito, estoy organizando...",
+      "¡Recibido! Déjame prepararlo..."
+    ],
+    accepted: [
+      "¡Manos a la obra! Preparando con cariño...",
+      "Todo va bien, ya casi está listo...",
+      "Empacando tus cosas con amor...",
+      "¡Trabajando en tu pedido!"
+    ],
+    ready: [
+      "¡Listo compa! Ya puedes pasar a buscar",
+      "¡Todo preparado! Te espero",
+      "¡Ya está! Ven cuando quieras",
+      "¡Pedido listo! A tu orden"
+    ]
+  };
+
+  const getMessage = (status) => {
+    const statusMessages = messages[status];
+    if (!statusMessages) return '';
+    return statusMessages[Math.floor(Math.random() * statusMessages.length)];
+  };
+
+  // Pending: Pulpero buscando/organizando
   if (status === 'pending') {
     return (
       <div className={`${sizes[size]} relative`}>
@@ -19,7 +47,7 @@ const Pulpito = ({ status, size = 'md' }) => {
           {/* Face */}
           <ellipse cx="50" cy="42" rx="22" ry="18" fill="#fca5a5" />
           
-          {/* Eyes - looking around */}
+          {/* Eyes - looking around curiously */}
           <g className="animate-bounce" style={{ animationDuration: '2s' }}>
             <circle cx="40" cy="38" r="6" fill="white" />
             <circle cx="60" cy="38" r="6" fill="white" />
@@ -27,13 +55,13 @@ const Pulpito = ({ status, size = 'md' }) => {
             <circle cx="62" cy="38" r="3" fill="#1c1917" />
           </g>
           
-          {/* Thinking expression - raised eyebrow */}
+          {/* Thinking expression */}
           <path d="M34 32 Q40 28 46 32" stroke="#991b1b" strokeWidth="2" fill="none" />
           
-          {/* Mouth - small o */}
+          {/* Concentrated mouth */}
           <ellipse cx="50" cy="50" rx="4" ry="3" fill="#991b1b" />
           
-          {/* Tentacles wiggling */}
+          {/* Tentacles wiggling - busy searching */}
           <g>
             <path d="M25 55 Q20 65 25 75 Q30 85 25 90" stroke="#ef4444" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wiggle-1" />
             <path d="M35 58 Q28 70 35 80 Q42 90 35 95" stroke="#ef4444" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wiggle-2" />
@@ -42,26 +70,24 @@ const Pulpito = ({ status, size = 'md' }) => {
             <path d="M75 55 Q80 65 75 75 Q70 85 75 90" stroke="#ef4444" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wiggle-1" />
           </g>
           
-          {/* Question marks floating */}
-          <text x="78" y="25" className="animate-float-up text-lg" fill="#fbbf24" fontWeight="bold">?</text>
-          <text x="15" y="30" className="animate-float-up-delayed text-sm" fill="#fbbf24" fontWeight="bold">?</text>
+          {/* Search indicators */}
+          <text x="78" y="25" className="animate-float-up text-lg" fill="#fbbf24" fontWeight="bold">🔍</text>
         </svg>
         <style>{`
           @keyframes wiggle-1 { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
           @keyframes wiggle-2 { 0%, 100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
           @keyframes wiggle-3 { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(2px); } }
-          @keyframes float-up { 0%, 100% { opacity: 0; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-10px); } }
+          @keyframes float-up { 0%, 100% { opacity: 0.5; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-8px); } }
           .animate-wiggle-1 { animation: wiggle-1 1s ease-in-out infinite; transform-origin: top center; }
           .animate-wiggle-2 { animation: wiggle-2 1.2s ease-in-out infinite; transform-origin: top center; }
           .animate-wiggle-3 { animation: wiggle-3 0.8s ease-in-out infinite; }
           .animate-float-up { animation: float-up 2s ease-in-out infinite; }
-          .animate-float-up-delayed { animation: float-up 2s ease-in-out infinite 0.5s; }
         `}</style>
       </div>
     );
   }
 
-  // Accepted: Pulpito está cocinando/preparando
+  // Accepted: Pulpero preparando con gorro de chef
   if (status === 'accepted') {
     return (
       <div className={`${sizes[size]} relative`}>
@@ -77,11 +103,11 @@ const Pulpito = ({ status, size = 'md' }) => {
           {/* Face */}
           <ellipse cx="50" cy="47" rx="22" ry="18" fill="#93c5fd" />
           
-          {/* Happy eyes - closed arcs */}
+          {/* Happy closed eyes */}
           <path d="M36 42 Q40 38 44 42" stroke="#1e3a8a" strokeWidth="3" fill="none" strokeLinecap="round" />
           <path d="M56 42 Q60 38 64 42" stroke="#1e3a8a" strokeWidth="3" fill="none" strokeLinecap="round" />
           
-          {/* Happy mouth */}
+          {/* Cheerful smile */}
           <path d="M42 52 Q50 60 58 52" stroke="#1e3a8a" strokeWidth="2" fill="none" strokeLinecap="round" />
           
           {/* Blush */}
@@ -97,10 +123,9 @@ const Pulpito = ({ status, size = 'md' }) => {
             <path d="M78 60 Q85 72 78 82" stroke="#3b82f6" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-work-1" />
           </g>
           
-          {/* Cooking sparkles */}
-          <text x="80" y="35" className="animate-sparkle text-sm" fill="#fbbf24">✦</text>
-          <text x="12" y="40" className="animate-sparkle-delayed text-xs" fill="#fbbf24">✦</text>
-          <text x="85" y="55" className="animate-sparkle text-xs" fill="#fbbf24">✦</text>
+          {/* Work sparkles */}
+          <text x="80" y="35" className="animate-sparkle text-sm" fill="#fbbf24">✨</text>
+          <text x="12" y="40" className="animate-sparkle-delayed text-xs" fill="#fbbf24">📦</text>
         </svg>
         <style>{`
           @keyframes work-1 { 0%, 100% { transform: rotate(-10deg) translateY(0); } 50% { transform: rotate(10deg) translateY(-5px); } }
@@ -115,7 +140,7 @@ const Pulpito = ({ status, size = 'md' }) => {
     );
   }
 
-  // Ready: Pulpito está celebrando!
+  // Ready: Pulpero celebrando
   if (status === 'ready') {
     return (
       <div className={`${sizes[size]} relative`}>
@@ -125,29 +150,27 @@ const Pulpito = ({ status, size = 'md' }) => {
           <circle cx="85" cy="25" r="2" fill="#f472b6" className="animate-confetti-2" />
           <circle cx="20" cy="80" r="2" fill="#34d399" className="animate-confetti-3" />
           <circle cx="80" cy="75" r="3" fill="#60a5fa" className="animate-confetti-1" />
-          <rect x="10" y="50" width="4" height="4" fill="#c084fc" className="animate-confetti-2" transform="rotate(45 12 52)" />
-          <rect x="88" y="45" width="3" height="3" fill="#fbbf24" className="animate-confetti-3" transform="rotate(45 89.5 46.5)" />
           
-          {/* Body bouncing */}
+          {/* Body bouncing with excitement */}
           <g className="animate-celebrate">
             <ellipse cx="50" cy="45" rx="28" ry="25" fill="#22c55e" />
             
             {/* Face */}
             <ellipse cx="50" cy="42" rx="22" ry="18" fill="#86efac" />
             
-            {/* Star eyes */}
+            {/* Excited star eyes */}
             <text x="33" y="44" fill="#15803d" fontSize="14">★</text>
             <text x="57" y="44" fill="#15803d" fontSize="14">★</text>
             
-            {/* Big smile */}
+            {/* Big happy smile */}
             <path d="M38 48 Q50 62 62 48" stroke="#15803d" strokeWidth="3" fill="none" strokeLinecap="round" />
             
-            {/* Blush */}
+            {/* Excited blush */}
             <ellipse cx="32" cy="46" rx="5" ry="3" fill="#fda4af" opacity="0.6" />
             <ellipse cx="68" cy="46" rx="5" ry="3" fill="#fda4af" opacity="0.6" />
           </g>
           
-          {/* Tentacles waving excitedly */}
+          {/* Waving tentacles */}
           <g>
             <path d="M22 55 Q10 65 20 80 Q25 90 15 95" stroke="#22c55e" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wave-1" />
             <path d="M32 58 Q22 72 30 85" stroke="#22c55e" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wave-2" />
@@ -156,7 +179,7 @@ const Pulpito = ({ status, size = 'md' }) => {
             <path d="M78 55 Q90 65 80 80 Q75 90 85 95" stroke="#22c55e" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-wave-1" />
           </g>
           
-          {/* Trophy/checkmark above */}
+          {/* Ready badge */}
           <circle cx="50" cy="8" r="8" fill="#fbbf24" className="animate-pulse" />
           <text x="46" y="12" fill="white" fontSize="10" fontWeight="bold">✓</text>
         </svg>
@@ -180,7 +203,7 @@ const Pulpito = ({ status, size = 'md' }) => {
     );
   }
 
-  // Default/completed: Happy satisfied pulpito
+  // Completed: Pulpero satisfecho y descansando
   return (
     <div className={`${sizes[size]} relative`}>
       <svg viewBox="0 0 100 100" className="w-full h-full opacity-50">
@@ -198,4 +221,34 @@ const Pulpito = ({ status, size = 'md' }) => {
   );
 };
 
-export default Pulpito;
+// Función helper para obtener mensajes del Pulpero
+export const getPulperoMessage = (status) => {
+  const messages = {
+    pending: [
+      "Dame un momento, ya te busco todo...",
+      "Revisando tu pedido, ¡ya casi!",
+      "Un segundito, estoy organizando...",
+      "¡Recibido! Déjame prepararlo..."
+    ],
+    accepted: [
+      "¡Manos a la obra! Preparando con cariño...",
+      "Todo va bien, ya casi está listo...",
+      "Empacando tus cosas con amor...",
+      "¡Trabajando en tu pedido!"
+    ],
+    ready: [
+      "¡Listo compa! Ya puedes pasar a buscar",
+      "¡Todo preparado! Te espero",
+      "¡Ya está! Ven cuando quieras",
+      "¡Pedido listo! A tu orden"
+    ]
+  };
+  
+  const statusMessages = messages[status];
+  if (!statusMessages) return '';
+  // Use a seed based on current minute to keep message consistent for a while
+  const seed = Math.floor(Date.now() / 60000) % statusMessages.length;
+  return statusMessages[seed];
+};
+
+export default Pulpero;

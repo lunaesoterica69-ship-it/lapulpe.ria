@@ -5,7 +5,7 @@ import { Package, Clock, CheckCircle, XCircle, ShoppingBag, Sparkles, Zap, Troph
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
-import Pulpito from '../components/Pulpito';
+import Pulpero, { getPulperoMessage } from '../components/Pulpito';
 import useWebSocket from '../hooks/useWebSocket';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -49,14 +49,8 @@ const OrderProgress = ({ status }) => {
   );
 };
 
-const getStatusMessage = (status) => {
-  const messages = {
-    pending: '¡Pulpito está buscando tu pedido!',
-    accepted: '¡Pulpito está preparando todo con amor!',
-    ready: '¡Pulpito terminó! Tu orden está lista 🎉'
-  };
-  return messages[status] || '';
-};
+// Usar mensajes del Pulpero más humanos
+const getStatusMessage = (status) => getPulperoMessage(status);
 
 const MyOrders = () => {
   const [user, setUser] = useState(null);
@@ -175,7 +169,7 @@ const MyOrders = () => {
                         order.status === 'accepted' ? 'bg-blue-500/5' :
                         'bg-green-500/5'
                       }`}>
-                        <Pulpito status={order.status} size="md" />
+                        <Pulpero status={order.status} size="md" />
                         <p className="text-center text-sm text-stone-400 mt-2 px-4">
                           {getStatusMessage(order.status)}
                         </p>
