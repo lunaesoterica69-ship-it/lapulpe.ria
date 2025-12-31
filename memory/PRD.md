@@ -4,7 +4,7 @@
 Aplicación web para conectar pulperías hondureñas con clientes locales. Permite a los dueños de pulperías gestionar sus negocios, productos y pedidos, mientras los clientes pueden explorar, ordenar y rastrear sus compras con una mascota animada que representa al "Pulpero" (dueño de la pulpería).
 
 ## URL de Preview
-https://pulpito-delivery.preview.emergentagent.com
+https://lapulperia.preview.emergentagent.com
 
 ## Design System
 - **Fondo**: stone-950 con efecto nebulosa roja (CSS puro, sin JavaScript)

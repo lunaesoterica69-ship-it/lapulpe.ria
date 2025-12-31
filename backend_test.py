@@ -11,7 +11,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 
 # Backend URL from frontend .env
-BACKEND_URL = "https://pulpito-delivery.preview.emergentagent.com/api"
+BACKEND_URL = "https://lapulperia.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):

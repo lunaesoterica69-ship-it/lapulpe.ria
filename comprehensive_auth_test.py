@@ -10,7 +10,7 @@ import time
 import subprocess
 from datetime import datetime
 
-BACKEND_URL = "https://pulpito-delivery.preview.emergentagent.com/api"
+BACKEND_URL = "https://lapulperia.preview.emergentagent.com/api"
 
 def create_test_user_with_pulperia():
     """Create a test user with pulperia type and create a pulperia"""
