@@ -113,7 +113,7 @@ const Header = ({ user, title, subtitle }) => {
           </button>
 
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-72 bg-stone-900 rounded-xl shadow-2xl border border-stone-800 overflow-hidden z-[9999]">
+            <div className="absolute right-0 mt-2 w-72 bg-stone-900 rounded-xl shadow-2xl border border-stone-800 overflow-hidden z-[99999]">
               {/* User Info */}
               <div className="p-4 border-b border-stone-800">
                 <div className="flex items-center gap-3">
