@@ -987,7 +987,7 @@ async def get_order_stats(period: str = "day", authorization: Optional[str] = He
 
 @api_router.get("/notifications")
 async def get_notifications(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
-    """Get notifications for current user - shows recent orders"""
+    """Get notifications for current user - shows recent orders with full details"""
     user = await get_current_user(authorization, session_token)
     
     notifications = []
@@ -999,28 +999,40 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
             {"_id": 0}
         ).sort("created_at", -1).to_list(20)
         
+        # Get pulperia names for orders
+        pulperia_ids = list(set(o.get("pulperia_id") for o in orders if o.get("pulperia_id")))
+        pulperias = await db.pulperias.find({"pulperia_id": {"$in": pulperia_ids}}, {"_id": 0, "pulperia_id": 1, "name": 1}).to_list(100)
+        pulperia_map = {p["pulperia_id"]: p["name"] for p in pulperias}
+        
         for order in orders:
-            status_text = {
-                "pending": "Pendiente",
-                "accepted": "Aceptada",
-                "ready": "Lista para recoger",
-                "completed": "Completada",
-                "cancelled": "Cancelada"
-            }.get(order.get("status", "pending"), "Pendiente")
+            items = order.get("items", [])
+            total_items = sum(item.get("quantity", 1) for item in items)
+            pulperia_name = pulperia_map.get(order.get("pulperia_id"), "Pulpería")
+            
+            # Create item summary (e.g., "2x Pan, 1x Leche")
+            item_summary = ", ".join([f"{item.get('quantity', 1)}x {item.get('product_name', 'Producto')}" for item in items[:3]])
+            if len(items) > 3:
+                item_summary += f" +{len(items) - 3} más"
             
             notifications.append({
                 "id": order["order_id"],
                 "type": "order_status",
-                "title": f"Orden #{order['order_id'][-6:]}",
-                "message": f"Total: L{order.get('total', 0):.2f} - {len(order.get('items', []))} productos",
+                "title": f"Orden en {pulperia_name}",
+                "message": item_summary or "Sin productos",
                 "status": order.get("status", "pending"),
                 "created_at": order.get("created_at"),
-                "order_id": order["order_id"]
+                "order_id": order["order_id"],
+                "items": items,
+                "total": order.get("total", 0),
+                "total_items": total_items,
+                "pulperia_name": pulperia_name,
+                "role": "customer"
             })
     else:
         # Pulperia owners see orders received
         user_pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(100)
         pulperia_ids = [p["pulperia_id"] for p in user_pulperias]
+        pulperia_map = {p["pulperia_id"]: p["name"] for p in user_pulperias}
         
         orders = await db.orders.find(
             {"pulperia_id": {"$in": pulperia_ids}},
@@ -1029,23 +1041,29 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
         
         for order in orders:
             customer_name = order.get("customer_name", "Cliente")
-            status_text = {
-                "pending": "Nueva",
-                "accepted": "Aceptada",
-                "ready": "Lista",
-                "completed": "Completada",
-                "cancelled": "Cancelada"
-            }.get(order.get("status", "pending"), "Pendiente")
+            items = order.get("items", [])
+            total_items = sum(item.get("quantity", 1) for item in items)
+            pulperia_name = pulperia_map.get(order.get("pulperia_id"), "Tu Pulpería")
+            
+            # Create item summary
+            item_summary = ", ".join([f"{item.get('quantity', 1)}x {item.get('product_name', 'Producto')}" for item in items[:3]])
+            if len(items) > 3:
+                item_summary += f" +{len(items) - 3} más"
             
             notifications.append({
                 "id": order["order_id"],
                 "type": "new_order" if order.get("status") == "pending" else "order_update",
-                "title": f"Orden de {customer_name}",
-                "message": f"#{order['order_id'][-6:]} - L{order.get('total', 0):.2f}",
+                "title": f"Pedido de {customer_name}",
+                "message": item_summary or "Sin productos",
                 "status": order.get("status", "pending"),
                 "created_at": order.get("created_at"),
                 "order_id": order["order_id"],
-                "customer_name": customer_name
+                "customer_name": customer_name,
+                "items": items,
+                "total": order.get("total", 0),
+                "total_items": total_items,
+                "pulperia_name": pulperia_name,
+                "role": "owner"
             })
     
     return notifications
