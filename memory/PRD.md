@@ -3,12 +3,12 @@
 ## Original Problem Statement
 Aplicación web para pulperías hondureñas con Google OAuth, sistema de roles, mapa interactivo, catálogo de productos, sistema de pedidos, panel de administración, y sección de empleos/servicios ("Chamba").
 
-## Design System - Estilo Grok
-- **Fondo**: stone-950 (oscuro sólido, sin gradientes)
-- **Animación**: Partículas flotantes simples (puntitos, sin brillo)
-- **Colores**: Rojo para app general, Azul para sección Chamba
-- **UI**: Minimalista, limpia, sin sombras excesivas
-- **Tipografía**: Pesos normales, sin negritas excesivas
+## Design System - Estilo Grok con Nebulosa
+- **Fondo**: stone-950 con nebulosa roja (blur gradients)
+- **Animación**: Partículas flotantes simples (puntitos sin brillo)
+- **Scrollbar**: Oscuro (stone-900/stone-800) - NO blanco
+- **Colores**: Rojo para app general, Azul para Chamba
+- **UI**: Minimalista, bordes stone-800, sin sombras excesivas
 
 ## Core Features
 
@@ -30,44 +30,39 @@ Aplicación web para pulperías hondureñas con Google OAuth, sistema de roles, 
 
 ## Implemented (December 31, 2025)
 
-### UI Refresh - Estilo Grok
-- [x] AnimatedBackground: Partículas simples flotantes (sin brillo)
-- [x] Landing page: Minimalista, centrada, limpia
-- [x] Header: Simplificado, backdrop-blur-sm
-- [x] BottomNav: Simplificado, iconos más pequeños
-- [x] MapView: Fondo sólido, botones simples
-- [x] SearchProducts: Estilo consistente
-- [x] JobsServices: Tema azul con partículas azules
+### UI Overhaul Completo
+- [x] **Landing Page**: Nebulosa roja con partículas flotantes
+- [x] **Scrollbar oscuro**: CSS personalizado para todas las páginas
+- [x] **Header z-index**: Corregido para notificaciones (z-99999)
+- [x] **Advertising Page**: Overhaul visual con colores emerald, violet, amber
+- [x] **OrderHistory/Reportes**: Overhaul visual y funcional con cards oscuras
+- [x] **PulperiaDashboard**: Estilo oscuro consistente
+- [x] **Todas las páginas**: bg-stone-950, borders stone-800
 
-### Admin Panel
-- [x] Contraseña requerida: AlEjA127
-- [x] Badges en español
-- [x] Baneo temporal con duración
-- [x] Mensajes a pulperías
-- [x] Precios actualizados
-
-### Pulperia Dashboard
-- [x] Preview del banner visible
-- [x] Pestaña "Mensajes del Admin"
+### Componentes Actualizados
+- AnimatedBackground: Partículas simples flotantes
+- Header: Simplificado, dropdown z-99999
+- BottomNav: Estilo oscuro
+- index.css: Scrollbar oscuro, variables dark theme
 
 ---
 
-## API Pricing
-- Básico: L.200 / 7 días
-- Destacado: L.400 / 15 días  
-- Premium: L.600 / 30 días
+## Visual Theme Specs
+```css
+/* Colors */
+Background: #0c0a09 (stone-950)
+Cards: #1c1917 (stone-900)
+Borders: #292524 (stone-800)
+Text Primary: white
+Text Secondary: #78716c (stone-500)
+Accent Red: #ef4444 (red-500)
+Accent Blue: #3b82f6 (blue-500)
 
-## Badge System (Spanish)
-| ID | Name | Icon |
-|----|------|------|
-| novato | Novato | Star |
-| en_ascenso | En Ascenso | Zap |
-| en_llamas | En Llamas | Flame |
-| elite | Élite | Gem |
-| campeon | Campeón | Trophy |
-| legendario | Legendario | Crown |
-| verificado | Verificado | Check |
-| socio | Socio Oficial | Target |
+/* Scrollbar */
+Track: #0c0a09
+Thumb: #292524
+Thumb Hover: #44403c
+```
 
 ---
 
@@ -78,10 +73,6 @@ Aplicación web para pulperías hondureñas con Google OAuth, sistema de roles, 
 
 ### P2
 - [ ] Botón fullscreen mapa
-
-### P3
-- [ ] Push notifications
-- [ ] Pagos integrados
 
 ---
 
