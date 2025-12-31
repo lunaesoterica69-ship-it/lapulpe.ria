@@ -161,6 +161,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
                           const Icon = config.icon;
                           const isOwner = notification.role === 'owner';
                           const isSelected = selectedOrder?.order_id === notification.order_id;
+                          const totalItems = notification.total_items || notification.items?.length || 0;
 
                           return (
                             <div key={notification.order_id} className="bg-stone-900">
@@ -176,8 +177,11 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
                                     <p className="text-white font-medium text-sm truncate">
                                       {isOwner ? notification.customer_name : notification.pulperia_name}
                                     </p>
-                                    <p className="text-stone-500 text-xs">
-                                      {notification.items?.length || 0} productos • L{notification.total?.toFixed(0)}
+                                    <p className="text-stone-400 text-xs truncate">
+                                      {notification.message}
+                                    </p>
+                                    <p className="text-stone-500 text-xs mt-0.5">
+                                      {totalItems} {totalItems === 1 ? 'producto' : 'productos'} • L{notification.total?.toFixed(0) || 0}
                                     </p>
                                   </div>
                                   <div className="text-right">
@@ -187,9 +191,34 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
                                 </div>
                               </button>
 
-                              {/* Status Update Panel for Owners */}
+                              {/* Expanded Order Details for Owners */}
                               {isSelected && isOwner && (
                                 <div className="px-4 pb-4 bg-stone-800/30">
+                                  {/* Items List */}
+                                  {notification.items && notification.items.length > 0 && (
+                                    <div className="mb-3 p-3 bg-stone-900/50 rounded-xl">
+                                      <p className="text-xs text-stone-400 mb-2 font-medium flex items-center gap-1">
+                                        <ShoppingBag className="w-3 h-3" /> Productos:
+                                      </p>
+                                      <div className="space-y-1">
+                                        {notification.items.map((item, idx) => (
+                                          <div key={idx} className="flex justify-between text-xs">
+                                            <span className="text-white">
+                                              {item.quantity}x {item.product_name}
+                                            </span>
+                                            <span className="text-stone-400">
+                                              L{(item.price * item.quantity).toFixed(0)}
+                                            </span>
+                                          </div>
+                                        ))}
+                                        <div className="flex justify-between text-sm pt-2 border-t border-stone-700 mt-2">
+                                          <span className="text-white font-bold">Total:</span>
+                                          <span className="text-green-400 font-bold">L{notification.total?.toFixed(0)}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                  
                                   <p className="text-xs text-stone-500 mb-3">Cambiar estado:</p>
                                   <div className="grid grid-cols-2 gap-2">
                                     {notification.status === 'pending' && (
