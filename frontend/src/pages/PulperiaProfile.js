@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package } from 'lucide-react';
+import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
@@ -34,6 +34,8 @@ const PulperiaProfile = () => {
   const [comment, setComment] = useState('');
   const [hasReviewed, setHasReviewed] = useState(false);
   const [activeTab, setActiveTab] = useState('products');
+  const [showLogoModal, setShowLogoModal] = useState(false);
+  const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +53,14 @@ const PulperiaProfile = () => {
         setProducts(productsRes.data.filter(p => p.available !== false));
         setReviews(reviewsRes.data);
         setJobs(jobsRes.data);
+        
+        // Fetch announcements
+        try {
+          const announcementsRes = await axios.get(`${BACKEND_URL}/api/pulperias/${id}/announcements`);
+          setAnnouncements(announcementsRes.data);
+        } catch (e) {
+          setAnnouncements([]);
+        }
         
         const userReview = reviewsRes.data.find(r => r.user_id === userRes.data.user_id);
         setHasReviewed(!!userReview);
