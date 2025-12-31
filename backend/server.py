@@ -1431,6 +1431,67 @@ async def broadcast_order_update(order: dict, event_type: str):
         await ws_manager.broadcast_to_user(customer_id, customer_notification)
 
 # ============================================
+# IMAGE UPLOAD ENDPOINT
+# ============================================
+
+@api_router.post("/upload-image")
+async def upload_image(file: UploadFile = File(...), authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Upload an image and return its base64 data URL"""
+    user = await get_current_user(authorization, session_token)
+    
+    # Validate file type
+    allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Tipo de archivo no permitido. Use JPEG, PNG, GIF o WebP.")
+    
+    # Read file content
+    content = await file.read()
+    
+    # Check file size (max 5MB)
+    max_size = 5 * 1024 * 1024  # 5MB
+    if len(content) > max_size:
+        raise HTTPException(status_code=400, detail="Archivo demasiado grande. Máximo 5MB.")
+    
+    # Convert to base64 data URL
+    base64_content = base64.b64encode(content).decode('utf-8')
+    data_url = f"data:{file.content_type};base64,{base64_content}"
+    
+    return {"image_url": data_url, "filename": file.filename, "size": len(content)}
+
+@api_router.delete("/admin/clear-orders")
+async def admin_clear_orders(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Clear all orders from the system"""
+    await get_admin_user(authorization, session_token)
+    
+    result = await db.orders.delete_many({})
+    return {"message": f"Se eliminaron {result.deleted_count} órdenes del sistema"}
+
+@api_router.delete("/admin/clear-data")
+async def admin_clear_data(keep_products: bool = True, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Clear data from the system"""
+    await get_admin_user(authorization, session_token)
+    
+    deleted = {}
+    
+    # Clear orders
+    result = await db.orders.delete_many({})
+    deleted["orders"] = result.deleted_count
+    
+    # Clear announcements
+    result = await db.announcements.delete_many({})
+    deleted["announcements"] = result.deleted_count
+    
+    # Clear reviews (optional)
+    # result = await db.reviews.delete_many({})
+    # deleted["reviews"] = result.deleted_count
+    
+    if not keep_products:
+        result = await db.products.delete_many({})
+        deleted["products"] = result.deleted_count
+    
+    return {"message": "Datos limpiados", "deleted": deleted}
+
+# ============================================
 # CORS MIDDLEWARE
 # ============================================
 
