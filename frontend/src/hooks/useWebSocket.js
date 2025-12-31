@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { notifyNewOrder, notifyOrderStatusChange, requestNotificationPermission } from './useNotifications';
 
 /**
  * Custom hook for WebSocket connection with auto-reconnect
- * Provides real-time order updates for pulperías
+ * Provides real-time order updates with browser notifications
  */
 export const useWebSocket = (userId, onMessage) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -12,6 +13,11 @@ export const useWebSocket = (userId, onMessage) => {
   const connectRef = useRef(null);
   const MAX_RECONNECT_ATTEMPTS = 5;
   const RECONNECT_DELAY = 3000;
+
+  // Request notification permission on mount
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
 
   // Get WebSocket URL from environment
   const getWsUrl = useCallback(() => {
@@ -24,14 +30,12 @@ export const useWebSocket = (userId, onMessage) => {
   const connect = useCallback(() => {
     if (!userId) return;
     
-    // Don't reconnect if already connected
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       return;
     }
 
     try {
       const wsUrl = getWsUrl();
-      
       const socket = new WebSocket(wsUrl);
 
       socket.onopen = () => {
@@ -51,7 +55,26 @@ export const useWebSocket = (userId, onMessage) => {
             return;
           }
           
-          // Pass other messages to callback
+          // Send browser notifications for important events
+          if (data.type === 'order_update') {
+            const { event: orderEvent, order, target } = data;
+            
+            // Notification for pulperia owners - new order
+            if (orderEvent === 'new_order' && target === 'owner') {
+              notifyNewOrder(
+                order.customer_name,
+                order.total?.toFixed(0) || '0',
+                order.pulperia_name || 'tu pulpería'
+              );
+            }
+            
+            // Notification for customers - status changes
+            if (target === 'customer' && ['accepted', 'ready', 'completed'].includes(order.status)) {
+              notifyOrderStatusChange(order.status, order.pulperia_name || 'La Pulpería');
+            }
+          }
+          
+          // Pass to callback
           if (onMessage) {
             onMessage(data);
           }
@@ -68,7 +91,6 @@ export const useWebSocket = (userId, onMessage) => {
         setIsConnected(false);
         wsRef.current = null;
 
-        // Silent reconnect with exponential backoff
         if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
           reconnectAttemptsRef.current += 1;
           const delay = Math.min(RECONNECT_DELAY * Math.pow(1.5, reconnectAttemptsRef.current - 1), 15000);
@@ -87,7 +109,6 @@ export const useWebSocket = (userId, onMessage) => {
     }
   }, [userId, getWsUrl, onMessage]);
 
-  // Keep reference to connect function updated
   useEffect(() => {
     connectRef.current = connect;
   }, [connect]);
@@ -112,10 +133,8 @@ export const useWebSocket = (userId, onMessage) => {
     setIsConnected(false);
   }, []);
 
-  // Connect on mount, disconnect on unmount
   useEffect(() => {
     if (userId) {
-      // Small delay to avoid connection during initial render
       const timeout = setTimeout(() => {
         connect();
       }, 500);
@@ -129,7 +148,6 @@ export const useWebSocket = (userId, onMessage) => {
     };
   }, [disconnect]);
 
-  // Keep-alive ping every 30 seconds
   useEffect(() => {
     if (!isConnected) return;
 
