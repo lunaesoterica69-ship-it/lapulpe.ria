@@ -9,6 +9,7 @@ import './App.css';
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const MapView = lazy(() => import('./pages/MapView'));
 const PulperiaProfile = lazy(() => import('./pages/PulperiaProfile'));
+const SharedPulperiaLink = lazy(() => import('./pages/SharedPulperiaLink'));
 const SearchProducts = lazy(() => import('./pages/SearchProducts'));
 const ShoppingCart = lazy(() => import('./pages/ShoppingCart'));
 const MyOrders = lazy(() => import('./pages/MyOrders'));
