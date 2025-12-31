@@ -370,6 +370,60 @@ const PulperiaProfile = () => {
           </div>
         )}
 
+        {activeTab === 'anuncios' && (
+          <div className="space-y-4">
+            {announcements.length === 0 ? (
+              <div className="text-center py-12 bg-stone-800/30 rounded-2xl border border-stone-700/50">
+                <Megaphone className="w-12 h-12 text-stone-600 mx-auto mb-3" />
+                <p className="text-stone-500">No hay anuncios publicados</p>
+                <p className="text-stone-600 text-sm mt-1">Esta pulpería aún no ha publicado anuncios</p>
+              </div>
+            ) : (
+              announcements.map(announcement => (
+                <div key={announcement.announcement_id} className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden">
+                  {/* Announcement Image */}
+                  {announcement.image_url && (
+                    <img 
+                      src={announcement.image_url} 
+                      alt="Anuncio" 
+                      className="w-full h-48 object-cover"
+                    />
+                  )}
+                  
+                  {/* Announcement Content */}
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      {pulperia.logo_url && (
+                        <img src={pulperia.logo_url} alt={pulperia.name} className="w-8 h-8 rounded-full object-cover" />
+                      )}
+                      <div>
+                        <p className="font-bold text-white text-sm">{pulperia.name}</p>
+                        <p className="text-stone-500 text-xs">
+                          {new Date(announcement.created_at).toLocaleDateString('es-HN', { 
+                            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <p className="text-white">{announcement.content}</p>
+                    
+                    {announcement.tags && announcement.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {announcement.tags.map((tag, i) => (
+                          <span key={i} className="text-xs bg-red-900/50 text-red-400 px-2 py-1 rounded-full">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
         {activeTab === 'reviews' && (
           <div className="space-y-3">
             {user?.user_type === 'cliente' && !hasReviewed && (
