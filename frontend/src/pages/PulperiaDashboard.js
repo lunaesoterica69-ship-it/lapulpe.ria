@@ -729,7 +729,7 @@ const PulperiaDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+    <div className="min-h-screen bg-stone-950 pb-24">
       <AnimatedBackground variant="minimal" />
       
       {/* Header with Profile Dropdown */}
@@ -747,7 +747,7 @@ const PulperiaDashboard = () => {
             alt="Banner" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent"></div>
           <div className="absolute bottom-3 left-4 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-lg">
             <p className="text-xs text-white/70">Vista previa del banner</p>
           </div>
@@ -755,32 +755,32 @@ const PulperiaDashboard = () => {
       )}
       
       {/* Pulperia Info Section */}
-      <div className={`bg-gradient-to-b from-stone-800 to-transparent text-white px-6 pb-6 ${selectedPulperia?.banner_url ? '-mt-8 relative z-10' : ''}`}>
+      <div className={`relative z-10 px-4 pb-4 ${selectedPulperia?.banner_url ? '-mt-8' : 'pt-4'}`}>
         {pulperias.length === 0 ? (
           <Button
             data-testid="create-pulperia-button"
             onClick={() => setShowPulperiaDialog(true)}
-            className="bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-500 hover:to-red-400 font-bold shadow-lg"
+            className="bg-red-600 hover:bg-red-500 text-white font-medium"
           >
             <Plus className="w-5 h-5 mr-2" />
             Crear Mi Pulpería
           </Button>
         ) : (
-          <div className="bg-stone-700/50 backdrop-blur-sm rounded-xl p-4 flex items-center gap-4 border border-stone-600">
+          <div className="bg-stone-900 rounded-xl p-4 flex items-center gap-4 border border-stone-800">
             {selectedPulperia.logo_url && (
               <img
                 src={selectedPulperia.logo_url}
                 alt={selectedPulperia.name}
-                className="w-12 h-12 rounded-full object-cover border-2 border-red-400"
+                className="w-12 h-12 rounded-full object-cover border-2 border-red-500"
               />
             )}
             <div className="flex-1">
-              <p className="text-sm text-red-400 mb-1">Pulpería Activa:</p>
-              <p className="text-xl font-bold text-white">{selectedPulperia?.name}</p>
+              <p className="text-xs text-stone-500 mb-0.5">Pulpería Activa</p>
+              <p className="text-lg font-bold text-white">{selectedPulperia?.name}</p>
             </div>
             <Button
               onClick={handleEditPulperia}
-              className="bg-stone-600 hover:bg-stone-500 text-white border-0"
+              className="bg-stone-800 hover:bg-stone-700 text-white border border-stone-700"
             >
               <Edit className="w-4 h-4 mr-2" />
               Editar
