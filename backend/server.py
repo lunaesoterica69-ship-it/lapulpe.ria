@@ -594,6 +594,53 @@ async def create_review(pulperia_id: str, review_data: ReviewCreate, authorizati
     
     return await db.reviews.find_one({"review_id": review_id}, {"_id": 0})
 
+@api_router.get("/pulperias/{pulperia_id}/announcements")
+async def get_pulperia_announcements(pulperia_id: str):
+    """Get all announcements for a pulperia"""
+    announcements = await db.announcements.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return announcements
+
+@api_router.post("/pulperias/{pulperia_id}/announcements")
+async def create_announcement(pulperia_id: str, content: str = "", image_url: Optional[str] = None, tags: Optional[List[str]] = None, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Create an announcement for a pulperia"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    if pulperia["owner_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Solo el dueño puede crear anuncios")
+    
+    announcement_id = f"ann_{uuid.uuid4().hex[:12]}"
+    announcement_doc = {
+        "announcement_id": announcement_id,
+        "pulperia_id": pulperia_id,
+        "content": content,
+        "image_url": image_url,
+        "tags": tags or [],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.announcements.insert_one(announcement_doc)
+    return await db.announcements.find_one({"announcement_id": announcement_id}, {"_id": 0})
+
+@api_router.delete("/announcements/{announcement_id}")
+async def delete_announcement(announcement_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Delete an announcement"""
+    user = await get_current_user(authorization, session_token)
+    
+    announcement = await db.announcements.find_one({"announcement_id": announcement_id}, {"_id": 0})
+    if not announcement:
+        raise HTTPException(status_code=404, detail="Anuncio no encontrado")
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": announcement["pulperia_id"]}, {"_id": 0})
+    if pulperia["owner_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Solo el dueño puede eliminar anuncios")
+    
+    await db.announcements.delete_one({"announcement_id": announcement_id})
+    return {"message": "Anuncio eliminado"}
+
 # ============================================
 # PRODUCT ENDPOINTS
 # ============================================
