@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { 
   Shield, Store, Crown, Sparkles, Star, Check, X, Clock, Calendar, Search, 
   Ban, MessageSquare, Award, Zap, Flame, Gem, Trophy, Target, Rocket, 
-  Users, ChevronRight, Send, Eye, AlertTriangle
+  Users, ChevronRight, Send, Eye, AlertTriangle, Lock, Unlock
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
@@ -17,20 +17,21 @@ import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const ADMIN_PASSWORD = 'AlEjA127';
 
-// Gaming-style Badge System
+// Sistema de Badges en Español - Estilo Gaming
 const BADGES = [
-  { id: 'starter', name: 'Starter', icon: Star, color: 'from-gray-500 to-gray-600', glow: 'shadow-gray-500/50', description: 'Nuevo en la plataforma' },
-  { id: 'rising', name: 'Rising Star', icon: Zap, color: 'from-blue-500 to-blue-600', glow: 'shadow-blue-500/50', description: 'En crecimiento' },
-  { id: 'fire', name: 'On Fire', icon: Flame, color: 'from-orange-500 to-red-500', glow: 'shadow-orange-500/50', description: 'Muy activo' },
-  { id: 'elite', name: 'Elite', icon: Gem, color: 'from-purple-500 to-pink-500', glow: 'shadow-purple-500/50', description: 'Vendedor destacado' },
-  { id: 'champion', name: 'Champion', icon: Trophy, color: 'from-yellow-400 to-amber-500', glow: 'shadow-yellow-500/50', description: 'Top vendedor' },
-  { id: 'legendary', name: 'Legendary', icon: Crown, color: 'from-amber-400 via-yellow-500 to-amber-600', glow: 'shadow-amber-500/50', description: 'Legendario' },
-  { id: 'verified', name: 'Verified', icon: Check, color: 'from-emerald-500 to-green-600', glow: 'shadow-emerald-500/50', description: 'Verificado oficialmente' },
-  { id: 'partner', name: 'Partner', icon: Target, color: 'from-cyan-500 to-blue-500', glow: 'shadow-cyan-500/50', description: 'Socio oficial' },
+  { id: 'novato', name: 'Novato', icon: Star, color: 'from-gray-500 to-gray-600', glow: 'shadow-gray-500/50', description: 'Nuevo en la plataforma' },
+  { id: 'en_ascenso', name: 'En Ascenso', icon: Zap, color: 'from-blue-500 to-blue-600', glow: 'shadow-blue-500/50', description: 'Creciendo rápidamente' },
+  { id: 'en_llamas', name: 'En Llamas', icon: Flame, color: 'from-orange-500 to-red-500', glow: 'shadow-orange-500/50', description: 'Muy activo' },
+  { id: 'elite', name: 'Élite', icon: Gem, color: 'from-purple-500 to-pink-500', glow: 'shadow-purple-500/50', description: 'Vendedor destacado' },
+  { id: 'campeon', name: 'Campeón', icon: Trophy, color: 'from-yellow-400 to-amber-500', glow: 'shadow-yellow-500/50', description: 'Top vendedor' },
+  { id: 'legendario', name: 'Legendario', icon: Crown, color: 'from-amber-400 via-yellow-500 to-amber-600', glow: 'shadow-amber-500/50', description: 'Leyenda viviente' },
+  { id: 'verificado', name: 'Verificado', icon: Check, color: 'from-emerald-500 to-green-600', glow: 'shadow-emerald-500/50', description: 'Verificado oficialmente' },
+  { id: 'socio', name: 'Socio Oficial', icon: Target, color: 'from-cyan-500 to-blue-500', glow: 'shadow-cyan-500/50', description: 'Socio de La Pulpería' },
 ];
 
-// Badge Component with gaming effects
+// Componente de Badge con efectos gaming
 const BadgeDisplay = ({ badgeId, size = 'md', showName = true, animated = true }) => {
   const badge = BADGES.find(b => b.id === badgeId);
   if (!badge) return null;
@@ -52,15 +53,10 @@ const BadgeDisplay = ({ badgeId, size = 'md', showName = true, animated = true }
   return (
     <div className="flex items-center gap-2">
       <div className={`relative ${animated ? 'group' : ''}`}>
-        {/* Glow effect */}
         <div className={`absolute inset-0 bg-gradient-to-r ${badge.color} rounded-xl blur-lg opacity-50 ${animated ? 'group-hover:opacity-80' : ''} transition-opacity`}></div>
-        
-        {/* Badge container */}
         <div className={`relative ${sizes[size]} bg-gradient-to-br ${badge.color} rounded-xl flex items-center justify-center shadow-lg ${badge.glow} ${animated ? 'group-hover:scale-110' : ''} transition-transform`}>
           <Icon className={`${iconSizes[size]} text-white drop-shadow-lg`} />
         </div>
-        
-        {/* Sparkle effect */}
         {animated && (
           <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-ping opacity-75"></div>
         )}
@@ -89,6 +85,11 @@ const AdminPanel = () => {
   const [selectedDuration, setSelectedDuration] = useState(7);
   const [activeTab, setActiveTab] = useState('pulperias');
   
+  // Password protection
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPasswordDialog, setShowPasswordDialog] = useState(true);
+  
   // Dialogs
   const [showMessageDialog, setShowMessageDialog] = useState(false);
   const [showBadgeDialog, setShowBadgeDialog] = useState(false);
@@ -99,6 +100,18 @@ const AdminPanel = () => {
   const [messageText, setMessageText] = useState('');
   const [selectedBadge, setSelectedBadge] = useState('');
   const [suspendReason, setSuspendReason] = useState('');
+  const [suspendDays, setSuspendDays] = useState(7);
+
+  const handlePasswordSubmit = () => {
+    if (passwordInput === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowPasswordDialog(false);
+      toast.success('¡Acceso autorizado!');
+    } else {
+      toast.error('Contraseña incorrecta');
+      setPasswordInput('');
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -132,9 +145,11 @@ const AdminPanel = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (isAuthenticated) {
+      fetchData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthenticated]);
 
   const handleActivateAd = async (pulperiaId) => {
     try {
@@ -169,11 +184,12 @@ const AdminPanel = () => {
       await axios.post(
         `${BACKEND_URL}/api/admin/pulperias/${selectedPulperia.pulperia_id}/suspend`,
         null,
-        { params: { reason: suspendReason }, withCredentials: true }
+        { params: { reason: suspendReason, days: suspendDays }, withCredentials: true }
       );
-      toast.success('Pulpería suspendida');
+      toast.success(`Pulpería suspendida por ${suspendDays} días`);
       setShowSuspendDialog(false);
       setSuspendReason('');
+      setSuspendDays(7);
       setSelectedPulperia(null);
       fetchData();
     } catch (error) {
@@ -235,6 +251,14 @@ const AdminPanel = () => {
     }
   };
 
+  const getPlanPrice = (plan) => {
+    switch (plan) {
+      case 'premium': return 'L. 600';
+      case 'destacado': return 'L. 400';
+      default: return 'L. 200';
+    }
+  };
+
   const filteredPulperias = pulperias.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.address?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -243,6 +267,55 @@ const AdminPanel = () => {
   const getActiveAd = (pulperiaId) => {
     return ads.find(ad => ad.pulperia_id === pulperiaId && ad.status === 'active');
   };
+
+  // Password Dialog
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-950 via-red-950 to-stone-950">
+        <AnimatedBackground />
+        <Dialog open={showPasswordDialog} onOpenChange={() => {}}>
+          <DialogContent className="bg-stone-900 border-stone-700 max-w-sm" hideClose>
+            <DialogHeader>
+              <DialogTitle className="text-white flex items-center gap-2 justify-center">
+                <div className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30 mb-2">
+                  <Lock className="w-7 h-7 text-white" />
+                </div>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="text-center mb-4">
+              <h2 className="text-xl font-bold text-white">Panel de Administración</h2>
+              <p className="text-stone-400 text-sm mt-1">Ingresa la contraseña para continuar</p>
+            </div>
+            <div className="space-y-4">
+              <Input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                placeholder="Contraseña"
+                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500 text-center text-lg"
+                autoFocus
+              />
+              <Button 
+                onClick={handlePasswordSubmit} 
+                className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-900/30"
+              >
+                <Unlock className="w-4 h-4 mr-2" />
+                Acceder
+              </Button>
+              <Button 
+                onClick={() => navigate('/')} 
+                variant="ghost"
+                className="w-full text-stone-400 hover:text-white"
+              >
+                Volver al inicio
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -323,7 +396,7 @@ const AdminPanel = () => {
         {/* Pulperias Tab */}
         {activeTab === 'pulperias' && (
           <div className="space-y-4">
-            {/* Plan Selection */}
+            {/* Plan Selection - Updated prices */}
             <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl p-4 border border-stone-700/50">
               <h3 className="font-bold text-white mb-3 flex items-center gap-2">
                 <Rocket className="w-5 h-5 text-red-400" />
@@ -343,6 +416,7 @@ const AdminPanel = () => {
                   >
                     {getPlanIcon(plan)}
                     <span className="capitalize">{plan}</span>
+                    <span className="text-xs opacity-75">{getPlanPrice(plan)}</span>
                   </button>
                 ))}
               </div>
@@ -411,6 +485,11 @@ const AdminPanel = () => {
                             )}
                           </div>
                           <p className="text-xs text-stone-400 truncate">{pulperia.address}</p>
+                          {pulperia.suspend_until && isSuspended && (
+                            <p className="text-xs text-orange-400">
+                              Hasta: {new Date(pulperia.suspend_until).toLocaleDateString('es-HN')}
+                            </p>
+                          )}
                           {activeAd && (
                             <div className="flex items-center gap-1 mt-1">
                               {getPlanIcon(activeAd.plan)}
@@ -467,7 +546,7 @@ const AdminPanel = () => {
                         <button
                           onClick={() => handleUnsuspend(pulperia.pulperia_id)}
                           className="bg-green-500/20 text-green-400 py-2 px-3 rounded-xl text-sm font-bold border border-green-500/50 hover:bg-green-500/30 transition-all"
-                          title="Reactivar"
+                          title="Desbanear"
                         >
                           <Check className="w-4 h-4" />
                         </button>
@@ -475,7 +554,7 @@ const AdminPanel = () => {
                         <button
                           onClick={() => { setSelectedPulperia(pulperia); setShowSuspendDialog(true); }}
                           className="bg-orange-500/20 text-orange-400 py-2 px-3 rounded-xl text-sm font-bold border border-orange-500/50 hover:bg-orange-500/30 transition-all"
-                          title="Suspender"
+                          title="Banear Temporalmente"
                         >
                           <Ban className="w-4 h-4" />
                         </button>
@@ -691,23 +770,43 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Suspend Dialog */}
+      {/* Suspend Dialog - Updated for temporary ban */}
       <Dialog open={showSuspendDialog} onOpenChange={setShowSuspendDialog}>
         <DialogContent className="bg-stone-900 border-stone-700 max-w-md">
           <DialogHeader>
             <DialogTitle className="text-white flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-orange-400" />
-              Suspender {selectedPulperia?.name}
+              Banear Temporalmente: {selectedPulperia?.name}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-3">
               <p className="text-orange-400 text-sm">
-                Esta acción ocultará la pulpería del mapa y búsquedas. El dueño será notificado.
+                Esta acción ocultará la pulpería del mapa y búsquedas durante el tiempo especificado. El dueño será notificado.
               </p>
             </div>
+            
             <div>
-              <Label className="text-white">Razón de la suspensión</Label>
+              <Label className="text-white">Duración del baneo</Label>
+              <div className="grid grid-cols-4 gap-2 mt-2">
+                {[1, 3, 7, 30].map(days => (
+                  <button
+                    key={days}
+                    onClick={() => setSuspendDays(days)}
+                    className={`py-2 px-3 rounded-xl font-bold text-sm transition-all ${
+                      suspendDays === days
+                        ? 'bg-orange-600 text-white'
+                        : 'bg-stone-700/50 text-stone-300 hover:bg-stone-700 border border-stone-600'
+                    }`}
+                  >
+                    {days} {days === 1 ? 'día' : 'días'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <Label className="text-white">Razón del baneo</Label>
               <Textarea
                 value={suspendReason}
                 onChange={(e) => setSuspendReason(e.target.value)}
@@ -718,7 +817,7 @@ const AdminPanel = () => {
             </div>
             <Button onClick={handleSuspend} className="w-full bg-orange-600 hover:bg-orange-500">
               <Ban className="w-4 h-4 mr-2" />
-              Confirmar Suspensión
+              Confirmar Baneo por {suspendDays} días
             </Button>
           </div>
         </DialogContent>
