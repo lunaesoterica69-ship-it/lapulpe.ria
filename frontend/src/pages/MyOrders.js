@@ -5,7 +5,7 @@ import { Package, Clock, CheckCircle, XCircle, ShoppingBag, Sparkles, Zap, Troph
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
-import Pulpero, { getPulperoMessage } from '../components/Pulpito';
+import Pulpero, { getPulperoMessage } from '../components/Pulpero';
 import useWebSocket from '../hooks/useWebSocket';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
