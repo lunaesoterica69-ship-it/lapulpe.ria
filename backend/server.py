@@ -1305,6 +1305,114 @@ async def admin_deactivate_ad(ad_id: str, authorization: Optional[str] = Header(
     
     return {"message": "Anuncio desactivado"}
 
+@api_router.post("/admin/pulperias/{pulperia_id}/suspend")
+async def admin_suspend_pulperia(pulperia_id: str, reason: str = "", authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Suspend a pulperia"""
+    admin = await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": {"is_suspended": True, "suspension_reason": reason, "suspended_by": admin.email, "suspended_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    return {"message": "Pulpería suspendida"}
+
+@api_router.post("/admin/pulperias/{pulperia_id}/unsuspend")
+async def admin_unsuspend_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Unsuspend a pulperia"""
+    await get_admin_user(authorization, session_token)
+    
+    await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": {"is_suspended": False, "suspension_reason": None}}
+    )
+    
+    return {"message": "Pulpería reactivada"}
+
+@api_router.post("/admin/pulperias/{pulperia_id}/badge")
+async def admin_set_badge(pulperia_id: str, badge: str = "", authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Set a badge for a pulperia"""
+    await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": {"badge": badge if badge else None}}
+    )
+    
+    return {"message": "Badge actualizado"}
+
+@api_router.post("/admin/pulperias/{pulperia_id}/message")
+async def admin_send_message(pulperia_id: str, message: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Send a message to a pulperia"""
+    admin = await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    message_id = f"msg_{uuid.uuid4().hex[:12]}"
+    message_doc = {
+        "message_id": message_id,
+        "pulperia_id": pulperia_id,
+        "pulperia_name": pulperia["name"],
+        "from_admin": True,
+        "sender": admin.email,
+        "message": message,
+        "read": False,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.admin_messages.insert_one(message_doc)
+    
+    # Broadcast via WebSocket if pulperia owner is connected
+    owner_id = pulperia.get("owner_user_id")
+    if owner_id:
+        await ws_manager.broadcast_to_user(owner_id, {
+            "type": "admin_message",
+            "message": message,
+            "from": "Administrador"
+        })
+    
+    return {"message": "Mensaje enviado", "message_id": message_id}
+
+@api_router.get("/admin/messages")
+async def admin_get_messages(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Get all admin messages"""
+    await get_admin_user(authorization, session_token)
+    
+    messages = await db.admin_messages.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return messages
+
+@api_router.get("/pulperias/{pulperia_id}/admin-messages")
+async def get_pulperia_admin_messages(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get admin messages for a pulperia"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    if pulperia["owner_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="No tienes permiso")
+    
+    messages = await db.admin_messages.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    
+    # Mark as read
+    await db.admin_messages.update_many(
+        {"pulperia_id": pulperia_id, "read": False},
+        {"$set": {"read": True}}
+    )
+    
+    return messages
+
 # ============================================
 # WEBSOCKET CONNECTION MANAGER
 # ============================================
