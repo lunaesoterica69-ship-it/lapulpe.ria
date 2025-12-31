@@ -114,7 +114,7 @@ const PulperiaProfile = () => {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, checkFavorite]);
 
   // Save cart with minimal data
   const saveCart = (newCart) => {
