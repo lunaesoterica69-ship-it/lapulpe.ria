@@ -205,13 +205,13 @@ const PulperiaProfile = () => {
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
       <AnimatedBackground variant="minimal" />
       
-      {/* Banner - estilo X/Facebook */}
-      <div className="relative h-40 md:h-48 overflow-hidden">
+      {/* Banner - estilo X/Facebook con imagen ajustada */}
+      <div className="relative h-48 md:h-56 overflow-hidden">
         {pulperia.banner_url ? (
           <img 
             src={pulperia.banner_url} 
             alt="Banner" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
         ) : (
           <div 
@@ -219,7 +219,7 @@ const PulperiaProfile = () => {
             style={{ background: `linear-gradient(135deg, ${bgColor} 0%, ${bgColor}99 50%, #1c1917 100%)` }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent" />
         
         <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-black/60 transition-all z-10">
           <ArrowLeft className="w-5 h-5" />
