@@ -652,6 +652,12 @@ async def delete_announcement(announcement_id: str, authorization: Optional[str]
     await db.announcements.delete_one({"announcement_id": announcement_id})
     return {"message": "Anuncio eliminado"}
 
+@api_router.get("/pulperias/{pulperia_id}/jobs")
+async def get_pulperia_jobs(pulperia_id: str):
+    """Get all jobs for a pulperia"""
+    jobs = await db.jobs.find({"pulperia_id": pulperia_id}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return jobs
+
 # ============================================
 # PRODUCT ENDPOINTS
 # ============================================
