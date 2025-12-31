@@ -268,10 +268,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Order Notification System"
-    - "Order Customer Name Display"
-  stuck_tasks:
-    - "Order Notification System"
+    - "Final La Pulpería Updates Testing"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
