@@ -314,6 +314,7 @@ const PulperiaDashboard = () => {
       lat: selectedPulperia.location.lat.toString(),
       lng: selectedPulperia.location.lng.toString(),
       logo_url: selectedPulperia.logo_url || '',
+      banner_url: selectedPulperia.banner_url || '',
       title_font: selectedPulperia.title_font || 'default',
       background_color: selectedPulperia.background_color || '#DC2626'
     });
