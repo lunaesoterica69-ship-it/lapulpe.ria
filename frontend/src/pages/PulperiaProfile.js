@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image, Heart } from 'lucide-react';
+import { MapPin, Phone, Clock, Plus, Minus, ShoppingCart, ArrowLeft, Star, Send, Camera, Check, X, Briefcase, Mail, Globe, DollarSign, Package, Megaphone, Image, Heart, ZoomIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import AnimatedBackground from '../components/AnimatedBackground';
@@ -18,6 +18,34 @@ const FONT_CLASSES = {
   serif: 'font-serif font-bold',
   script: 'font-serif italic',
   bold: 'font-extrabold tracking-tight'
+};
+
+// Modal para ver imagen completa
+const ImageViewerModal = ({ imageUrl, productName, onClose }) => {
+  if (!imageUrl) return null;
+  
+  return (
+    <div 
+      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <button 
+        onClick={onClose}
+        className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+      >
+        <X className="w-6 h-6 text-white" />
+      </button>
+      <img 
+        src={imageUrl} 
+        alt={productName}
+        className="max-w-full max-h-[85vh] object-contain rounded-lg"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <p className="absolute bottom-6 left-0 right-0 text-center text-white font-medium">
+        {productName}
+      </p>
+    </div>
+  );
 };
 
 const PulperiaProfile = () => {
@@ -39,6 +67,7 @@ const PulperiaProfile = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [togglingFavorite, setTogglingFavorite] = useState(false);
+  const [viewingImage, setViewingImage] = useState(null);
 
   // Check if favorite
   const checkFavorite = useCallback(async () => {
