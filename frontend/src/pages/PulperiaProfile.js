@@ -259,6 +259,19 @@ const PulperiaProfile = () => {
         <button onClick={() => navigate(-1)} className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-black/60 transition-all z-10">
           <ArrowLeft className="w-5 h-5" />
         </button>
+        
+        {/* Favorite Button */}
+        <button 
+          onClick={toggleFavorite}
+          disabled={togglingFavorite}
+          className={`absolute top-4 right-4 backdrop-blur-sm p-2.5 rounded-full transition-all z-10 ${
+            isFavorite 
+              ? 'bg-red-500 text-white' 
+              : 'bg-black/40 text-white hover:bg-black/60'
+          }`}
+        >
+          <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+        </button>
       </div>
 
       {/* Profile Photo - Clickeable */}
