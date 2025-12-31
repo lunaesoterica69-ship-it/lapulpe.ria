@@ -75,8 +75,38 @@ const PulperiaDashboard = () => {
   const [announcementForm, setAnnouncementForm] = useState({ content: '', image_url: '', tags: '' });
   const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
   
-  // WebSocket message handler - Silencioso, solo actualiza datos
+  // WebSocket message handler - Maneja órdenes y mensajes de admin
   const handleWebSocketMessage = useCallback((data) => {
+    // Handle admin messages
+    if (data.type === 'admin_message') {
+      // Play notification sound
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.frequency.value = 660;
+        oscillator.type = 'sine';
+        gainNode.gain.value = 0.2;
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.4);
+      } catch (e) {}
+      
+      toast.info(`📬 Mensaje del Admin: ${data.message?.slice(0, 50)}...`, {
+        duration: 8000,
+        style: { background: '#1e40af', color: 'white' }
+      });
+      
+      // Refresh admin messages
+      if (selectedPulperia) {
+        axios.get(`${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}/admin-messages`, { withCredentials: true })
+          .then(res => setAdminMessages(res.data))
+          .catch(() => {});
+      }
+      return;
+    }
+    
     if (data.type === 'order_update') {
       const { event, order, message } = data;
       
@@ -133,7 +163,7 @@ const PulperiaDashboard = () => {
         setNewOrdersCount(prev => prev + 1);
       }
     }
-  }, []);
+  }, [selectedPulperia]);
 
   // WebSocket connection (silencioso)
   useWebSocket(user?.user_id, handleWebSocketMessage);
