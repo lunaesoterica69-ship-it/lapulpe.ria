@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, LogOut, User, Store, ShoppingBag, CheckCircle, Clock, XCircle, Package, RefreshCw } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, RefreshCw } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,26 +19,19 @@ const Header = ({ user, title, subtitle }) => {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch notification count on mount (WebSocket will handle real-time updates)
   useEffect(() => {
     if (!user) return;
-    
     const fetchCount = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/notifications`, { withCredentials: true });
         setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready').length);
-      } catch (error) {
-        // Silently fail
-      }
+      } catch (error) {}
     };
-    
     fetchCount();
-    // Reduced polling to 30 seconds as backup (WebSocket handles real-time)
     const interval = setInterval(fetchCount, 30000);
     return () => clearInterval(interval);
   }, [user]);
@@ -56,7 +49,6 @@ const Header = ({ user, title, subtitle }) => {
     }
   }, []);
 
-  // Fetch notifications when dropdown opens
   useEffect(() => {
     if (showDropdown && user) {
       fetchNotifications();
@@ -75,153 +67,105 @@ const Header = ({ user, title, subtitle }) => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'pending':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
-      case 'accepted':
-        return <Package className="w-4 h-4 text-blue-500" />;
-      case 'ready':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'cancelled':
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      default:
-        return <ShoppingBag className="w-4 h-4 text-stone-500" />;
+      case 'pending': return <Clock className="w-4 h-4 text-amber-400" />;
+      case 'accepted': return <Package className="w-4 h-4 text-blue-400" />;
+      case 'ready': return <CheckCircle className="w-4 h-4 text-green-400" />;
+      case 'cancelled': return <XCircle className="w-4 h-4 text-red-400" />;
+      default: return <Package className="w-4 h-4 text-stone-500" />;
     }
   };
 
-  const getStatusBadgeColor = (status) => {
+  const getStatusText = (status) => {
     switch (status) {
-      case 'pending':
-        return 'bg-amber-900/50 text-amber-400';
-      case 'accepted':
-        return 'bg-blue-900/50 text-blue-400';
-      case 'ready':
-        return 'bg-green-900/50 text-green-400';
-      case 'cancelled':
-        return 'bg-red-900/50 text-red-400';
-      default:
-        return 'bg-stone-700 text-stone-400';
+      case 'pending': return 'Nuevo';
+      case 'accepted': return 'Aceptada';
+      case 'ready': return 'Lista';
+      default: return status;
     }
   };
 
   return (
-    <div className="bg-gradient-to-r from-stone-900 via-red-900 to-stone-900 text-white px-6 py-6 shadow-lg">
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          {title && <h1 className="text-2xl font-black mb-1">{title}</h1>}
-          {subtitle && <p className="text-white/70 text-sm">{subtitle}</p>}
+    <div className="bg-stone-900/80 backdrop-blur-sm border-b border-stone-800 text-white px-6 py-4">
+      <div className="flex justify-between items-center">
+        <div>
+          {title && <h1 className="text-xl font-bold">{title}</h1>}
+          {subtitle && <p className="text-stone-500 text-sm">{subtitle}</p>}
         </div>
 
-        {/* Profile Icon with Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="relative flex items-center gap-2 bg-white/20 hover:bg-white/30 rounded-full p-1 pr-3 transition-all"
+            className="relative flex items-center gap-2 hover:bg-stone-800 rounded-full p-1.5 transition-colors"
             data-testid="profile-dropdown-trigger"
           >
             {user?.picture ? (
-              <img
-                src={user.picture}
-                alt={user.name}
-                className="w-10 h-10 rounded-full border-2 border-white shadow-md"
-              />
+              <img src={user.picture} alt={user.name} className="w-9 h-9 rounded-full" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center">
-                <User className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-full bg-stone-800 flex items-center justify-center">
+                <User className="w-5 h-5 text-stone-400" />
               </div>
             )}
-            <Bell className="w-5 h-5" />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-yellow-400 text-yellow-900 text-xs font-black rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {notificationCount}
               </span>
             )}
           </button>
 
-          {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-80 bg-stone-800 rounded-2xl shadow-2xl border border-stone-700 overflow-hidden z-[9999]">
-              {/* User Info Header */}
-              <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4">
+            <div className="absolute right-0 mt-2 w-72 bg-stone-900 rounded-xl shadow-2xl border border-stone-800 overflow-hidden z-[9999]">
+              {/* User Info */}
+              <div className="p-4 border-b border-stone-800">
                 <div className="flex items-center gap-3">
                   {user?.picture ? (
-                    <img
-                      src={user.picture}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full border-2 border-white/30"
-                    />
+                    <img src={user.picture} alt={user.name} className="w-10 h-10 rounded-full" />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                      <User className="w-6 h-6" />
+                    <div className="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center">
+                      <User className="w-5 h-5 text-stone-400" />
                     </div>
                   )}
                   <div>
-                    <p className="font-bold">{user?.name}</p>
-                    <p className="text-sm opacity-80 flex items-center gap-1">
-                      {user?.user_type === 'pulperia' ? (
-                        <>
-                          <Store className="w-3 h-3" /> Dueño de Pulpería
-                        </>
-                      ) : (
-                        <>
-                          <User className="w-3 h-3" /> Cliente
-                        </>
-                      )}
+                    <p className="font-medium text-white">{user?.name}</p>
+                    <p className="text-xs text-stone-500 flex items-center gap-1">
+                      {user?.user_type === 'pulperia' ? <><Store className="w-3 h-3" /> Pulpería</> : <><User className="w-3 h-3" /> Cliente</>}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Notifications Section */}
-              <div className="max-h-64 overflow-y-auto">
-                <div className="px-4 py-2 bg-stone-700/50 border-b border-stone-700 flex justify-between items-center">
-                  <p className="text-xs font-bold text-red-400 uppercase">
-                    {user?.user_type === 'pulperia' ? 'Órdenes Pendientes' : 'Mis Órdenes'}
-                  </p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      fetchNotifications();
-                    }}
-                    className="p-1 hover:bg-stone-600 rounded transition-colors"
-                    title="Actualizar"
-                  >
-                    <RefreshCw className={`w-4 h-4 text-stone-400 ${loading ? 'animate-spin' : ''}`} />
+              {/* Notifications */}
+              <div className="max-h-56 overflow-y-auto">
+                <div className="px-4 py-2 bg-stone-800/50 flex justify-between items-center sticky top-0">
+                  <p className="text-xs font-medium text-stone-400">Notificaciones</p>
+                  <button onClick={(e) => { e.stopPropagation(); fetchNotifications(); }} className="p-1 hover:bg-stone-700 rounded transition-colors">
+                    <RefreshCw className={`w-3 h-3 text-stone-500 ${loading ? 'animate-spin' : ''}`} />
                   </button>
                 </div>
 
                 {loading ? (
                   <div className="p-4 text-center">
-                    <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-red-500 border-r-transparent"></div>
+                    <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-red-500 border-r-transparent"></div>
                   </div>
                 ) : notifications.length === 0 ? (
-                  <div className="p-6 text-center text-stone-500">
-                    <Bell className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                    <p className="text-sm">No hay notificaciones</p>
+                  <div className="p-6 text-center">
+                    <Bell className="w-6 h-6 mx-auto mb-2 text-stone-700" />
+                    <p className="text-xs text-stone-600">Sin notificaciones</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-stone-700">
-                    {notifications.map((notification) => (
+                  <div className="divide-y divide-stone-800">
+                    {notifications.slice(0, 5).map((n) => (
                       <div
-                        key={notification.id}
-                        onClick={() => {
-                          setShowDropdown(false);
-                          navigate(user?.user_type === 'pulperia' ? '/dashboard' : '/orders');
-                        }}
-                        className="p-3 hover:bg-stone-700/50 cursor-pointer transition-colors"
+                        key={n.id}
+                        onClick={() => { setShowDropdown(false); navigate(user?.user_type === 'pulperia' ? '/dashboard' : '/orders'); }}
+                        className="p-3 hover:bg-stone-800/50 cursor-pointer transition-colors"
                       >
-                        <div className="flex items-start gap-3">
-                          <div className="mt-1">
-                            {getStatusIcon(notification.status)}
-                          </div>
+                        <div className="flex items-start gap-2">
+                          {getStatusIcon(n.status)}
                           <div className="flex-1 min-w-0">
-                            <p className="font-bold text-white text-sm">{notification.title}</p>
-                            <p className="text-xs text-stone-400 truncate">{notification.message}</p>
+                            <p className="text-sm font-medium text-white truncate">{n.title}</p>
+                            <p className="text-xs text-stone-500 truncate">{n.message}</p>
                           </div>
-                          <span className={`text-xs px-2 py-1 rounded-full font-bold ${getStatusBadgeColor(notification.status)}`}>
-                            {notification.status === 'pending' ? 'Nuevo' : 
-                             notification.status === 'accepted' ? 'Aceptada' :
-                             notification.status === 'ready' ? 'Lista' : notification.status}
-                          </span>
+                          <span className="text-[10px] text-stone-500">{getStatusText(n.status)}</span>
                         </div>
                       </div>
                     ))}
@@ -230,23 +174,18 @@ const Header = ({ user, title, subtitle }) => {
               </div>
 
               {/* Actions */}
-              <div className="border-t border-stone-700 p-2">
+              <div className="border-t border-stone-800 p-2">
                 <button
-                  onClick={() => {
-                    setShowDropdown(false);
-                    navigate('/profile');
-                  }}
-                  className="w-full text-left px-4 py-2 text-sm text-stone-300 hover:bg-stone-700 rounded-lg flex items-center gap-2"
+                  onClick={() => { setShowDropdown(false); navigate('/profile'); }}
+                  className="w-full text-left px-3 py-2 text-sm text-stone-400 hover:bg-stone-800 rounded-lg flex items-center gap-2"
                 >
-                  <User className="w-4 h-4" />
-                  Ver Perfil
+                  <User className="w-4 h-4" /> Ver Perfil
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-stone-700 rounded-lg flex items-center gap-2"
+                  className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-stone-800 rounded-lg flex items-center gap-2"
                 >
-                  <LogOut className="w-4 h-4" />
-                  Cerrar Sesión
+                  <LogOut className="w-4 h-4" /> Cerrar Sesión
                 </button>
               </div>
             </div>
