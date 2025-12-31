@@ -698,10 +698,11 @@ const PulperiaDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-stone-900">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-white mx-auto"></div>
-          <p className="mt-4 text-white/70 font-medium">Cargando dashboard...</p>
+      <div className="min-h-screen flex items-center justify-center bg-stone-950">
+        <AnimatedBackground />
+        <div className="text-center relative z-10">
+          <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-red-500 mx-auto"></div>
+          <p className="mt-4 text-stone-500">Cargando dashboard...</p>
         </div>
       </div>
     );
