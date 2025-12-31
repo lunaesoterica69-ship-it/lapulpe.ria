@@ -3,13 +3,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 /**
  * Custom hook for WebSocket connection with auto-reconnect
  * Provides real-time order updates for pulperías
- * Updated: Silent connection - no UI indicator needed
  */
 export const useWebSocket = (userId, onMessage) => {
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
   const reconnectAttemptsRef = useRef(0);
+  const connectRef = useRef(null);
   const MAX_RECONNECT_ATTEMPTS = 5;
   const RECONNECT_DELAY = 3000;
 
@@ -31,12 +31,10 @@ export const useWebSocket = (userId, onMessage) => {
 
     try {
       const wsUrl = getWsUrl();
-      console.log('🔌 Connecting to WebSocket...');
       
       const socket = new WebSocket(wsUrl);
 
       socket.onopen = () => {
-        console.log('✅ WebSocket connected!');
         setIsConnected(true);
         reconnectAttemptsRef.current = 0;
       };
@@ -58,7 +56,7 @@ export const useWebSocket = (userId, onMessage) => {
             onMessage(data);
           }
         } catch (e) {
-          console.error('Error parsing WebSocket message:', e);
+          /* Ignore parse errors */
         }
       };
 
@@ -76,16 +74,23 @@ export const useWebSocket = (userId, onMessage) => {
           const delay = Math.min(RECONNECT_DELAY * Math.pow(1.5, reconnectAttemptsRef.current - 1), 15000);
           
           reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
+            if (connectRef.current) {
+              connectRef.current();
+            }
           }, delay);
         }
       };
 
       wsRef.current = socket;
     } catch (e) {
-      console.error('Error creating WebSocket:', e);
+      /* Ignore connection errors */
     }
   }, [userId, getWsUrl, onMessage]);
+
+  // Keep reference to connect function updated
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
 
   const sendMessage = useCallback((message) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
