@@ -295,13 +295,13 @@ const PulperiaProfile = () => {
 
       {/* Tabs */}
       <div className="px-4 mb-4">
-        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50 overflow-x-auto">
+        <div className="flex bg-stone-900 rounded-xl p-1 border border-stone-800 overflow-x-auto">
           {['products', 'anuncios', 'empleos', 'reviews'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-                activeTab === tab ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg' : 'text-stone-400 hover:text-white'
+              className={`flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                activeTab === tab ? 'bg-red-600 text-white' : 'text-stone-500 hover:text-white'
               }`}
             >
               {tab === 'products' ? `Productos` : 
@@ -316,34 +316,34 @@ const PulperiaProfile = () => {
       {/* Content */}
       <div className="px-4">
         {activeTab === 'products' && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {products.map(product => {
               const qty = getCartQuantity(product.product_id);
               return (
-                <div key={product.product_id} className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden hover:border-red-500/50 transition-all group">
-                  <div className="h-40 bg-gradient-to-br from-stone-700 to-stone-800 flex items-center justify-center overflow-hidden">
+                <div key={product.product_id} className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden hover:border-stone-700 transition-all group">
+                  <div className="h-36 bg-stone-800 flex items-center justify-center overflow-hidden">
                     {product.image_url ? (
                       <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     ) : (
-                      <Package className="w-12 h-12 text-stone-500" />
+                      <Package className="w-10 h-10 text-stone-700" />
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-white text-sm truncate">{product.name}</h3>
-                    <p className="text-red-400 font-black text-xl mt-1">L{product.price.toFixed(0)}</p>
+                  <div className="p-3">
+                    <h3 className="font-medium text-white text-sm truncate">{product.name}</h3>
+                    <p className="text-red-400 font-bold text-lg mt-1">L{product.price.toFixed(0)}</p>
                     
                     {qty > 0 ? (
-                      <div className="flex items-center justify-between mt-3 bg-stone-700/50 rounded-xl border border-stone-600">
-                        <button onClick={() => removeFromCart(product.product_id)} className="p-2.5 hover:bg-stone-600 rounded-l-xl transition-colors">
-                          <Minus className="w-4 h-4 text-red-400" />
+                      <div className="flex items-center justify-between mt-2 bg-stone-800 rounded-xl border border-stone-700">
+                        <button onClick={() => removeFromCart(product.product_id)} className="p-2 hover:bg-stone-700 rounded-l-xl transition-colors">
+                          <Minus className="w-4 h-4 text-stone-400" />
                         </button>
-                        <span className="font-bold text-white">{qty}</span>
-                        <button onClick={() => addToCart(product)} className="p-2.5 hover:bg-stone-600 rounded-r-xl transition-colors">
-                          <Plus className="w-4 h-4 text-red-400" />
+                        <span className="font-bold text-white text-sm">{qty}</span>
+                        <button onClick={() => addToCart(product)} className="p-2 hover:bg-stone-700 rounded-r-xl transition-colors">
+                          <Plus className="w-4 h-4 text-stone-400" />
                         </button>
                       </div>
                     ) : (
-                      <button onClick={() => addToCart(product)} className="w-full mt-3 bg-gradient-to-r from-red-600 to-red-500 text-white py-2.5 rounded-xl text-sm font-bold hover:from-red-500 hover:to-red-400 transition-all shadow-lg shadow-red-900/30">
+                      <button onClick={() => addToCart(product)} className="w-full mt-2 bg-red-600 hover:bg-red-500 text-white py-2 rounded-xl text-sm font-medium transition-all">
                         Agregar
                       </button>
                     )}
@@ -357,12 +357,12 @@ const PulperiaProfile = () => {
         {activeTab === 'empleos' && (
           <div className="space-y-3">
             {jobs.length === 0 ? (
-              <p className="text-center text-stone-500 py-8">No hay empleos disponibles</p>
+              <p className="text-center text-stone-600 py-8">No hay empleos disponibles</p>
             ) : (
               jobs.map(job => (
-                <div key={job.job_id} className="bg-stone-800/50 backdrop-blur-sm rounded-xl p-4 border border-stone-700/50">
-                  <h3 className="font-bold text-white">{job.title}</h3>
-                  <p className="text-stone-400 text-sm mt-1">{job.description}</p>
+                <div key={job.job_id} className="bg-stone-900 rounded-xl p-4 border border-stone-800">
+                  <h3 className="font-medium text-white">{job.title}</h3>
+                  <p className="text-stone-500 text-sm mt-1">{job.description}</p>
                   <div className="flex items-center gap-2 mt-2 text-sm">
                     <DollarSign className="w-4 h-4 text-green-400" />
                     <span className="font-bold text-green-400">L{job.pay_rate}/{job.pay_currency}</span>
@@ -376,20 +376,19 @@ const PulperiaProfile = () => {
         {activeTab === 'anuncios' && (
           <div className="space-y-4">
             {announcements.length === 0 ? (
-              <div className="text-center py-12 bg-stone-800/30 rounded-2xl border border-stone-700/50">
-                <Megaphone className="w-12 h-12 text-stone-600 mx-auto mb-3" />
+              <div className="text-center py-12 bg-stone-900/50 rounded-2xl border border-stone-800">
+                <Megaphone className="w-10 h-10 text-stone-700 mx-auto mb-3" />
                 <p className="text-stone-500">No hay anuncios publicados</p>
-                <p className="text-stone-600 text-sm mt-1">Esta pulpería aún no ha publicado anuncios</p>
               </div>
             ) : (
               announcements.map(announcement => (
-                <div key={announcement.announcement_id} className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-stone-700/50 overflow-hidden">
+                <div key={announcement.announcement_id} className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden">
                   {/* Announcement Image */}
                   {announcement.image_url && (
                     <img 
                       src={announcement.image_url} 
                       alt="Anuncio" 
-                      className="w-full h-48 object-cover"
+                      className="w-full h-44 object-cover"
                     />
                   )}
                   
