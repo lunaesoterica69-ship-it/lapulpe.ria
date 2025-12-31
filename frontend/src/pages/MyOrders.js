@@ -248,7 +248,7 @@ const MyOrders = () => {
                         }`}>
                           <Pulpero status={order.status} size="md" />
                           <p className="text-center text-sm text-stone-400 mt-2 px-4 italic">
-                            "{getPulperoMessage(order.status)}"
+                            &ldquo;{getPulperoMessage(order.status)}&rdquo;
                           </p>
                         </div>
 
