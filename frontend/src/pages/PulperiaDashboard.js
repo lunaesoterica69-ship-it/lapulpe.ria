@@ -1646,16 +1646,14 @@ const PulperiaDashboard = () => {
               />
             </div>
             
-            <div>
-              <Label className="text-white">URL de imagen (opcional)</Label>
-              <Input
-                value={announcementForm.image_url}
-                onChange={(e) => setAnnouncementForm({ ...announcementForm, image_url: e.target.value })}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500"
-              />
-              <p className="text-xs text-stone-500 mt-1">Sube tu imagen a un servicio como imgur.com y pega el link aquí</p>
-            </div>
+            <ImageUpload
+              value={announcementForm.image_url}
+              onChange={(url) => setAnnouncementForm({ ...announcementForm, image_url: url })}
+              label="Imagen del anuncio (opcional)"
+              aspectRatio="product"
+              placeholder="Seleccionar imagen"
+              maxSize={5}
+            />
             
             <div>
               <Label className="text-white">Tags (separados por coma)</Label>
