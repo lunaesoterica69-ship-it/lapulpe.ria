@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image } from 'lucide-react';
+import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image, MessageSquare, Shield, Clock } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import ImageUpload from '../components/ImageUpload';
+import AnimatedBackground from '../components/AnimatedBackground';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
