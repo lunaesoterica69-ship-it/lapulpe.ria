@@ -286,9 +286,9 @@
 
 ### URLs de Acceso
 ```
-Frontend: https://lapulperia-app.preview.emergentagent.com
-Backend API: https://lapulperia-app.preview.emergentagent.com/api
-API Docs: https://lapulperia-app.preview.emergentagent.com/api/docs
+Frontend: https://pulpito-delivery.preview.emergentagent.com
+Backend API: https://pulpito-delivery.preview.emergentagent.com/api
+API Docs: https://pulpito-delivery.preview.emergentagent.com/api/docs
 ```
 
 ### Post-Lanzamiento Inmediato

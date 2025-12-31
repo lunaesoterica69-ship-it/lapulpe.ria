@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 
 class PulperiaAPITester:
-    def __init__(self, base_url="https://lapulperia-app.preview.emergentagent.com"):
+    def __init__(self, base_url="https://pulpito-delivery.preview.emergentagent.com"):
         self.base_url = base_url
         self.ws_base_url = base_url.replace("https://", "wss://").replace("http://", "ws://")
         self.cliente_token = "9tlgddE3GsdKSJ33ipNJ4-ompxnELUdGP1d-qSNyCTA"  # Ale Nolasco - cliente
