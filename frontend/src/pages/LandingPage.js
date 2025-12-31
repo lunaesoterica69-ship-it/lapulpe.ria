@@ -1,27 +1,23 @@
 import { MapPin, Store, ShoppingBag, Zap, Search, ArrowRight, Users, Star, ShoppingCart, Package, Sparkles } from 'lucide-react';
 
-// Custom SVG Logo Component - La Pulpería (Minimalist)
+// Custom SVG Logo Component - La Pulpería (Minimalist - inspired by reference)
 const PulperiaLogo = ({ className = "" }) => (
-  <svg viewBox="0 0 60 60" className={className} xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="roofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#EF4444" />
-        <stop offset="100%" stopColor="#DC2626" />
-      </linearGradient>
-    </defs>
+  <svg viewBox="0 0 50 50" className={className} xmlns="http://www.w3.org/2000/svg">
     {/* Store body */}
-    <rect x="10" y="28" width="40" height="28" rx="3" fill="#FEE2E2"/>
-    {/* Roof */}
-    <path d="M6 30 L30 12 L54 30 Z" fill="url(#roofGrad)"/>
-    {/* Awning stripes */}
-    <rect x="10" y="28" width="8" height="8" fill="#DC2626"/>
-    <rect x="18" y="28" width="8" height="8" fill="#FECACA"/>
-    <rect x="26" y="28" width="8" height="8" fill="#DC2626"/>
-    <rect x="34" y="28" width="8" height="8" fill="#FECACA"/>
-    <rect x="42" y="28" width="8" height="8" fill="#DC2626"/>
+    <rect x="8" y="22" width="34" height="24" rx="2" fill="#FEE2E2" opacity="0.9"/>
+    {/* Awning with wave */}
+    <path d="M5 24 Q12 18 18 24 Q24 30 30 24 Q36 18 42 24 L45 24 L45 20 L25 8 L5 20 Z" fill="#EF4444"/>
     {/* Door */}
-    <rect x="23" y="42" width="14" height="14" rx="2" fill="#991B1B"/>
-    <circle cx="34" cy="50" r="1.5" fill="#FCD34D"/>
+    <rect x="19" y="30" width="12" height="16" rx="1" fill="#B91C1C"/>
+    <circle cx="28" cy="38" r="1.2" fill="#FCD34D"/>
+    {/* Shopping bag */}
+    <g transform="translate(6, 28)">
+      <rect x="0" y="4" width="10" height="12" rx="1" fill="#DC2626"/>
+      <path d="M2 4 L2 2 Q2 0 5 0 Q8 0 8 2 L8 4" fill="none" stroke="#DC2626" strokeWidth="1.5"/>
+    </g>
+    {/* Sparkles */}
+    <circle cx="40" cy="14" r="1.5" fill="#FCD34D"/>
+    <circle cx="10" cy="12" r="1" fill="#FCD34D"/>
   </svg>
 );
 
@@ -58,7 +54,7 @@ const LandingPage = () => {
           </div>
           
           <p className="text-white/50 text-lg md:text-xl mb-10 max-w-lg mx-auto">
-            Tu tienda de barrio, ahora en tu bolsillo
+            ¿Qué deseaba?
           </p>
           
           {/* CTA Button */}
