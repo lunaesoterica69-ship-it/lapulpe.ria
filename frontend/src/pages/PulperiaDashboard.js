@@ -674,18 +674,16 @@ const PulperiaDashboard = () => {
       const tagsArray = announcementForm.tags ? announcementForm.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
       await axios.post(
         `${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}/announcements`,
-        null,
-        { 
-          params: {
-            content: announcementForm.content,
-            image_url: announcementForm.image_url || null,
-            tags: tagsArray
-          },
-          withCredentials: true 
-        }
+        {
+          content: announcementForm.content,
+          image_url: announcementForm.image_url || null,
+          tags: tagsArray
+        },
+        { withCredentials: true }
       );
       toast.success('Anuncio publicado');
       setShowAnnouncementDialog(false);
+      setAnnouncementForm({ content: '', image_url: '', tags: '' });
       await fetchPulperiaData(selectedPulperia.pulperia_id);
     } catch (error) {
       console.error('Error creating announcement:', error);
