@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import DisclaimerModal, { useDisclaimer } from '../components/DisclaimerModal';
 
 // Logo minimalista inline
 const PulperiaLogo = () => (
@@ -15,6 +16,8 @@ const PulperiaLogo = () => (
 );
 
 const LandingPage = () => {
+  const { showDisclaimer, closeDisclaimer } = useDisclaimer();
+
   const handleLogin = () => {
     const redirectUrl = window.location.origin + '/dashboard';
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
@@ -22,7 +25,10 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-stone-950 relative overflow-hidden">
-      {/* Nebula - CSS puro, sin JavaScript */}
+      {/* Disclaimer Modal */}
+      {showDisclaimer && <DisclaimerModal onClose={closeDisclaimer} />}
+
+      {/* Nebula - CSS puro */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/20 rounded-full blur-[100px]" />
         <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-red-500/15 rounded-full blur-[80px]" />
