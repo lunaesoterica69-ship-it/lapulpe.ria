@@ -91,7 +91,7 @@ const PulperiaDashboard = () => {
         gainNode.gain.value = 0.2;
         oscillator.start();
         oscillator.stop(audioContext.currentTime + 0.4);
-      } catch (e) {}
+      } catch (e) { /* Audio might fail silently */ }
       
       toast.info(`📬 Mensaje del Admin: ${data.message?.slice(0, 50)}...`, {
         duration: 8000,
@@ -102,7 +102,7 @@ const PulperiaDashboard = () => {
       if (selectedPulperia) {
         axios.get(`${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}/admin-messages`, { withCredentials: true })
           .then(res => setAdminMessages(res.data))
-          .catch(() => {});
+          .catch(() => { /* Ignore error */ });
       }
       return;
     }
@@ -134,7 +134,7 @@ const PulperiaDashboard = () => {
             osc2.start();
             osc2.stop(audioContext.currentTime + 0.2);
           }, 200);
-        } catch (e) {}
+        } catch (e) { /* Audio might fail silently */ }
         
         // Show toast for new orders
         toast.success(message || '🔔 ¡Nueva orden recibida!', {
