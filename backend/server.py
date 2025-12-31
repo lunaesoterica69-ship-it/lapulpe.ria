@@ -1637,12 +1637,24 @@ async def websocket_orders_endpoint(websocket: WebSocket, user_id: str):
         ws_manager.disconnect(websocket, user_id)
 
 async def broadcast_order_update(order: dict, event_type: str):
-    """Broadcast order update to owner and customer with specific messages"""
+    """Broadcast order update to owner and customer with full order details"""
     pulperia = await db.pulperias.find_one({"pulperia_id": order.get("pulperia_id")}, {"_id": 0})
     owner_id = pulperia.get("owner_user_id") if pulperia else None
     customer_id = order.get("customer_user_id")
     pulperia_name = pulperia.get("name", "Pulpería") if pulperia else "Pulpería"
     customer_name = order.get("customer_name", "Cliente")
+    
+    # Enrich order with pulperia name
+    enriched_order = {**order, "pulperia_name": pulperia_name}
+    
+    # Calculate total items
+    items = order.get("items", [])
+    total_items = sum(item.get("quantity", 1) for item in items)
+    
+    # Create item summary for messages
+    item_summary = ", ".join([f"{item.get('quantity', 1)}x {item.get('product_name', 'Producto')}" for item in items[:3]])
+    if len(items) > 3:
+        item_summary += f" +{len(items) - 3} más"
     
     status_messages = {
         "pending": f"Tu orden en {pulperia_name} está pendiente",
@@ -1657,8 +1669,9 @@ async def broadcast_order_update(order: dict, event_type: str):
             "type": "order_update",
             "event": event_type,
             "target": "owner",
-            "order": order,
-            "message": f"Nueva orden de {customer_name}" if event_type == "new_order" else f"Orden de {customer_name} actualizada",
+            "order": enriched_order,
+            "message": f"Nuevo pedido de {customer_name}: {item_summary}" if event_type == "new_order" else f"Orden de {customer_name} actualizada",
+            "total_items": total_items,
             "sound": event_type == "new_order",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
@@ -1669,8 +1682,9 @@ async def broadcast_order_update(order: dict, event_type: str):
             "type": "order_update",
             "event": event_type,
             "target": "customer",
-            "order": order,
+            "order": enriched_order,
             "message": status_messages.get(order.get("status"), "Estado de orden actualizado"),
+            "total_items": total_items,
             "sound": order.get("status") == "ready",
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
