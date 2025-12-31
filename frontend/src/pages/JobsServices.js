@@ -308,11 +308,11 @@ const JobsServices = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-stone-950 via-blue-950 to-stone-950">
+      <div className="min-h-screen flex items-center justify-center bg-stone-950">
         <AnimatedBackground color="blue" />
         <div className="text-center relative z-10">
-          <div className="w-20 h-20 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500 mx-auto"></div>
-          <p className="mt-4 text-white/70 font-medium">Cargando...</p>
+          <div className="w-16 h-16 border-4 border-blue-400/30 rounded-full animate-spin border-t-blue-500 mx-auto"></div>
+          <p className="mt-4 text-stone-500 font-medium">Cargando...</p>
         </div>
       </div>
     );
@@ -321,8 +321,8 @@ const JobsServices = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-950 via-blue-950/30 to-stone-950 pb-24">
-      <AnimatedBackground color="blue" variant="minimal" />
+    <div className="min-h-screen bg-stone-950 pb-24">
+      <AnimatedBackground color="blue" />
       
       {/* Header */}
       <Header 
@@ -331,27 +331,24 @@ const JobsServices = () => {
         subtitle="Empleos y Servicios"
       />
       
-      {/* Hero Section */}
-      <div className="relative z-10 bg-gradient-to-b from-blue-900/50 to-transparent px-4 pb-6">
+      {/* Search Section */}
+      <div className="relative z-10 px-4 py-4">
         {/* Disclaimer */}
-        <div className="bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-3 mb-4">
-          <p className="text-blue-300/80 text-xs">
-            <span className="text-blue-400 font-bold">Aviso:</span> La comunicación entre usuarios es su responsabilidad. Verifique la información antes de contratar.
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 mb-4">
+          <p className="text-blue-400/70 text-xs">
+            <span className="text-blue-400 font-medium">Aviso:</span> La comunicación entre usuarios es su responsabilidad.
           </p>
         </div>
         
         {/* Search */}
         <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
-            <input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar empleos o servicios..."
-              className="w-full bg-stone-800/50 backdrop-blur-sm text-white border border-stone-700/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-xl py-3 pl-12 pr-4 placeholder:text-stone-500"
-            />
-          </div>
-          <button className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 rounded-xl hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-900/30">
+          <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar empleos o servicios..."
+            className="flex-1 bg-stone-900 text-white border border-stone-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-xl py-3 px-4 placeholder:text-stone-600"
+          />
+          <button className="bg-blue-600 hover:bg-blue-500 text-white px-5 rounded-xl transition-colors">
             <Search className="w-5 h-5" />
           </button>
         </div>
@@ -359,13 +356,13 @@ const JobsServices = () => {
 
       {/* Tabs */}
       <div className="relative z-10 px-4 mb-4">
-        <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50">
+        <div className="flex bg-stone-900 rounded-xl p-1 border border-stone-800">
           <button
             onClick={() => { setActiveTab('jobs'); setSelectedCategory(''); }}
-            className={`flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
               activeTab === 'jobs' 
-                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30' 
-                : 'text-stone-400 hover:text-white'
+                ? 'bg-blue-600 text-white' 
+                : 'text-stone-500 hover:text-white'
             }`}
           >
             <Briefcase className="w-4 h-4" />
@@ -373,10 +370,10 @@ const JobsServices = () => {
           </button>
           <button
             onClick={() => { setActiveTab('services'); setSelectedCategory(''); }}
-            className={`flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
               activeTab === 'services' 
-                ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30' 
-                : 'text-stone-400 hover:text-white'
+                ? 'bg-blue-600 text-white' 
+                : 'text-stone-500 hover:text-white'
             }`}
           >
             <Wrench className="w-4 h-4" />
