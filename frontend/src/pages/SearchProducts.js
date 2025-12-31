@@ -88,6 +88,8 @@ const SearchProducts = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 pb-24">
+      <AnimatedBackground variant="minimal" />
+      
       {/* Header with Profile Dropdown */}
       <Header 
         user={user} 
