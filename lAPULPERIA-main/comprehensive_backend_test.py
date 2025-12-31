@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 
 class ComprehensiveBackendTester:
-    def __init__(self, base_url="https://market-makeover.preview.emergentagent.com"):
+    def __init__(self, base_url="https://lapulperia-app.preview.emergentagent.com"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0

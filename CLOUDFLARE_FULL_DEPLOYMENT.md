@@ -75,7 +75,7 @@ Root directory: / (raíz)
 En **"Environment variables"** (Production):
 
 ```
-REACT_APP_BACKEND_URL = https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL = https://lapulperia-app.preview.emergentagent.com
 ```
 
 #### 5. Deploy
@@ -113,7 +113,7 @@ wrangler pages deploy build --project-name=la-pulperia
 
 Después del primer deploy, configura en Cloudflare Dashboard:
 - Pages → Tu proyecto → Settings → Environment variables
-- Agregar: `REACT_APP_BACKEND_URL = https://market-makeover.preview.emergentagent.com`
+- Agregar: `REACT_APP_BACKEND_URL = https://lapulperia-app.preview.emergentagent.com`
 - Redeploy
 
 ---
@@ -134,7 +134,7 @@ Después del primer deploy, configura en Cloudflare Dashboard:
 ### Opción 1: Usar Backend Actual (Emergent)
 
 **Ya está configurado:**
-- URL: `https://market-makeover.preview.emergentagent.com`
+- URL: `https://lapulperia-app.preview.emergentagent.com`
 - El frontend ya apunta a esta URL
 - ✅ **FUNCIONA INMEDIATAMENTE**
 
@@ -289,7 +289,7 @@ https://www.lapulperiahn.shop
 
 ```javascript
 [App] Iniciando aplicación
-[App] REACT_APP_BACKEND_URL: https://market-makeover.preview.emergentagent.com
+[App] REACT_APP_BACKEND_URL: https://lapulperia-app.preview.emergentagent.com
 [AuthContext] Inicializando con BACKEND_URL: https://...
 [AuthContext] Montando AuthProvider, verificando auth inicial...
 
@@ -300,7 +300,7 @@ https://www.lapulperiahn.shop
 [AuthCallback] Session ID extraído: xyz123...
 [AuthCallback] Llamando a login()...
 [AuthContext] Iniciando login con session_id: xyz123...
-[AuthContext] URL del backend: https://market-makeover.preview.emergentagent.com/api/auth/session
+[AuthContext] URL del backend: https://lapulperia-app.preview.emergentagent.com/api/auth/session
 [AuthContext] Login exitoso, datos del usuario: {...}
 [AuthCallback] Usuario autenticado exitosamente
 [AuthCallback] Redirigiendo a /select-type (o /map o /dashboard)
@@ -368,7 +368,7 @@ Cloudflare configurará automáticamente los registros DNS.
 1. Verificar `REACT_APP_BACKEND_URL` en Cloudflare Pages
 2. Verificar que el backend esté accesible:
    ```bash
-   curl https://market-makeover.preview.emergentagent.com/api/ads/plans
+   curl https://lapulperia-app.preview.emergentagent.com/api/ads/plans
    ```
 3. Verificar CORS en backend
 
@@ -484,7 +484,7 @@ Backend:  http://localhost:8001
 ```
 Frontend: https://la-pulperia.pages.dev
           https://www.lapulperiahn.shop
-Backend:  https://market-makeover.preview.emergentagent.com
+Backend:  https://lapulperia-app.preview.emergentagent.com
           (o tu backend en Railway/Render)
 ```
 

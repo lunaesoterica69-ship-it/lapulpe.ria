@@ -286,9 +286,9 @@
 
 ### URLs de Acceso
 ```
-Frontend: https://market-makeover.preview.emergentagent.com
-Backend API: https://market-makeover.preview.emergentagent.com/api
-API Docs: https://market-makeover.preview.emergentagent.com/api/docs
+Frontend: https://lapulperia-app.preview.emergentagent.com
+Backend API: https://lapulperia-app.preview.emergentagent.com/api
+API Docs: https://lapulperia-app.preview.emergentagent.com/api/docs
 ```
 
 ### Post-Lanzamiento Inmediato

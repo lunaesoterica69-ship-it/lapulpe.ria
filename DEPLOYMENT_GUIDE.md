@@ -64,7 +64,7 @@ CORS_ORIGINS="*"
 
 #### Frontend (`/app/frontend/.env`)
 ```env
-REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 WDS_SOCKET_PORT=443
 ENABLE_HEALTH_CHECK=false
 ```
@@ -109,9 +109,9 @@ PORT=3000 yarn start
 
 ## 📊 URLs de Acceso
 
-- **Frontend:** https://market-makeover.preview.emergentagent.com
-- **Backend API:** https://market-makeover.preview.emergentagent.com/api
-- **API Docs:** https://market-makeover.preview.emergentagent.com/api/docs
+- **Frontend:** https://lapulperia-app.preview.emergentagent.com
+- **Backend API:** https://lapulperia-app.preview.emergentagent.com/api
+- **API Docs:** https://lapulperia-app.preview.emergentagent.com/api/docs
 
 ## ✅ Lista de Verificación Pre-Lanzamiento
 

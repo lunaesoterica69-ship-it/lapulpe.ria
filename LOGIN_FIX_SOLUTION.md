@@ -24,7 +24,7 @@ Usuario en celular/PC → lapulperiahn.shop (frontend)
 
 #### `/app/frontend/.env` (Base)
 ```env
-REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 WDS_SOCKET_PORT=443
 ENABLE_HEALTH_CHECK=false
 ```
@@ -38,7 +38,7 @@ ENABLE_HEALTH_CHECK=false
 
 #### `/app/frontend/.env.production` (Para producción)
 ```env
-REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 ENABLE_HEALTH_CHECK=false
 ```
 
@@ -62,7 +62,7 @@ yarn build
 
 # 2. Verificar que use la URL correcta
 grep -r "BACKEND_URL" build/static/js/*.js | head -1
-# Debería mostrar: https://market-makeover.preview.emergentagent.com
+# Debería mostrar: https://lapulperia-app.preview.emergentagent.com
 
 # 3. Deploy a Cloudflare
 wrangler pages deploy build --project-name=la-pulperia
@@ -85,7 +85,7 @@ git push origin main
 2. Pages → Tu Proyecto → Settings → Environment Variables
 3. Agregar:
    ```
-   REACT_APP_BACKEND_URL = https://market-makeover.preview.emergentagent.com
+   REACT_APP_BACKEND_URL = https://lapulperia-app.preview.emergentagent.com
    ```
 4. Redeploy
 
@@ -140,7 +140,7 @@ yarn start
 cd /app/frontend
 yarn build
 # Usa .env.production
-# REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+# REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 ```
 
 ---
@@ -156,7 +156,7 @@ yarn build
 grep -r "gui-redesign" build/static/js/*.js | head -1
 
 # Debería mostrar:
-# build/static/js/main.xxxxx.js:..."https://market-makeover.preview.emergentagent.com"...
+# build/static/js/main.xxxxx.js:..."https://lapulperia-app.preview.emergentagent.com"...
 ```
 
 ### Verificar en Navegador
@@ -210,7 +210,7 @@ yarn build
 
 #### Opción A: Usar el servidor actual de Emergent
 ```env
-REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 ```
 
 #### Opción B: Deployar backend en Railway/Render

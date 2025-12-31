@@ -175,7 +175,7 @@ CORS_ORIGINS="*"
 #### Frontend
 ```bash
 # Archivo: /app/frontend/.env
-REACT_APP_BACKEND_URL=https://market-makeover.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://lapulperia-app.preview.emergentagent.com
 WDS_SOCKET_PORT=443
 ENABLE_HEALTH_CHECK=false
 ```
