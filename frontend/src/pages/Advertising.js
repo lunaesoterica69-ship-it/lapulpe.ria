@@ -31,9 +31,9 @@ const Advertising = () => {
   const fetchData = async () => {
     try {
       const [userRes, plansRes, adsRes] = await Promise.all([
-        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/auth/me`),
         api.get(`/api/ads/plans`),
-        api.get(`/api/ads/my-ads`, { withCredentials: true }).catch(() => ({ data: [] }))
+        api.get(`/api/ads/my-ads`).catch(() => ({ data: [] }))
       ]);
       
       setUser(userRes.data);
@@ -57,8 +57,7 @@ const Advertising = () => {
     
     setSubmitting(true);
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/ads/create`,
+      await api.post(`/api/ads/create`,
         {
           plan: selectedPlan,
           payment_method: paymentForm.payment_method,

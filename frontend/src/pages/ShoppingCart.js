@@ -19,7 +19,7 @@ const ShoppingCartPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await api.get(`/api/auth/me`, { withCredentials: true });
+        const response = await api.get(`/api/auth/me`);
         setUser(response.data);
         setCustomerName(response.data.name || '');
       } catch (error) {
@@ -117,7 +117,7 @@ const ShoppingCartPage = () => {
         })),
         total: pulperiaItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
         order_type: 'pickup'
-      }, { withCredentials: true });
+      });
       
       // Mark this pulperia as completed
       const pulperiaName = groupedByPulperia[pulperiaId]?.pulperia_name || 'Pulpería';

@@ -53,7 +53,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
     if (!user) return;
     const fetchCount = async () => {
       try {
-        const response = await api.get(`/api/notifications`, { withCredentials: true });
+        const response = await api.get(`/api/notifications`);
         setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
       } catch (error) { /* Silently ignore */ }
     };
@@ -65,7 +65,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/api/notifications`, { withCredentials: true });
+      const response = await api.get(`/api/notifications`);
       setNotifications(response.data);
       setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
     } catch (error) {
@@ -83,7 +83,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
 
   const handleLogout = async () => {
     try {
-      await api.post(`/api/auth/logout`, {}, { withCredentials: true });
+      await api.post(`/api/auth/logout`, {});
       localStorage.removeItem('cart');
       navigate('/', { replace: true });
     } catch (error) {

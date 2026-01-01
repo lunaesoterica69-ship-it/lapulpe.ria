@@ -48,8 +48,7 @@ const UserProfile = () => {
     
     setChangingType(true);
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/auth/change-user-type`,
+      const response = await api.post(`/api/auth/change-user-type`,
         { new_type: newType },
         { withCredentials: true }
       );

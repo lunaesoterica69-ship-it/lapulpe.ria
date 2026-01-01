@@ -44,8 +44,7 @@ const ImageUpload = ({
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await axios.post(
-        `${BACKEND_URL}/api/upload-image`,
+      const response = await api.post(`/api/upload-image`,
         formData,
         {
           withCredentials: true,

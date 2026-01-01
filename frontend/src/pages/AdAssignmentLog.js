@@ -14,7 +14,7 @@ const AdAssignmentLog = () => {
     const fetchData = async () => {
       try {
         const [userRes, logsRes] = await Promise.all([
-          api.get(`/api/auth/me`, { withCredentials: true }).catch(() => ({ data: null })),
+          api.get(`/api/auth/me`).catch(() => ({ data: null })),
           api.get(`/api/ads/assignment-log`)
         ]);
         

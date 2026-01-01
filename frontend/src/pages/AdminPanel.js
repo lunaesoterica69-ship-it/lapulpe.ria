@@ -115,11 +115,11 @@ const AdminPanel = () => {
   const fetchData = async () => {
     try {
       const [userRes, pulperiasRes, adsRes, logsRes, messagesRes] = await Promise.all([
-        api.get(`/api/auth/me`, { withCredentials: true }),
-        api.get(`/api/admin/pulperias`, { withCredentials: true }),
-        api.get(`/api/admin/ads`, { withCredentials: true }),
+        api.get(`/api/auth/me`),
+        api.get(`/api/admin/pulperias`),
+        api.get(`/api/admin/ads`),
         api.get(`/api/ads/assignment-log`),
-        api.get(`/api/admin/messages`, { withCredentials: true }).catch(() => ({ data: [] }))
+        api.get(`/api/admin/messages`).catch(() => ({ data: [] }))
       ]);
       
       setUser(userRes.data);
@@ -156,7 +156,7 @@ const AdminPanel = () => {
         pulperia_id: pulperiaId,
         plan: selectedPlan,
         duration_days: selectedDuration
-      }, { withCredentials: true });
+      });
       
       toast.success('¡Anuncio activado!');
       fetchData();
@@ -168,7 +168,7 @@ const AdminPanel = () => {
 
   const handleDeactivateAd = async (adId) => {
     try {
-      await api.post(`/api/admin/ads/${adId}/deactivate`, {}, { withCredentials: true });
+      await api.post(`/api/admin/ads/${adId}/deactivate`, {});
       toast.success('Anuncio desactivado');
       fetchData();
     } catch (error) {
@@ -180,8 +180,7 @@ const AdminPanel = () => {
   const handleSuspend = async () => {
     if (!selectedPulperia) return;
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/admin/pulperias/${selectedPulperia.pulperia_id}/suspend`,
+      await api.post(`/api/admin/pulperias/${selectedPulperia.pulperia_id}/suspend`,
         null,
         { params: { reason: suspendReason, days: suspendDays }, withCredentials: true }
       );
@@ -198,7 +197,7 @@ const AdminPanel = () => {
 
   const handleUnsuspend = async (pulperiaId) => {
     try {
-      await api.post(`/api/admin/pulperias/${pulperiaId}/unsuspend`, {}, { withCredentials: true });
+      await api.post(`/api/admin/pulperias/${pulperiaId}/unsuspend`, {});
       toast.success('Pulpería reactivada');
       fetchData();
     } catch (error) {
@@ -209,8 +208,7 @@ const AdminPanel = () => {
   const handleSetBadge = async () => {
     if (!selectedPulperia) return;
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/admin/pulperias/${selectedPulperia.pulperia_id}/badge`,
+      await api.post(`/api/admin/pulperias/${selectedPulperia.pulperia_id}/badge`,
         null,
         { params: { badge: selectedBadge }, withCredentials: true }
       );
@@ -227,8 +225,7 @@ const AdminPanel = () => {
   const handleSendMessage = async () => {
     if (!selectedPulperia || !messageText.trim()) return;
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/admin/pulperias/${selectedPulperia.pulperia_id}/message`,
+      await api.post(`/api/admin/pulperias/${selectedPulperia.pulperia_id}/message`,
         null,
         { params: { message: messageText }, withCredentials: true }
       );

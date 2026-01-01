@@ -73,7 +73,7 @@ const JobsServices = () => {
   const fetchData = async () => {
     try {
       const [userRes, jobsRes, servicesRes] = await Promise.all([
-        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/auth/me`),
         api.get(`/api/jobs`),
         api.get(`/api/services`)
       ]);
@@ -98,8 +98,7 @@ const JobsServices = () => {
     e.preventDefault();
     
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/jobs`,
+      await api.post(`/api/jobs`,
         {
           ...jobForm,
           pay_rate: parseFloat(jobForm.pay_rate)
@@ -129,8 +128,7 @@ const JobsServices = () => {
     e.preventDefault();
     
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/services`,
+      await api.post(`/api/services`,
         {
           ...serviceForm,
           hourly_rate: parseFloat(serviceForm.hourly_rate)
@@ -219,7 +217,7 @@ const JobsServices = () => {
 
   const handleDeleteJob = async (jobId) => {
     try {
-      await api.delete(`/api/jobs/${jobId}`, { withCredentials: true });
+      await api.delete(`/api/jobs/${jobId}`);
       toast.success('Oferta eliminada');
       await fetchData();
     } catch (error) {
@@ -230,7 +228,7 @@ const JobsServices = () => {
 
   const handleDeleteService = async (serviceId) => {
     try {
-      await api.delete(`/api/services/${serviceId}`, { withCredentials: true });
+      await api.delete(`/api/services/${serviceId}`);
       toast.success('Servicio eliminado');
       await fetchData();
     } catch (error) {
@@ -245,8 +243,7 @@ const JobsServices = () => {
     if (!selectedJob) return;
     
     try {
-      await axios.post(
-        `${BACKEND_URL}/api/jobs/${selectedJob.job_id}/apply`,
+      await api.post(`/api/jobs/${selectedJob.job_id}/apply`,
         applyForm,
         { withCredentials: true }
       );
@@ -265,8 +262,7 @@ const JobsServices = () => {
   const handleViewApplications = async (job) => {
     setSelectedJob(job);
     try {
-      const response = await axios.get(
-        `${BACKEND_URL}/api/jobs/${job.job_id}/applications`,
+      const response = await api.get(`/api/jobs/${job.job_id}/applications`,
         { withCredentials: true }
       );
       setApplications(response.data);
