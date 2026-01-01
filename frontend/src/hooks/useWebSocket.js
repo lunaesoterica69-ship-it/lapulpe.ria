@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { notifyNewOrder, notifyOrderStatusChange, requestNotificationPermission, registerServiceWorker } from './useNotifications';
+import { toast } from 'sonner';
 
 /**
  * Custom hook for WebSocket connection with auto-reconnect
@@ -18,7 +19,10 @@ export const useWebSocket = (userId, onMessage) => {
   useEffect(() => {
     const initNotifications = async () => {
       await registerServiceWorker();
-      await requestNotificationPermission();
+      const hasPermission = await requestNotificationPermission();
+      if (!hasPermission) {
+        console.log('Notification permission not granted, will use in-app notifications');
+      }
     };
     initNotifications();
   }, []);
@@ -40,9 +44,11 @@ export const useWebSocket = (userId, onMessage) => {
 
     try {
       const wsUrl = getWsUrl();
+      console.log('WebSocket connecting to:', wsUrl);
       const socket = new WebSocket(wsUrl);
 
       socket.onopen = () => {
+        console.log('WebSocket connected for user:', userId);
         setIsConnected(true);
         reconnectAttemptsRef.current = 0;
       };
@@ -59,19 +65,41 @@ export const useWebSocket = (userId, onMessage) => {
             return;
           }
           
-          // Send browser notifications for important events
+          console.log('WebSocket message received:', data.type, data.event);
+          
+          // Send browser notifications AND in-app toasts for important events
           if (data.type === 'order_update') {
-            const { event: orderEvent, order, target } = data;
+            const { event: orderEvent, order, target, message } = data;
             const pulperiaName = order.pulperia_name || 'tu pulpería';
+            const items = order.items || [];
+            const totalItems = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
             
             // Notification for pulperia owners - new order
             if (orderEvent === 'new_order' && target === 'owner') {
+              // Browser notification
               notifyNewOrder(order, pulperiaName);
+              // In-app toast as backup
+              const itemSummary = items.slice(0, 2).map(i => `${i.quantity}x ${i.product_name}`).join(', ');
+              toast.success(`🛒 ¡Nuevo Pedido!`, {
+                description: `${order.customer_name}: ${itemSummary} - L${order.total?.toFixed(0)}`,
+                duration: 10000
+              });
             }
             
             // Notification for customers - status changes
             if (target === 'customer' && ['accepted', 'ready', 'completed'].includes(order.status)) {
+              // Browser notification
               notifyOrderStatusChange(order.status, pulperiaName, order);
+              // In-app toast as backup
+              const statusMessages = {
+                accepted: `👨‍🍳 ${pulperiaName} está preparando tu pedido`,
+                ready: `✅ ¡Tu orden en ${pulperiaName} está lista!`,
+                completed: `🎉 Orden completada en ${pulperiaName}`
+              };
+              toast.success(statusMessages[order.status] || message, {
+                description: `${totalItems} productos • L${order.total?.toFixed(0)}`,
+                duration: 8000
+              });
             }
           }
           
@@ -80,21 +108,24 @@ export const useWebSocket = (userId, onMessage) => {
             onMessage(data);
           }
         } catch (e) {
-          /* Ignore parse errors */
+          console.error('WebSocket message parse error:', e);
         }
       };
 
-      socket.onerror = () => {
+      socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
         setIsConnected(false);
       };
 
-      socket.onclose = () => {
+      socket.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason);
         setIsConnected(false);
         wsRef.current = null;
 
         if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
           reconnectAttemptsRef.current += 1;
           const delay = Math.min(RECONNECT_DELAY * Math.pow(1.5, reconnectAttemptsRef.current - 1), 15000);
+          console.log(`WebSocket reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current})`);
           
           reconnectTimeoutRef.current = setTimeout(() => {
             if (connectRef.current) {
@@ -106,7 +137,7 @@ export const useWebSocket = (userId, onMessage) => {
 
       wsRef.current = socket;
     } catch (e) {
-      /* Ignore connection errors */
+      console.error('WebSocket connection error:', e);
     }
   }, [userId, getWsUrl, onMessage]);
 
