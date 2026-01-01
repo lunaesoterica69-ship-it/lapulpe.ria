@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, Copy, Check, ExternalLink, ShoppingBag, Store, Bell, MapPin, Star } from 'lucide-react';
-import axios from 'axios';
 import DisclaimerModal from '../components/DisclaimerModal';
-import { BACKEND_URL, CUSTOM_DOMAIN, isCustomDomain } from '../config/api';
+import { api, BACKEND_URL, isCustomDomain } from '../config/api';
 
 // Iconos de redes sociales
 const XIcon = () => (
