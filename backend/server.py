@@ -347,6 +347,131 @@ async def fuzzy_search_products(search_term: str) -> list:
 # AUTHENTICATION ENDPOINTS
 # ============================================
 
+# Google OAuth configuration for custom domain
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+CUSTOM_DOMAIN = os.environ.get('CUSTOM_DOMAIN', 'lapulperiastore.net')
+
+@api_router.get("/auth/google/url")
+async def get_google_auth_url(redirect_uri: str):
+    """Get Google OAuth URL for custom domain authentication"""
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="Google OAuth not configured")
+    
+    # Build Google OAuth URL
+    google_auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "access_type": "offline",
+        "prompt": "consent"
+    }
+    
+    query_string = "&".join([f"{k}={v}" for k, v in params.items()])
+    return {"auth_url": f"{google_auth_url}?{query_string}"}
+
+@api_router.post("/auth/google/callback")
+async def google_oauth_callback(code: str, redirect_uri: str, response: Response):
+    """Handle Google OAuth callback and create session"""
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        raise HTTPException(status_code=500, detail="Google OAuth not configured")
+    
+    logger.info("[AUTH] Processing Google OAuth callback")
+    
+    async with httpx.AsyncClient() as http_client:
+        try:
+            # Exchange code for tokens
+            token_response = await http_client.post(
+                "https://oauth2.googleapis.com/token",
+                data={
+                    "client_id": GOOGLE_CLIENT_ID,
+                    "client_secret": GOOGLE_CLIENT_SECRET,
+                    "code": code,
+                    "redirect_uri": redirect_uri,
+                    "grant_type": "authorization_code"
+                },
+                timeout=15
+            )
+            token_response.raise_for_status()
+            tokens = token_response.json()
+            
+            # Get user info
+            userinfo_response = await http_client.get(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
+                headers={"Authorization": f"Bearer {tokens['access_token']}"},
+                timeout=15
+            )
+            userinfo_response.raise_for_status()
+            user_info = userinfo_response.json()
+            
+            logger.info(f"[AUTH] Google OAuth successful for: {user_info.get('email')}")
+            
+        except httpx.HTTPStatusError as e:
+            logger.error(f"[AUTH] Google OAuth failed: {e.response.status_code} - {e.response.text}")
+            raise HTTPException(status_code=401, detail="Autenticación con Google fallida")
+        except Exception as e:
+            logger.error(f"[AUTH] Google OAuth error: {str(e)}")
+            raise HTTPException(status_code=502, detail="Error del servicio de autenticación")
+    
+    # Create or update user
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    session_token = f"sess_{uuid.uuid4().hex}"
+    
+    existing_user = await db.users.find_one({"email": user_info["email"]}, {"_id": 0})
+    
+    if existing_user:
+        user_id = existing_user["user_id"]
+        logger.info(f"[AUTH] Existing user: {user_id}")
+        await db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "name": user_info.get("name", ""),
+                "picture": user_info.get("picture", "")
+            }}
+        )
+        is_new_user = False
+    else:
+        logger.info(f"[AUTH] Creating new user: {user_id}")
+        user_doc = {
+            "user_id": user_id,
+            "email": user_info["email"],
+            "name": user_info.get("name", ""),
+            "picture": user_info.get("picture", ""),
+            "user_type": None,
+            "location": None,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.users.insert_one(user_doc)
+        is_new_user = True
+    
+    # Create session
+    session_doc = {
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.user_sessions.insert_one(session_doc)
+    logger.info(f"[AUTH] Session created for: {user_id}")
+    
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,
+        path="/"
+    )
+    
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    user["is_new_user"] = is_new_user
+    user["is_admin"] = user.get("email") == ADMIN_EMAIL
+    user["session_token"] = session_token
+    return user
+
 @api_router.post("/auth/session")
 async def create_session(request: SessionRequest, response: Response):
     """Create user session from Emergent Auth session_id"""
