@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { Store, ArrowRight } from 'lucide-react';
 
-import { BACKEND_URL } from '../config/api';
 
 // Página de link compartido - SIEMPRE pide iniciar sesión
 const SharedPulperiaLink = () => {

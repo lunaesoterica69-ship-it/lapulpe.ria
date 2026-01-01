@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { 
   Briefcase, Search, Plus, MapPin, DollarSign, Trash2, Users, Wrench, Send, 
@@ -14,7 +14,6 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 
-import { BACKEND_URL } from '../config/api';
 
 const CATEGORIES = {
   jobs: ['Ventas', 'Construcción', 'Limpieza', 'Cocina', 'Seguridad', 'Otro'],

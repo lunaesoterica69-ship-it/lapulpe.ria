@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { Calendar, Clock, Check, X, Crown, Sparkles, Star, Store, Eye } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 
-import { BACKEND_URL } from '../config/api';
 
 const AdAssignmentLog = () => {
   const [user, setUser] = useState(null);

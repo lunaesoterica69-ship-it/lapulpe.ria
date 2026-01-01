@@ -1,9 +1,8 @@
 import { useState, useRef } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
 
-import { BACKEND_URL } from '../config/api';
 
 const ImageUpload = ({ 
   value, 

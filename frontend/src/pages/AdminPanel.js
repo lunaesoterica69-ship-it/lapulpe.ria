@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { 
   Shield, Store, Crown, Sparkles, Star, Check, X, Clock, Calendar, Search, 
@@ -16,7 +16,6 @@ import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
 
-import { BACKEND_URL } from '../config/api';
 const ADMIN_PASSWORD = 'AlEjA127';
 
 // Sistema de Badges en Español - Estilo Gaming

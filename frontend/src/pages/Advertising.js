@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { Megaphone, Star, Crown, Sparkles, CheckCircle, Clock, CreditCard, Zap, ArrowRight } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
@@ -10,7 +10,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 
-import { BACKEND_URL } from '../config/api';
 
 const Advertising = () => {
   const [user, setUser] = useState(null);
