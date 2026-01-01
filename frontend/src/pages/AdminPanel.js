@@ -15,60 +15,16 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
+import ArtDecoBadge, { BADGES_ART_DECO, ArtDecoBadgeInline, AdPlanBadge } from '../components/ArtDecoBadge';
 
 const ADMIN_PASSWORD = 'AlEjA127';
 
-// Sistema de Badges en Español - Estilo Gaming
-const BADGES = [
-  { id: 'novato', name: 'Novato', icon: Star, color: 'from-gray-500 to-gray-600', glow: 'shadow-gray-500/50', description: 'Nuevo en la plataforma' },
-  { id: 'en_ascenso', name: 'En Ascenso', icon: Zap, color: 'from-blue-500 to-blue-600', glow: 'shadow-blue-500/50', description: 'Creciendo rápidamente' },
-  { id: 'en_llamas', name: 'En Llamas', icon: Flame, color: 'from-orange-500 to-red-500', glow: 'shadow-orange-500/50', description: 'Muy activo' },
-  { id: 'elite', name: 'Élite', icon: Gem, color: 'from-purple-500 to-pink-500', glow: 'shadow-purple-500/50', description: 'Vendedor destacado' },
-  { id: 'campeon', name: 'Campeón', icon: Trophy, color: 'from-yellow-400 to-amber-500', glow: 'shadow-yellow-500/50', description: 'Top vendedor' },
-  { id: 'legendario', name: 'Legendario', icon: Crown, color: 'from-amber-400 via-yellow-500 to-amber-600', glow: 'shadow-amber-500/50', description: 'Leyenda viviente' },
-  { id: 'verificado', name: 'Verificado', icon: Check, color: 'from-emerald-500 to-green-600', glow: 'shadow-emerald-500/50', description: 'Verificado oficialmente' },
-  { id: 'socio', name: 'Socio Oficial', icon: Target, color: 'from-cyan-500 to-blue-500', glow: 'shadow-cyan-500/50', description: 'Socio de La Pulpería' },
-];
+// Use new Art Deco badges
+const BADGES = BADGES_ART_DECO;
 
-// Componente de Badge con efectos gaming
+// Componente de Badge Art Deco
 const BadgeDisplay = ({ badgeId, size = 'md', showName = true, animated = true }) => {
-  const badge = BADGES.find(b => b.id === badgeId);
-  if (!badge) return null;
-
-  const sizes = {
-    sm: 'w-6 h-6',
-    md: 'w-10 h-10',
-    lg: 'w-14 h-14'
-  };
-
-  const iconSizes = {
-    sm: 'w-3 h-3',
-    md: 'w-5 h-5',
-    lg: 'w-7 h-7'
-  };
-
-  const Icon = badge.icon;
-
-  return (
-    <div className="flex items-center gap-2">
-      <div className={`relative ${animated ? 'group' : ''}`}>
-        <div className={`absolute inset-0 bg-gradient-to-r ${badge.color} rounded-xl blur-lg opacity-50 ${animated ? 'group-hover:opacity-80' : ''} transition-opacity`}></div>
-        <div className={`relative ${sizes[size]} bg-gradient-to-br ${badge.color} rounded-xl flex items-center justify-center shadow-lg ${badge.glow} ${animated ? 'group-hover:scale-110' : ''} transition-transform`}>
-          <Icon className={`${iconSizes[size]} text-white drop-shadow-lg`} />
-        </div>
-        {animated && (
-          <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-ping opacity-75"></div>
-        )}
-      </div>
-      
-      {showName && (
-        <div>
-          <p className={`font-bold text-white ${size === 'sm' ? 'text-xs' : 'text-sm'}`}>{badge.name}</p>
-          {size !== 'sm' && <p className="text-xs text-stone-400">{badge.description}</p>}
-        </div>
-      )}
-    </div>
-  );
+  return <ArtDecoBadge badgeId={badgeId} size={size} showName={showName} animated={animated} />;
 };
 
 const AdminPanel = () => {
