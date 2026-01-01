@@ -286,9 +286,9 @@
 
 ### URLs de Acceso
 ```
-Frontend: https://premium-grocery-1.preview.emergentagent.com
-Backend API: https://premium-grocery-1.preview.emergentagent.com/api
-API Docs: https://premium-grocery-1.preview.emergentagent.com/api/docs
+Frontend: https://lapulperia-web.preview.emergentagent.com
+Backend API: https://lapulperia-web.preview.emergentagent.com/api
+API Docs: https://lapulperia-web.preview.emergentagent.com/api/docs
 ```
 
 ### Post-Lanzamiento Inmediato

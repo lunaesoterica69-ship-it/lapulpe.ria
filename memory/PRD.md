@@ -3,7 +3,7 @@
 ## Estado Actual: ✅ LISTO PARA LANZAMIENTO
 
 ## URLs
-- **Preview**: https://premium-grocery-1.preview.emergentagent.com
+- **Preview**: https://lapulperia-web.preview.emergentagent.com
 - **Dominio**: https://lapulperiastore.net
 
 ## Base de Datos (test_database)

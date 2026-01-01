@@ -18,7 +18,7 @@ const getBackendUrl = () => {
   }
   
   // Fallback al preview de Emergent
-  return 'https://premium-grocery-1.preview.emergentagent.com';
+  return 'https://lapulperia-web.preview.emergentagent.com';
 };
 
 // Backend URL
