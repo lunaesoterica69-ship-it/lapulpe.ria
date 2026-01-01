@@ -33,16 +33,20 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
-        withCredentials: true,
-        timeout: 10000,
-        headers: getAuthHeaders()
+        timeout: 15000,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       
       setUser(response.data);
       return response.data;
     } catch (error) {
-      console.log('[Auth] Session check failed, clearing token');
-      localStorage.removeItem('session_token');
+      console.log('[Auth] Session check failed:', error.message);
+      // Only clear token on 401 errors
+      if (error.response?.status === 401) {
+        localStorage.removeItem('session_token');
+      }
       setUser(null);
       return null;
     } finally {
