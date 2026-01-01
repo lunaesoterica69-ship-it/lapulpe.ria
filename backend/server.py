@@ -1880,10 +1880,19 @@ async def admin_clear_data(keep_products: bool = True, authorization: Optional[s
 # CORS MIDDLEWARE
 # ============================================
 
+# Dominios permitidos para CORS
+ALLOWED_ORIGINS = [
+    "https://lapulperia.preview.emergentagent.com",
+    "https://lapulperiastore.net",
+    "https://www.lapulperiastore.net",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
