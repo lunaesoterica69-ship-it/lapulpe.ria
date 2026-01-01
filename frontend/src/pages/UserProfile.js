@@ -17,6 +17,11 @@ const UserProfile = () => {
   const { user, loading, logout, setUser } = useAuth();
   const [cart, setCart] = useState([]);
   const [changingType, setChangingType] = useState(false);
+  const [myPulperias, setMyPulperias] = useState([]);
+  const [showCloseStoreDialog, setShowCloseStoreDialog] = useState(false);
+  const [selectedPulperiaToClose, setSelectedPulperiaToClose] = useState(null);
+  const [closeConfirmation, setCloseConfirmation] = useState('');
+  const [isClosingStore, setIsClosingStore] = useState(false);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
@@ -27,7 +32,62 @@ const UserProfile = () => {
         setCart([]);
       }
     }
-  }, []);
+    
+    // Fetch user's pulperias if they are a pulperia owner
+    const fetchMyPulperias = async () => {
+      if (user?.user_type === 'pulperia') {
+        try {
+          const res = await api.get('/api/pulperias');
+          const mine = res.data.filter(p => p.owner_user_id === user.user_id);
+          setMyPulperias(mine);
+        } catch (e) {
+          console.error('Error fetching pulperias:', e);
+        }
+      }
+    };
+    
+    if (user) {
+      fetchMyPulperias();
+    }
+  }, [user]);
+
+  const handleCloseStore = async () => {
+    if (!selectedPulperiaToClose) return;
+    
+    if (closeConfirmation.trim().toLowerCase() !== selectedPulperiaToClose.name.trim().toLowerCase()) {
+      toast.error(`Debes escribir exactamente "${selectedPulperiaToClose.name}" para confirmar`);
+      return;
+    }
+    
+    setIsClosingStore(true);
+    try {
+      const response = await api.delete(`/api/pulperias/${selectedPulperiaToClose.pulperia_id}/close`, {
+        data: { confirmation_phrase: closeConfirmation }
+      });
+      
+      toast.success(response.data.message || '¡Tu tienda ha sido cerrada!');
+      setShowCloseStoreDialog(false);
+      setCloseConfirmation('');
+      setSelectedPulperiaToClose(null);
+      
+      // Refresh pulperias list
+      const res = await api.get('/api/pulperias');
+      const mine = res.data.filter(p => p.owner_user_id === user.user_id);
+      setMyPulperias(mine);
+      
+      // If no more pulperias, they can create a new one
+      if (mine.length === 0) {
+        toast.info('Puedes crear una nueva pulpería desde el Dashboard');
+      }
+      
+    } catch (error) {
+      console.error('Error closing store:', error);
+      const errorMsg = error.response?.data?.detail || 'Error al cerrar la tienda';
+      toast.error(errorMsg);
+    } finally {
+      setIsClosingStore(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
