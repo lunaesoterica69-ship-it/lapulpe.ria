@@ -3,7 +3,7 @@
 ## Estado Actual: ✅ LISTO PARA LANZAMIENTO
 
 ## URLs
-- **Preview**: https://lapulperia-web.preview.emergentagent.com
+- **Preview**: https://achiev-meritocracy.preview.emergentagent.com
 - **Dominio**: https://lapulperiastore.net
 
 ## Base de Datos

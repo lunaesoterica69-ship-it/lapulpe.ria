@@ -4,7 +4,7 @@
 import axios from 'axios';
 
 // Backend URL - SIEMPRE usar la variable de entorno del preview
-export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia-web.preview.emergentagent.com';
+export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://achiev-meritocracy.preview.emergentagent.com';
 
 // Dominio personalizado
 export const CUSTOM_DOMAIN = 'lapulperiastore.net';

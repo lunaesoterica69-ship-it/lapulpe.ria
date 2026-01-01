@@ -30,7 +30,7 @@ export const useWebSocket = (userId, onMessage, floatingNotifications = null) =>
   // Get WebSocket URL - siempre usar el backend de Emergent
   const getWsUrl = useCallback(() => {
     // URL fija del backend
-    const backendUrl = 'https://lapulperia-web.preview.emergentagent.com';
+    const backendUrl = 'https://achiev-meritocracy.preview.emergentagent.com';
     const wsProtocol = 'wss';
     const wsHost = backendUrl.replace(/^https?:\/\//, '');
     return `${wsProtocol}://${wsHost}/ws/orders/${userId}`;

@@ -286,9 +286,9 @@
 
 ### URLs de Acceso
 ```
-Frontend: https://lapulperia-web.preview.emergentagent.com
-Backend API: https://lapulperia-web.preview.emergentagent.com/api
-API Docs: https://lapulperia-web.preview.emergentagent.com/api/docs
+Frontend: https://achiev-meritocracy.preview.emergentagent.com
+Backend API: https://achiev-meritocracy.preview.emergentagent.com/api
+API Docs: https://achiev-meritocracy.preview.emergentagent.com/api/docs
 ```
 
 ### Post-Lanzamiento Inmediato

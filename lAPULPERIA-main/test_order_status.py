@@ -7,7 +7,7 @@ This tests the main bug fix mentioned in the review request
 import requests
 import json
 
-BASE_URL = "https://lapulperia-web.preview.emergentagent.com"
+BASE_URL = "https://achiev-meritocracy.preview.emergentagent.com"
 PULPERIA_TOKEN = "test_session_pulperia_1766943109361"
 
 def test_order_status_transitions():

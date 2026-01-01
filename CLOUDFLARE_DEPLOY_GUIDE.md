@@ -61,7 +61,7 @@ Esto creará una carpeta `build/` con los archivos estáticos optimizados.
 
 4. **Variables de Entorno (MUY IMPORTANTE):**
    ```
-   REACT_APP_BACKEND_URL = https://lapulperia-web.preview.emergentagent.com
+   REACT_APP_BACKEND_URL = https://achiev-meritocracy.preview.emergentagent.com
    NODE_VERSION = 18
    ```
 
@@ -135,7 +135,7 @@ Después del deploy, verifica:
 | Componente | URL |
 |------------|-----|
 | Frontend (Cloudflare) | `https://tu-proyecto.pages.dev` |
-| Backend (Emergent) | `https://lapulperia-web.preview.emergentagent.com` |
+| Backend (Emergent) | `https://achiev-meritocracy.preview.emergentagent.com` |
 | Auth Service | `https://auth.emergentagent.com` |
 
 ## 🎉 ¡Listo!

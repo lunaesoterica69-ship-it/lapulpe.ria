@@ -8,7 +8,7 @@ import json
 import sys
 
 def test_order_creation_and_updates():
-    base_url = "https://lapulperia-web.preview.emergentagent.com"
+    base_url = "https://achiev-meritocracy.preview.emergentagent.com"
     pulperia_token = "-VQBIlnpDEMpfon3aq3vZAlmk0n-bkvQSixYRttrn78"
     
     headers = {
