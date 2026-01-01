@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { MessageCircle, Send } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const Messages = () => {
   const [user, setUser] = useState(null);

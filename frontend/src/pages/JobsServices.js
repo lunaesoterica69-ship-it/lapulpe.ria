@@ -14,7 +14,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const CATEGORIES = {
   jobs: ['Ventas', 'Construcción', 'Limpieza', 'Cocina', 'Seguridad', 'Otro'],

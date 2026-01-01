@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const Advertising = () => {
   const [user, setUser] = useState(null);

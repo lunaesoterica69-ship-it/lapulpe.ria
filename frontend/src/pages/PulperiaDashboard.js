@@ -14,7 +14,7 @@ import { Button } from '../components/ui/button';
 import useWebSocket from '../hooks/useWebSocket';
 import { useNotifications } from '../contexts/NotificationContext';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 // Font options
 const FONT_OPTIONS = [

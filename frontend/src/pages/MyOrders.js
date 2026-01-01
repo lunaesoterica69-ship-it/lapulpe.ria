@@ -10,7 +10,7 @@ import Pulpero, { getPulperoMessage } from '../components/Pulpero';
 import useWebSocket from '../hooks/useWebSocket';
 import { useNotifications } from '../contexts/NotificationContext';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const StatusBadge = ({ status }) => {
   const config = {

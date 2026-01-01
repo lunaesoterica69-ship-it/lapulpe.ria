@@ -7,7 +7,7 @@ import BottomNav from '../components/BottomNav';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useAuth } from '../contexts/AuthContext';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const UserProfile = () => {
   const navigate = useNavigate();

@@ -16,7 +16,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 const ADMIN_PASSWORD = 'AlEjA127';
 
 // Sistema de Badges en Español - Estilo Gaming

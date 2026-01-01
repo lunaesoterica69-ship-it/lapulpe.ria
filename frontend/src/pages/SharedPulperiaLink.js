@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Store, ArrowRight } from 'lucide-react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 // Página de link compartido - SIEMPRE pide iniciar sesión
 const SharedPulperiaLink = () => {

@@ -4,7 +4,7 @@ import { Calendar, Clock, Check, X, Crown, Sparkles, Star, Store, Eye } from 'lu
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const AdAssignmentLog = () => {
   const [user, setUser] = useState(null);

@@ -7,7 +7,7 @@ import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const SearchProducts = () => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const ImageUpload = ({ 
   value, 
