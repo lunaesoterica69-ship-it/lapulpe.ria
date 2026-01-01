@@ -63,6 +63,7 @@ function AppRouter() {
         <Route path="/jobs-services" element={<ProtectedRoute><JobsServices /></ProtectedRoute>} />
         <Route path="/order-history" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
         <Route path="/advertising" element={<ProtectedRoute><Advertising /></ProtectedRoute>} />
+        <Route path="/recommended" element={<ProtectedRoute><RecommendedPage /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         <Route path="/ad-log" element={<AdAssignmentLog />} />
       </Routes>
