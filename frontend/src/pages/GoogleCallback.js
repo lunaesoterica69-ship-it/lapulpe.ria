@@ -2,7 +2,21 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+// Dynamically determine backend URL based on current domain
+const getBackendUrl = () => {
+  const currentHost = window.location.hostname;
+  const customDomains = ['lapulperiastore.net', 'www.lapulperiastore.net'];
+  
+  // If on custom domain, use same origin (the deployed app)
+  if (customDomains.includes(currentHost)) {
+    return window.location.origin;
+  }
+  
+  // Otherwise use environment variable (for preview/development)
+  return process.env.REACT_APP_BACKEND_URL;
+};
+
+const BACKEND_URL = getBackendUrl();
 
 const GoogleCallback = () => {
   const [searchParams] = useSearchParams();
