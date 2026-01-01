@@ -1126,9 +1126,14 @@ async def get_pulperia_achievements(pulperia_id: str):
     return result
 
 @api_router.get("/pulperias/{pulperia_id}/stats")
-async def get_pulperia_stats(pulperia_id: str):
-    """Get statistics for a pulperia"""
+async def get_pulperia_stats(pulperia_id: str, auto_check: bool = True):
+    """Get statistics for a pulperia and optionally check achievements"""
     stats = await calculate_pulperia_stats(pulperia_id)
+    
+    # Auto-check achievements when stats are fetched
+    if auto_check:
+        await check_and_award_achievements(pulperia_id)
+    
     return stats
 
 @api_router.post("/pulperias/{pulperia_id}/check-achievements")
