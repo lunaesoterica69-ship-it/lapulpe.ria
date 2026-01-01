@@ -200,6 +200,42 @@ const AdminPanel = () => {
     }
   };
 
+  // Featured Ad Slots Functions
+  const handleEnableAdSlot = async () => {
+    if (!selectedPulperia) return;
+    
+    try {
+      await api.post(`/api/admin/featured-ads/enable-slot?pulperia_id=${selectedPulperia.pulperia_id}&days=${adSlotDays}`);
+      toast.success(`Slot de anuncio habilitado para ${selectedPulperia.name} por ${adSlotDays} días`);
+      setShowEnableAdSlotDialog(false);
+      setSelectedPulperia(null);
+      setAdSlotDays(30);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Error al habilitar slot');
+    }
+  };
+
+  const handleDeleteAdSlot = async (slotId) => {
+    if (!confirm('¿Seguro que quieres eliminar este slot y su anuncio?')) return;
+    
+    try {
+      await api.delete(`/api/admin/featured-ads/slot/${slotId}`);
+      toast.success('Slot eliminado');
+      fetchData();
+    } catch (error) {
+      toast.error('Error al eliminar slot');
+    }
+  };
+
+  const hasActiveAdSlot = (pulperiaId) => {
+    const now = new Date();
+    return featuredAdSlots.some(slot => 
+      slot.pulperia_id === pulperiaId && 
+      new Date(slot.expires_at) > now
+    );
+  };
+
   const getPlanIcon = (plan) => {
     switch (plan) {
       case 'premium': return <Crown className="w-5 h-5 text-yellow-500" />;
