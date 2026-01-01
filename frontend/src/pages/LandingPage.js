@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Moderno y Minimalista
+// Logo de La Pulpería - Tiendita Simple y Limpia
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-12 h-12",
@@ -109,49 +109,35 @@ const PulperiaLogo = ({ size = "md" }) => {
   
   return (
     <svg viewBox="0 0 100 100" className={`${sizes[size]}`} xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#DC2626"/>
-          <stop offset="100%" stopColor="#B91C1C"/>
-        </linearGradient>
-        <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FEF3C7"/>
-          <stop offset="100%" stopColor="#FCD34D"/>
-        </linearGradient>
-      </defs>
-      
-      {/* Fondo circular */}
-      <circle cx="50" cy="50" r="46" fill="url(#bgGradient)"/>
-      <circle cx="50" cy="50" r="43" fill="none" stroke="#FCD34D" strokeWidth="1.5" opacity="0.4"/>
-      
-      {/* Tienda minimalista */}
-      {/* Techo */}
-      <rect x="22" y="28" width="56" height="10" rx="2" fill="url(#roofGradient)"/>
-      <rect x="26" y="31" width="48" height="4" rx="1" fill="#B91C1C" opacity="0.3"/>
-      
-      {/* Cuerpo de la tienda */}
-      <rect x="25" y="38" width="50" height="34" rx="3" fill="#FFFBEB"/>
+      {/* Techo rojo */}
+      <rect x="10" y="15" width="80" height="14" rx="2" fill="#DC2626"/>
+      <rect x="15" y="18" width="70" height="8" rx="1" fill="#B91C1C"/>
       
       {/* Toldo ondulado */}
-      <path d="M25 42 Q32 38 39 42 Q46 46 53 42 Q60 38 67 42 Q74 46 75 42" 
-            fill="none" stroke="#DC2626" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M10 32 Q22 26 34 32 Q46 38 58 32 Q70 26 82 32 Q88 29 90 32" 
+            fill="none" stroke="#DC2626" strokeWidth="4" strokeLinecap="round"/>
       
-      {/* Puerta central */}
-      <rect x="42" y="52" width="16" height="20" rx="8" ry="8" fill="#78350F"/>
-      <circle cx="54" cy="62" r="2" fill="#FCD34D"/>
+      {/* Cuerpo de la tienda */}
+      <rect x="15" y="38" width="70" height="48" rx="2" fill="#FEF3C7"/>
+      <rect x="15" y="38" width="70" height="48" rx="2" fill="none" stroke="#B45309" strokeWidth="1.5"/>
       
       {/* Ventana izquierda */}
-      <rect x="29" y="50" width="10" height="10" rx="1" fill="#374151"/>
-      <line x1="34" y1="50" x2="34" y2="60" stroke="#FCD34D" strokeWidth="1"/>
-      <line x1="29" y1="55" x2="39" y2="55" stroke="#FCD34D" strokeWidth="1"/>
+      <rect x="22" y="46" width="18" height="16" rx="1" fill="#1F2937"/>
+      <line x1="31" y1="46" x2="31" y2="62" stroke="#FCD34D" strokeWidth="1.5"/>
+      <line x1="22" y1="54" x2="40" y2="54" stroke="#FCD34D" strokeWidth="1.5"/>
       
       {/* Ventana derecha */}
-      <rect x="61" y="50" width="10" height="10" rx="1" fill="#374151"/>
-      <line x1="66" y1="50" x2="66" y2="60" stroke="#FCD34D" strokeWidth="1"/>
-      <line x1="61" y1="55" x2="71" y2="55" stroke="#FCD34D" strokeWidth="1"/>
+      <rect x="60" y="46" width="18" height="16" rx="1" fill="#1F2937"/>
+      <line x1="69" y1="46" x2="69" y2="62" stroke="#FCD34D" strokeWidth="1.5"/>
+      <line x1="60" y1="54" x2="78" y2="54" stroke="#FCD34D" strokeWidth="1.5"/>
+      
+      {/* Puerta central con arco */}
+      <path d="M42 86 L42 58 Q50 48 58 58 L58 86 Z" fill="#78350F"/>
+      <path d="M44 86 L44 60 Q50 52 56 60 L56 86" fill="none" stroke="#D4AF37" strokeWidth="1"/>
+      <circle cx="54" cy="72" r="2.5" fill="#FCD34D"/>
       
       {/* Base */}
-      <rect x="22" y="72" width="56" height="6" rx="2" fill="#92400E"/>
+      <rect x="10" y="86" width="80" height="6" rx="2" fill="#92400E"/>
     </svg>
   );
 };
