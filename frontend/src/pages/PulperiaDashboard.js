@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
-import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image, MessageSquare, Shield, Clock, MapPin, Phone, Check, Share2, Copy, ExternalLink } from 'lucide-react';
+import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image, MessageSquare, Shield, Clock, MapPin, Phone, Check, Share2, Copy, ExternalLink, Award, RefreshCw } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import ImageUpload from '../components/ImageUpload';
 import AnimatedBackground from '../components/AnimatedBackground';
+import ArtDecoBadge, { BADGES_ARTDECO } from '../components/ArtDecoBadge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
