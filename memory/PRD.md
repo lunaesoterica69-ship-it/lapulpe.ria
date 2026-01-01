@@ -1,45 +1,51 @@
 # La Pulpería - Product Requirements Document
 
-## Resumen
-Aplicación web para conectar pulperías hondureñas con clientes locales.
+## Estado Actual: ✅ LISTO PARA LANZAMIENTO
 
 ## URLs
 - **Preview**: https://premium-grocery-1.preview.emergentagent.com
 - **Dominio**: https://lapulperiastore.net
 
-## Base de Datos
-- **MongoDB**: `test_database`
-- **Colecciones**: users, pulperias, orders, products, advertisements, etc.
+## Base de Datos (test_database)
+### Usuarios: 14
+- 3 tipo pulpería
+- 10 tipo cliente
+- 1 admin (también pulpería)
 
-## Diseño Visual
-- **Tema**: Galáctico oscuro con nebulosas rojas
-- **Logo**: Pulpería simple con toldo rojo
-- **Medallas**: Art Deco con laureles
+### Pulperías: 3
+1. **Panaderia Las Recetas de Alba** - 5 productos
+2. **Bodega Diaz** - 2 productos  
+3. **Pulperia La Bendicion** - 10 productos
 
-## Sistema de Notificaciones
-- Contador solo de NO LEÍDAS
-- Se marcan como leídas automáticamente
-- Endpoint: `POST /api/notifications/mark-read`
+### Órdenes: 11
 
-## Planes de Publicidad
-| Plan | Precio | Duración |
-|------|--------|----------|
-| Básico | L. 250 | 7 días |
-| Destacado | L. 400 | 15 días |
-| Premium | L. 600 | 30 días |
-| Recomendado | L. 1,000 | 30 días |
+## Cuentas de Prueba
+| Email | Tipo | Pulpería |
+|-------|------|----------|
+| lasrecetasdealba1954@gmail.com | pulperia | Panaderia Las Recetas de Alba |
+| pseduardo67@gmail.com | pulperia | Bodega Diaz |
+| onol4sco05@gmail.com | pulperia/admin | Pulperia La Bendicion |
 
-## Credenciales
-- **Admin**: onol4sco05@gmail.com / AlEjA127
+## Diseño
+- Tema galáctico oscuro con nebulosas rojas
+- Logo simple de pulpería con toldo
+- Medallas Art Deco premium
 
-## Usuarios de Prueba
-- `onol4sco05@gmail.com` - Admin/Cliente
-- `lasrecetasdealba1954@gmail.com` - Pulpería (Panaderia Las Recetas de Alba)
-- `pseduardo67@gmail.com` - Pulpería (Bodega Diaz)
+## Funcionalidades
+- ✅ Login con Google (preview y dominio personalizado)
+- ✅ Mapa con pulperías
+- ✅ Carrito de compras
+- ✅ Sistema de órdenes
+- ✅ Dashboard para pulperías
+- ✅ Sistema de publicidad
+- ✅ Notificaciones (solo no leídas)
+- ✅ Medallas Art Deco
+- ✅ Página de Recomendados
+
+## Solución de Problemas de Login
+Si tienes error "Error al cargar datos":
+1. **Limpia caché del navegador** (Ctrl+Shift+Del)
+2. **Usa modo incógnito** para probar
+3. **Cierra sesión y vuelve a iniciar**
 
 ## Última Actualización: Enero 1, 2025
-- ✅ Medallas Art Deco
-- ✅ Notificaciones mejoradas
-- ✅ Plan Recomendado (L. 1,000)
-- ✅ Página de Pulperías Recomendadas
-- ✅ Backend conectado a test_database
