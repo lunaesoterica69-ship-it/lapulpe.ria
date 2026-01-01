@@ -25,6 +25,7 @@ const OrderHistory = lazy(() => import('./pages/OrderHistory'));
 const Advertising = lazy(() => import('./pages/Advertising'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
 const AdAssignmentLog = lazy(() => import('./pages/AdAssignmentLog'));
+const RecommendedPage = lazy(() => import('./pages/RecommendedPage'));
 
 // Simple loading spinner
 const LoadingSpinner = () => (
