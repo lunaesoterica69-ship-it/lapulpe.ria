@@ -322,10 +322,9 @@ const PulperiaDashboard = () => {
         }
       };
       
-      await axios.put(
-        `${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}`,
-        dataToSend,
-        { withCredentials: true }
+      await api.put(
+        `/api/pulperias/${selectedPulperia.pulperia_id}`,
+        dataToSend
       );
       
       toast.success('Pulpería actualizada exitosamente');
