@@ -364,6 +364,7 @@ const AdminPanel = () => {
         <div className="flex bg-stone-800/50 backdrop-blur-sm rounded-xl p-1 border border-stone-700/50 overflow-x-auto">
           {[
             { id: 'pulperias', label: 'Pulperías', icon: Store },
+            { id: 'anuncios', label: 'Anuncios', icon: Tv },
             { id: 'badges', label: 'Badges', icon: Award },
             { id: 'messages', label: 'Mensajes', icon: MessageSquare },
             { id: 'logs', label: 'Historial', icon: Clock }
