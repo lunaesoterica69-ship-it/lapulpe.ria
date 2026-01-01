@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo Simple de La Pulpería - Usando imagen PNG
+// Logo de La Pulpería - Tiendita con toldo rojo (recreado con código)
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-10 h-10",
@@ -108,11 +108,86 @@ const PulperiaLogo = ({ size = "md" }) => {
   };
   
   return (
-    <img 
-      src="/logo-pulperia.png" 
-      alt="La Pulpería" 
-      className={`${sizes[size]} object-contain`}
-    />
+    <svg viewBox="0 0 100 100" className={`${sizes[size]} drop-shadow-lg`} xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {/* Gradiente del toldo rojo */}
+        <linearGradient id="awningGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#EF4444"/>
+          <stop offset="50%" stopColor="#DC2626"/>
+          <stop offset="100%" stopColor="#B91C1C"/>
+        </linearGradient>
+        {/* Gradiente de la pared */}
+        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FEF3C7"/>
+          <stop offset="100%" stopColor="#FDE68A"/>
+        </linearGradient>
+        {/* Gradiente dorado */}
+        <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FCD34D"/>
+          <stop offset="50%" stopColor="#F59E0B"/>
+          <stop offset="100%" stopColor="#D97706"/>
+        </linearGradient>
+        {/* Sombra suave */}
+        <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.3"/>
+        </filter>
+      </defs>
+      
+      {/* Sombra del edificio */}
+      <ellipse cx="52" cy="92" rx="30" ry="5" fill="rgba(0,0,0,0.2)"/>
+      
+      {/* Edificio principal */}
+      <rect x="20" y="42" width="60" height="48" rx="2" fill="url(#wallGrad)" stroke="#D97706" strokeWidth="1.5"/>
+      
+      {/* Toldo ondulado - parte superior */}
+      <path d="M15 42 L50 18 L85 42" fill="none" stroke="url(#awningGrad)" strokeWidth="5" strokeLinecap="round"/>
+      
+      {/* Toldo ondulado - ondas */}
+      <path d="M12 42 Q22 35 32 42 Q42 49 52 42 Q62 35 72 42 Q82 49 88 42 L88 50 Q82 43 72 50 Q62 57 52 50 Q42 43 32 50 Q22 57 12 50 Z" fill="url(#awningGrad)"/>
+      
+      {/* Líneas del toldo para dar textura */}
+      <path d="M22 36 L22 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M32 42 L32 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M42 36 L42 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M52 42 L52 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M62 36 L62 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M72 42 L72 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      <path d="M82 36 L82 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      
+      {/* Ventana izquierda */}
+      <rect x="26" y="52" width="16" height="14" rx="1" fill="#292524" stroke="#78716C" strokeWidth="0.5"/>
+      <rect x="27" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      <rect x="34.5" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      {/* Productos en ventana */}
+      <rect x="29" y="58" width="3" height="6" rx="0.5" fill="#3B82F6"/>
+      <rect x="36" y="60" width="3" height="4" rx="0.5" fill="#10B981"/>
+      
+      {/* Ventana derecha */}
+      <rect x="58" y="52" width="16" height="14" rx="1" fill="#292524" stroke="#78716C" strokeWidth="0.5"/>
+      <rect x="59" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      <rect x="66.5" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      {/* Productos en ventana */}
+      <circle cx="63" cy="60" r="3" fill="#F59E0B"/>
+      <rect x="68" y="58" width="3" height="6" rx="0.5" fill="#EF4444"/>
+      
+      {/* Puerta */}
+      <rect x="42" y="55" width="16" height="35" rx="1" fill="#7F1D1D" stroke="#991B1B" strokeWidth="1"/>
+      <rect x="43.5" y="57" width="13" height="31" rx="0.5" fill="#991B1B"/>
+      {/* Panel superior de puerta */}
+      <rect x="45" y="59" width="10" height="12" rx="0.5" fill="#7F1D1D"/>
+      {/* Panel inferior de puerta */}
+      <rect x="45" y="74" width="10" height="12" rx="0.5" fill="#7F1D1D"/>
+      {/* Perilla */}
+      <circle cx="54" cy="75" r="2" fill="url(#goldAccent)" filter="url(#dropShadow)"/>
+      
+      {/* Cartel "La Pulpería" arriba de la puerta */}
+      <rect x="38" y="45" width="24" height="8" rx="1" fill="#7F1D1D" stroke="#D97706" strokeWidth="0.5"/>
+      <text x="50" y="51" textAnchor="middle" fill="#FEF3C7" fontSize="4" fontWeight="bold" fontFamily="serif">PULPERÍA</text>
+      
+      {/* Estrella dorada en el techo */}
+      <circle cx="50" cy="14" r="5" fill="url(#goldAccent)" filter="url(#dropShadow)"/>
+      <circle cx="48" cy="12" r="1.5" fill="#FEF3C7" opacity="0.6"/>
+    </svg>
   );
 };
 
