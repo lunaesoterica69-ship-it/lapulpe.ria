@@ -467,13 +467,12 @@ const PulperiaDashboard = () => {
 
   const createPulperia = async (lat, lng) => {
     try {
-      const response = await axios.post(
-        `${BACKEND_URL}/api/pulperias`,
+      const response = await api.post(
+        `/api/pulperias`,
         {
           ...pulperiaForm,
           location: { lat, lng }
-        },
-        { withCredentials: true }
+        }
       );
       
       toast.success('Pulpería creada exitosamente');
