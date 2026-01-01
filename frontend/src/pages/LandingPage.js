@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Basado en diseño de tiendita tradicional
+// Logo de La Pulpería - Basado en diseño de tiendita tradicional con techo plano
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-12 h-12",
@@ -124,51 +124,51 @@ const PulperiaLogo = ({ size = "md" }) => {
         </linearGradient>
       </defs>
       
-      {/* Techo triangular */}
-      <polygon points="50,8 15,38 85,38" fill="url(#roofRed)" stroke="#FCD34D" strokeWidth="2"/>
+      {/* Techo PLANO */}
+      <rect x="12" y="12" width="76" height="18" fill="url(#roofRed)" stroke="#B45309" strokeWidth="2" rx="2"/>
       {/* Línea decorativa del techo */}
-      <line x1="30" y1="28" x2="70" y2="28" stroke="#FCD34D" strokeWidth="1.5"/>
+      <line x1="18" y1="21" x2="82" y2="21" stroke="#FCD34D" strokeWidth="1.5"/>
       
       {/* Edificio principal */}
-      <rect x="18" y="38" width="64" height="54" fill="url(#wallCream)" stroke="#B45309" strokeWidth="1.5"/>
+      <rect x="15" y="30" width="70" height="62" fill="url(#wallCream)" stroke="#B45309" strokeWidth="1.5"/>
       
       {/* Toldo ondulado (awning) */}
-      <path d="M18 45 Q28 38 38 45 Q48 52 58 45 Q68 38 78 45 L82 45 L82 50 Q72 43 62 50 Q52 57 42 50 Q32 43 22 50 L18 50 Z" 
-            fill="url(#roofRed)" stroke="#FCD34D" strokeWidth="1"/>
+      <path d="M15 38 Q25 32 35 38 Q45 44 55 38 Q65 32 75 38 Q80 35 85 38 L85 44 Q75 38 65 44 Q55 50 45 44 Q35 38 25 44 Q20 47 15 44 Z" 
+            fill="url(#roofRed)" stroke="#B45309" strokeWidth="1"/>
       
       {/* Ventana izquierda */}
-      <rect x="24" y="55" width="14" height="18" fill="#374151" stroke="#B45309" strokeWidth="1.5" rx="1"/>
-      <line x1="31" y1="55" x2="31" y2="73" stroke="#B45309" strokeWidth="1"/>
-      <line x1="24" y1="64" x2="38" y2="64" stroke="#B45309" strokeWidth="1"/>
+      <rect x="22" y="50" width="16" height="20" fill="#374151" stroke="#B45309" strokeWidth="1.5" rx="1"/>
+      <line x1="30" y1="50" x2="30" y2="70" stroke="#B45309" strokeWidth="1"/>
+      <line x1="22" y1="60" x2="38" y2="60" stroke="#B45309" strokeWidth="1"/>
       {/* Productos en ventana */}
-      <circle cx="27" cy="59" r="2" fill="#F59E0B"/>
-      <rect x="33" y="57" width="3" height="5" rx="0.5" fill="#3B82F6"/>
-      <circle cx="27" cy="68" r="2" fill="#EF4444"/>
-      <rect x="33" y="67" width="3" height="4" rx="0.5" fill="#22C55E"/>
+      <circle cx="26" cy="55" r="2.5" fill="#F59E0B"/>
+      <rect x="32" y="53" width="4" height="6" rx="0.5" fill="#3B82F6"/>
+      <circle cx="26" cy="65" r="2" fill="#EF4444"/>
+      <rect x="32" y="63" width="4" height="5" rx="0.5" fill="#22C55E"/>
       
       {/* Ventana derecha */}
-      <rect x="62" y="55" width="14" height="18" fill="#374151" stroke="#B45309" strokeWidth="1.5" rx="1"/>
-      <line x1="69" y1="55" x2="69" y2="73" stroke="#B45309" strokeWidth="1"/>
-      <line x1="62" y1="64" x2="76" y2="64" stroke="#B45309" strokeWidth="1"/>
+      <rect x="62" y="50" width="16" height="20" fill="#374151" stroke="#B45309" strokeWidth="1.5" rx="1"/>
+      <line x1="70" y1="50" x2="70" y2="70" stroke="#B45309" strokeWidth="1"/>
+      <line x1="62" y1="60" x2="78" y2="60" stroke="#B45309" strokeWidth="1"/>
       {/* Productos en ventana */}
-      <circle cx="65" cy="59" r="2" fill="#22C55E"/>
-      <rect x="71" y="57" width="3" height="5" rx="0.5" fill="#EC4899"/>
-      <circle cx="65" cy="68" r="2" fill="#8B5CF6"/>
-      <rect x="71" y="67" width="3" height="4" rx="0.5" fill="#F59E0B"/>
+      <circle cx="66" cy="55" r="2.5" fill="#22C55E"/>
+      <rect x="72" y="53" width="4" height="6" rx="0.5" fill="#EC4899"/>
+      <circle cx="66" cy="65" r="2" fill="#8B5CF6"/>
+      <rect x="72" y="63" width="4" height="5" rx="0.5" fill="#F59E0B"/>
       
       {/* Puerta con arco */}
-      <path d="M40 92 L40 65 Q50 55 60 65 L60 92 Z" fill="url(#doorBrown)" stroke="#B45309" strokeWidth="1.5"/>
-      {/* Detalles de la puerta */}
-      <path d="M43 92 L43 68 Q50 60 57 68 L57 92" fill="none" stroke="#D4AF37" strokeWidth="0.8"/>
+      <path d="M40 92 L40 60 Q50 50 60 60 L60 92 Z" fill="url(#doorBrown)" stroke="#B45309" strokeWidth="1.5"/>
+      {/* Marco interior de la puerta */}
+      <path d="M43 92 L43 63 Q50 55 57 63 L57 92" fill="none" stroke="#D4AF37" strokeWidth="1"/>
       {/* Perilla */}
-      <circle cx="55" cy="78" r="2" fill="#FCD34D"/>
+      <circle cx="55" cy="76" r="2.5" fill="#FCD34D"/>
       
       {/* Letrero */}
-      <rect x="28" y="78" width="44" height="10" fill="url(#roofRed)" stroke="#FCD34D" strokeWidth="1" rx="1"/>
-      <text x="50" y="85.5" textAnchor="middle" fill="#FEF3C7" fontSize="5.5" fontWeight="bold" fontFamily="Arial, sans-serif">PULPERÍA</text>
+      <rect x="26" y="76" width="48" height="12" fill="url(#roofRed)" stroke="#FCD34D" strokeWidth="1" rx="2"/>
+      <text x="50" y="85" textAnchor="middle" fill="#FEF3C7" fontSize="6" fontWeight="bold" fontFamily="Arial, sans-serif">PULPERÍA</text>
       
       {/* Base */}
-      <rect x="15" y="92" width="70" height="4" fill="#B45309"/>
+      <rect x="12" y="92" width="76" height="5" fill="#B45309" rx="1"/>
     </svg>
   );
 };
