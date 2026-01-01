@@ -1832,14 +1832,14 @@ const PulperiaDashboard = () => {
           
           <div className="space-y-4">
             <div className="bg-red-900/20 border border-red-800/50 rounded-xl p-4">
-              <p className="text-red-300 font-medium mb-2">⚠️ Esta acción es IRREVERSIBLE</p>
+              <p className="text-red-300 font-medium mb-2">⚠️ Esta acción eliminará los datos de esta tienda</p>
               <ul className="text-sm text-red-200/70 space-y-1 list-disc pl-4">
                 <li>Se eliminarán todos tus productos</li>
                 <li>Se eliminarán todas las órdenes</li>
                 <li>Se eliminarán todas las reseñas</li>
                 <li>Se eliminarán todos tus logros</li>
-                <li>Tu cuenta cambiará a tipo &quot;cliente&quot;</li>
               </ul>
+              <p className="text-green-400 text-sm mt-3">✓ Podrás crear una nueva pulpería después</p>
             </div>
             
             <div>
