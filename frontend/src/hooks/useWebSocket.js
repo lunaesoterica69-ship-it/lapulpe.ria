@@ -27,11 +27,12 @@ export const useWebSocket = (userId, onMessage, floatingNotifications = null) =>
     initNotifications();
   }, []);
 
-  // Get WebSocket URL from environment
+  // Get WebSocket URL - siempre usar el backend de Emergent
   const getWsUrl = useCallback(() => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
-    const wsProtocol = backendUrl.startsWith('https') ? 'wss' : 'ws';
-    const wsHost = backendUrl.replace(/^https?:\/\//, '').replace(/\/api$/, '');
+    // URL fija del backend
+    const backendUrl = 'https://lapulperia.preview.emergentagent.com';
+    const wsProtocol = 'wss';
+    const wsHost = backendUrl.replace(/^https?:\/\//, '');
     return `${wsProtocol}://${wsHost}/ws/orders/${userId}`;
   }, [userId]);
 
