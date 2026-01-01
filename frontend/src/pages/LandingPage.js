@@ -105,14 +105,12 @@ const LandingPage = () => {
     if (isLoggingIn) return;
     setIsLoggingIn(true);
     
-    const currentHost = window.location.hostname;
-    const isCustomDomain = currentHost === CUSTOM_DOMAIN || currentHost === `www.${CUSTOM_DOMAIN}`;
-    
-    if (isCustomDomain) {
+    if (isCustomDomain()) {
       // Usar Google OAuth propio para el dominio personalizado
       try {
         const redirectUri = `${window.location.origin}/auth/callback`;
         console.log('Requesting OAuth URL for redirect:', redirectUri);
+        console.log('Using backend:', BACKEND_URL);
         
         const response = await axios.get(`${BACKEND_URL}/api/auth/google/url`, {
           params: { redirect_uri: redirectUri }
