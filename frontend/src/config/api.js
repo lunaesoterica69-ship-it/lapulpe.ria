@@ -1,25 +1,17 @@
-// API Configuration
-// Dynamically determines the backend URL based on the current domain
+// Configuración de API para La Pulpería
+// Este archivo asegura que el backend URL sea siempre el correcto
 
-const CUSTOM_DOMAIN = 'lapulperiastore.net';
+// Backend URL - SIEMPRE usar el de Emergent preview
+// Este URL es fijo porque el backend está hosteado en Emergent
+export const BACKEND_URL = 'https://lapulperia.preview.emergentagent.com';
 
-export const getBackendUrl = () => {
-  const currentHost = window.location.hostname;
-  const customDomains = [CUSTOM_DOMAIN, `www.${CUSTOM_DOMAIN}`];
-  
-  // If on custom domain, use same origin (the deployed app)
-  if (customDomains.includes(currentHost)) {
-    return window.location.origin;
-  }
-  
-  // Otherwise use environment variable (for preview/development)
-  return process.env.REACT_APP_BACKEND_URL;
-};
+// Dominio personalizado
+export const CUSTOM_DOMAIN = 'lapulperiastore.net';
 
+// Helper para detectar si estamos en el dominio personalizado
 export const isCustomDomain = () => {
-  const currentHost = window.location.hostname;
-  return currentHost === CUSTOM_DOMAIN || currentHost === `www.${CUSTOM_DOMAIN}`;
+  const host = window.location.hostname;
+  return host === CUSTOM_DOMAIN || host === `www.${CUSTOM_DOMAIN}`;
 };
 
-export const BACKEND_URL = getBackendUrl();
-export { CUSTOM_DOMAIN };
+export default BACKEND_URL;
