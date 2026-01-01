@@ -362,7 +362,18 @@ const PulperiaProfile = () => {
 
         <div className="flex flex-wrap gap-3 mt-3 text-sm text-stone-400">
           {pulperia.address && (
-            <div className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-red-400" />{pulperia.address}</div>
+            <a 
+              href={pulperia.location?.lat && pulperia.location?.lng 
+                ? `https://www.google.com/maps/dir/?api=1&destination=${pulperia.location.lat},${pulperia.location.lng}`
+                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pulperia.address)}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-red-400 transition-colors cursor-pointer"
+            >
+              <MapPin className="w-4 h-4 text-red-400" />
+              <span className="underline underline-offset-2">{pulperia.address}</span>
+            </a>
           )}
           {pulperia.phone && (
             <a href={`tel:${pulperia.phone}`} className="flex items-center gap-1.5 text-green-400 hover:text-green-300"><Phone className="w-4 h-4" />{pulperia.phone}</a>
