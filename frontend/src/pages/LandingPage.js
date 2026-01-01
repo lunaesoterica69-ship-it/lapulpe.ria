@@ -16,59 +16,57 @@ const InstagramIcon = () => (
   </svg>
 );
 
-// Modal de "Cómo Funciona" - Art Deco Style
+// Modal de "Cómo Funciona" - Estilo limpio con toques sutiles
 const HowItWorksModal = ({ onClose }) => (
   <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
-    <div className="bg-gradient-to-b from-stone-900 to-stone-950 rounded-none max-w-md w-full shadow-2xl max-h-[85vh] overflow-y-auto art-deco-border">
-      {/* Art Deco Header */}
-      <div className="px-6 pt-6 pb-4 border-b-2 border-amber-500/30 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
-        <h2 className="text-xl font-bold text-amber-100 text-center tracking-wider font-serif">¿Cómo funciona?</h2>
-        <p className="text-amber-500/60 text-sm text-center mt-1 tracking-widest uppercase">3 simples pasos</p>
+    <div className="bg-stone-900 rounded-2xl border border-stone-700/50 max-w-md w-full shadow-2xl max-h-[85vh] overflow-y-auto">
+      <div className="px-6 pt-6 pb-4 border-b border-stone-800">
+        <h2 className="text-xl font-bold text-white text-center">¿Cómo funciona?</h2>
+        <p className="text-stone-500 text-sm text-center mt-1">3 simples pasos</p>
       </div>
 
       <div className="px-6 py-5 space-y-4">
         {/* Paso 1 */}
-        <div className="flex gap-4 items-start group">
-          <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center flex-shrink-0 art-deco-diamond">
-            <MapPin className="w-5 h-5 text-amber-100" />
+        <div className="flex gap-4 items-start">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-500/20">
+            <MapPin className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-amber-100 font-bold font-serif">1. Explora</h3>
+            <h3 className="text-white font-bold">1. Explora</h3>
             <p className="text-stone-400 text-sm mt-1">Encuentra pulperías cercanas a tu ubicación en el mapa</p>
           </div>
         </div>
 
         {/* Paso 2 */}
         <div className="flex gap-4 items-start">
-          <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center flex-shrink-0 art-deco-diamond">
-            <ShoppingBag className="w-5 h-5 text-amber-100" />
+          <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/20">
+            <ShoppingBag className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-amber-100 font-bold font-serif">2. Ordena</h3>
+            <h3 className="text-white font-bold">2. Ordena</h3>
             <p className="text-stone-400 text-sm mt-1">Agrega productos al carrito y haz tu pedido</p>
           </div>
         </div>
 
         {/* Paso 3 */}
         <div className="flex gap-4 items-start">
-          <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center flex-shrink-0 art-deco-diamond">
-            <Bell className="w-5 h-5 text-amber-100" />
+          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/20">
+            <Bell className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-amber-100 font-bold font-serif">3. Recibe</h3>
+            <h3 className="text-white font-bold">3. Recibe</h3>
             <p className="text-stone-400 text-sm mt-1">Te notificamos cuando tu orden esté lista para recoger</p>
           </div>
         </div>
 
-        {/* Para dueños - Art Deco Card */}
-        <div className="bg-gradient-to-r from-stone-800/50 via-stone-800 to-stone-800/50 p-4 mt-4 border-t border-b border-amber-500/20">
+        {/* Para dueños */}
+        <div className="bg-stone-800/50 rounded-xl p-4 mt-4">
           <div className="flex gap-3 items-start">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center flex-shrink-0 rotate-45">
-              <Store className="w-5 h-5 text-stone-900 -rotate-45" />
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Store className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-amber-100 font-bold text-sm font-serif">¿Tienes una pulpería?</h3>
+              <h3 className="text-white font-bold text-sm">¿Tienes una pulpería?</h3>
               <p className="text-stone-400 text-xs mt-1">Registra tu negocio gratis y empieza a recibir pedidos</p>
             </div>
           </div>
@@ -78,7 +76,7 @@ const HowItWorksModal = ({ onClose }) => (
       <div className="px-6 pb-6">
         <button
           onClick={onClose}
-          className="w-full art-deco-btn-primary py-4 font-bold transition-all duration-300"
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:scale-[1.02] active:scale-[0.98]"
         >
           ¡Empezar!
         </button>
@@ -87,7 +85,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo Art Deco de La Pulpería - Estilo Pulpería Hondureña Tradicional
+// Logo Simple de La Pulpería - Tienda con toldo (diseño original mejorado)
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-10 h-10",
@@ -97,29 +95,23 @@ const PulperiaLogo = ({ size = "md" }) => {
   };
   
   return (
-    <svg viewBox="0 0 120 120" className={sizes[size]} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 100 100" className={sizes[size]} xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Art Deco Gold Gradient */}
-        <linearGradient id="goldArtDeco" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F7E7A0"/>
-          <stop offset="25%" stopColor="#D4A843"/>
-          <stop offset="50%" stopColor="#B8860B"/>
-          <stop offset="75%" stopColor="#D4A843"/>
-          <stop offset="100%" stopColor="#F7E7A0"/>
+        <linearGradient id="roofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#EF4444"/>
+          <stop offset="100%" stopColor="#B91C1C"/>
         </linearGradient>
-        {/* Deep Red for Pulpería */}
-        <linearGradient id="pulperiaRed" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#DC2626"/>
-          <stop offset="100%" stopColor="#7F1D1D"/>
-        </linearGradient>
-        {/* Cream Background */}
-        <linearGradient id="creamBg" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#FEF3C7"/>
           <stop offset="100%" stopColor="#FDE68A"/>
         </linearGradient>
-        {/* Glow Effect */}
-        <filter id="artDecoGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="1.5" result="glow"/>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FCD34D"/>
+          <stop offset="50%" stopColor="#F59E0B"/>
+          <stop offset="100%" stopColor="#D97706"/>
+        </linearGradient>
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="2" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
@@ -127,72 +119,33 @@ const PulperiaLogo = ({ size = "md" }) => {
         </filter>
       </defs>
       
-      {/* Outer Art Deco Frame - Octagonal */}
-      <polygon 
-        points="60,5 95,20 110,55 95,90 60,105 25,90 10,55 25,20" 
-        fill="none" 
-        stroke="url(#goldArtDeco)" 
-        strokeWidth="3"
-      />
+      {/* Building */}
+      <rect x="20" y="45" width="60" height="45" rx="3" fill="url(#wallGrad)" stroke="#DC2626" strokeWidth="2"/>
       
-      {/* Inner Decorative Ring */}
-      <polygon 
-        points="60,15 85,27 97,55 85,83 60,95 35,83 23,55 35,27" 
-        fill="url(#pulperiaRed)" 
-        stroke="url(#goldArtDeco)" 
-        strokeWidth="1.5"
-      />
+      {/* Roof - Toldo ondulado */}
+      <path d="M15 45 L50 22 L85 45" fill="none" stroke="url(#roofGrad)" strokeWidth="4" strokeLinecap="round"/>
+      <path d="M15 45 Q27 38 39 45 Q50 52 61 45 Q73 38 85 45 L85 52 Q73 45 61 52 Q50 59 39 52 Q27 45 15 52 Z" fill="url(#roofGrad)"/>
       
-      {/* Pulpería Building - Simplified Art Deco Style */}
-      <g transform="translate(32, 28)">
-        {/* Building Body */}
-        <rect x="8" y="22" width="40" height="32" fill="url(#creamBg)" stroke="url(#goldArtDeco)" strokeWidth="1"/>
-        
-        {/* Art Deco Toldo/Awning with stripes */}
-        <path d="M4 22 L28 8 L52 22 Z" fill="url(#pulperiaRed)" stroke="url(#goldArtDeco)" strokeWidth="1"/>
-        <line x1="16" y1="18" x2="22" y2="12" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.6"/>
-        <line x1="28" y1="18" x2="28" y2="8" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.6"/>
-        <line x1="40" y1="18" x2="34" y2="12" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.6"/>
-        
-        {/* Sunburst on top - Art Deco signature */}
-        <circle cx="28" cy="8" r="4" fill="url(#goldArtDeco)" filter="url(#artDecoGlow)"/>
-        <line x1="28" y1="2" x2="28" y2="-2" stroke="url(#goldArtDeco)" strokeWidth="1.5" strokeLinecap="round"/>
-        <line x1="22" y1="4" x2="19" y2="1" stroke="url(#goldArtDeco)" strokeWidth="1" strokeLinecap="round"/>
-        <line x1="34" y1="4" x2="37" y2="1" stroke="url(#goldArtDeco)" strokeWidth="1" strokeLinecap="round"/>
-        
-        {/* Window Left - Display with products */}
-        <rect x="12" y="26" width="12" height="10" fill="#1C1917" rx="1"/>
-        <rect x="13" y="27" width="10" height="8" fill="#292524" rx="0.5"/>
-        {/* Products on shelf */}
-        <rect x="14" y="30" width="2" height="5" rx="0.5" fill="#3B82F6"/>
-        <rect x="17" y="31" width="2" height="4" rx="0.5" fill="#10B981"/>
-        <rect x="20" y="29" width="2" height="6" rx="0.5" fill="#F59E0B"/>
-        
-        {/* Window Right */}
-        <rect x="32" y="26" width="12" height="10" fill="#1C1917" rx="1"/>
-        <rect x="33" y="27" width="10" height="8" fill="#292524" rx="0.5"/>
-        {/* More products */}
-        <circle cx="35" cy="31" r="2" fill="#EF4444"/>
-        <circle cx="40" cy="32" r="1.5" fill="#F97316"/>
-        
-        {/* Central Door - Art Deco Style */}
-        <rect x="22" y="36" width="12" height="18" fill="#7F1D1D"/>
-        <rect x="23" y="37" width="10" height="16" fill="#991B1B"/>
-        {/* Door Art Deco Pattern */}
-        <line x1="28" y1="38" x2="28" y2="52" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.4"/>
-        <rect x="25" y="39" width="6" height="3" fill="none" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.6"/>
-        <rect x="25" y="44" width="6" height="3" fill="none" stroke="url(#goldArtDeco)" strokeWidth="0.5" opacity="0.6"/>
-        {/* Door Handle */}
-        <circle cx="31" cy="48" r="1.2" fill="url(#goldArtDeco)"/>
-      </g>
+      {/* Window left */}
+      <rect x="26" y="52" width="16" height="14" rx="2" fill="#1C1917"/>
+      <rect x="28" y="54" width="12" height="10" rx="1" fill="#292524"/>
+      {/* Products */}
+      <rect x="30" y="57" width="3" height="7" rx="1" fill="#3B82F6"/>
+      <rect x="34" y="59" width="3" height="5" rx="1" fill="#10B981"/>
       
-      {/* Art Deco Corner Accents */}
-      <g stroke="url(#goldArtDeco)" strokeWidth="1.5" fill="none" opacity="0.8">
-        <path d="M60 10 L60 18"/>
-        <path d="M60 102 L60 94"/>
-        <path d="M15 55 L23 55"/>
-        <path d="M105 55 L97 55"/>
-      </g>
+      {/* Window right */}
+      <rect x="58" y="52" width="16" height="14" rx="2" fill="#1C1917"/>
+      <rect x="60" y="54" width="12" height="10" rx="1" fill="#292524"/>
+      {/* Hot food */}
+      <circle cx="66" cy="60" r="3" fill="#F59E0B"/>
+      
+      {/* Door */}
+      <rect x="42" y="58" width="16" height="32" rx="2" fill="#7F1D1D"/>
+      <rect x="44" y="60" width="12" height="28" rx="1" fill="#991B1B"/>
+      <circle cx="53" cy="76" r="2" fill="url(#goldGrad)" filter="url(#softGlow)"/>
+      
+      {/* Star on top */}
+      <circle cx="50" cy="18" r="4" fill="url(#goldGrad)" filter="url(#softGlow)"/>
     </svg>
   );
 };
