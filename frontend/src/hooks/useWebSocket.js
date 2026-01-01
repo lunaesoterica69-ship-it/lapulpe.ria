@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { notifyNewOrder, notifyOrderStatusChange, requestNotificationPermission } from './useNotifications';
+import { notifyNewOrder, notifyOrderStatusChange, requestNotificationPermission, registerServiceWorker } from './useNotifications';
 
 /**
  * Custom hook for WebSocket connection with auto-reconnect
@@ -14,9 +14,13 @@ export const useWebSocket = (userId, onMessage) => {
   const MAX_RECONNECT_ATTEMPTS = 5;
   const RECONNECT_DELAY = 3000;
 
-  // Request notification permission on mount
+  // Request notification permission and register service worker on mount
   useEffect(() => {
-    requestNotificationPermission();
+    const initNotifications = async () => {
+      await registerServiceWorker();
+      await requestNotificationPermission();
+    };
+    initNotifications();
   }, []);
 
   // Get WebSocket URL from environment
