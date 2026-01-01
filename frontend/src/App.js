@@ -69,6 +69,7 @@ function AppRouter() {
         <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         <Route path="/ad-log" element={<AdAssignmentLog />} />
         <Route path="/badge-demo" element={<BadgeDemo />} />
+        <Route path="/anuncios" element={<ProtectedRoute><FeaturedAdsPage /></ProtectedRoute>} />
       </Routes>
     </Suspense>
   );
