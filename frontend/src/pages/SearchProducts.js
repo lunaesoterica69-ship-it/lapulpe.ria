@@ -67,12 +67,12 @@ const SearchProducts = () => {
     if (products.length > 0) {
       setLoading(true);
       try {
-        let url = `${BACKEND_URL}/api/products?search=${searchTerm}`;
+        let url = `/api/products?search=${searchTerm}`;
         if (newSort) {
           url += `&sort_by=${newSort}`;
         }
         
-        const response = await axios.get(url);
+        const response = await api.get(url);
         setProducts(response.data);
       } catch (error) {
         console.error('Error sorting products:', error);
