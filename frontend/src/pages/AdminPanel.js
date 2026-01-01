@@ -73,12 +73,13 @@ const AdminPanel = () => {
 
   const fetchData = async () => {
     try {
-      const [userRes, pulperiasRes, adsRes, logsRes, messagesRes] = await Promise.all([
+      const [userRes, pulperiasRes, adsRes, logsRes, messagesRes, slotsRes] = await Promise.all([
         api.get(`/api/auth/me`),
         api.get(`/api/admin/pulperias`),
         api.get(`/api/admin/ads`),
         api.get(`/api/ads/assignment-log`),
-        api.get(`/api/admin/messages`).catch(() => ({ data: [] }))
+        api.get(`/api/admin/messages`).catch(() => ({ data: [] })),
+        api.get(`/api/admin/featured-ads/slots`).catch(() => ({ data: [] }))
       ]);
       
       setUser(userRes.data);
@@ -86,6 +87,7 @@ const AdminPanel = () => {
       setAds(adsRes.data);
       setLogs(logsRes.data);
       setMessages(messagesRes.data);
+      setFeaturedAdSlots(slotsRes.data);
       
       if (!userRes.data.is_admin) {
         toast.error('Acceso denegado');
