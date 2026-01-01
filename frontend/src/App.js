@@ -74,18 +74,20 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
-          <AppRouter />
-          <Toaster 
-            position="top-center" 
-            richColors 
-            toastOptions={{
-              style: {
-                background: '#DC2626',
-                color: 'white',
-                border: 'none'
-              }
-            }}
-          />
+          <NotificationProvider>
+            <AppRouter />
+            <Toaster 
+              position="top-center" 
+              richColors 
+              toastOptions={{
+                style: {
+                  background: '#1c1917',
+                  color: 'white',
+                  border: '1px solid #44403c'
+                }
+              }}
+            />
+          </NotificationProvider>
         </AuthProvider>
       </BrowserRouter>
     </div>
