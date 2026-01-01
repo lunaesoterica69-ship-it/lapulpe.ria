@@ -546,15 +546,14 @@ const PulperiaDashboard = () => {
       
       const method = editingProduct ? 'put' : 'post';
       
-      await axios[method](
+      await api[method](
         url,
         {
           ...productForm,
           price: parseFloat(productForm.price),
           stock: 0,
           available: productForm.available
-        },
-        { withCredentials: true }
+        }
       );
       
       toast.success(editingProduct ? 'Producto actualizado' : 'Producto creado exitosamente');
