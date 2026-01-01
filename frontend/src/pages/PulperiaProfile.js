@@ -71,7 +71,7 @@ const PulperiaProfile = () => {
   // Check if favorite
   const checkFavorite = useCallback(async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/favorites/${id}/check`, { withCredentials: true });
+      const response = await api.get(`/api/favorites/${id}/check`);
       setIsFavorite(response.data.is_favorite);
     } catch (e) { /* ignore */ }
   }, [id]);
@@ -82,11 +82,11 @@ const PulperiaProfile = () => {
     setTogglingFavorite(true);
     try {
       if (isFavorite) {
-        await axios.delete(`${BACKEND_URL}/api/favorites/${id}`, { withCredentials: true });
+        await api.delete(`/api/favorites/${id}`);
         setIsFavorite(false);
         toast.success('Eliminado de favoritos');
       } else {
-        await axios.post(`${BACKEND_URL}/api/favorites/${id}`, {}, { withCredentials: true });
+        await api.post(`/api/favorites/${id}`, {});
         setIsFavorite(true);
         toast.success('Agregado a favoritos');
       }
@@ -101,11 +101,11 @@ const PulperiaProfile = () => {
     const fetchData = async () => {
       try {
         const [userRes, pulperiaRes, productsRes, reviewsRes, jobsRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-          axios.get(`${BACKEND_URL}/api/pulperias/${id}`),
-          axios.get(`${BACKEND_URL}/api/pulperias/${id}/products`),
-          axios.get(`${BACKEND_URL}/api/pulperias/${id}/reviews`),
-          axios.get(`${BACKEND_URL}/api/pulperias/${id}/jobs`).catch(() => ({ data: [] }))
+          api.get(`/api/auth/me`),
+          api.get(`/api/pulperias/${id}`),
+          api.get(`/api/pulperias/${id}/products`),
+          api.get(`/api/pulperias/${id}/reviews`),
+          api.get(`/api/pulperias/${id}/jobs`).catch(() => ({ data: [] }))
         ]);
         
         setUser(userRes.data);
