@@ -1838,7 +1838,7 @@ const PulperiaDashboard = () => {
                 <li>Se eliminarán todas las órdenes</li>
                 <li>Se eliminarán todas las reseñas</li>
                 <li>Se eliminarán todos tus logros</li>
-                <li>Tu cuenta cambiará a tipo "cliente"</li>
+                <li>Tu cuenta cambiará a tipo &quot;cliente&quot;</li>
               </ul>
             </div>
             
@@ -1846,7 +1846,7 @@ const PulperiaDashboard = () => {
               <Label className="text-stone-400 text-sm">
                 Para confirmar, escribe el nombre de tu pulpería:
               </Label>
-              <p className="text-amber-400 font-bold mb-2 text-lg">"{selectedPulperia?.name}"</p>
+              <p className="text-amber-400 font-bold mb-2 text-lg">&quot;{selectedPulperia?.name}&quot;</p>
               <Input
                 value={closeConfirmation}
                 onChange={(e) => setCloseConfirmation(e.target.value)}
