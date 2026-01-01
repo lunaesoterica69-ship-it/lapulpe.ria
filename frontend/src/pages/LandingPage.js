@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { ArrowRight, Copy, Check, ExternalLink, ShoppingBag, Store, Bell, MapPin, Star } from 'lucide-react';
-import axios from 'axios';
 import DisclaimerModal from '../components/DisclaimerModal';
 
 const CUSTOM_DOMAIN = 'lapulperiastore.net';
-// Always use Emergent backend for API calls
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia.preview.emergentagent.com';
 
 // Iconos de redes sociales
 const XIcon = () => (
