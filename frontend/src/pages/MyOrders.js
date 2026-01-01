@@ -60,6 +60,9 @@ const MyOrders = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [expandedOrder, setExpandedOrder] = useState(null);
   
+  // Floating notifications
+  const floatingNotifications = useNotifications();
+  
   const handleWebSocketMessage = useCallback((data) => {
     if (data.type === 'order_update' && data.target === 'customer') {
       const { event, order, message, sound } = data;
@@ -97,7 +100,7 @@ const MyOrders = () => {
     }
   }, []);
 
-  useWebSocket(user?.user_id, handleWebSocketMessage);
+  useWebSocket(user?.user_id, handleWebSocketMessage, floatingNotifications);
 
   useEffect(() => {
     const fetchData = async () => {
