@@ -17,14 +17,15 @@
 ## Diseño
 - Tema galáctico oscuro con nebulosas rojas
 - Logo SVG estilo tiendita tradicional con:
-  - Techo triangular rojo
-  - Toldo ondulado decorativo
+  - **Techo PLANO rojo** (no triangular)
+  - Toldo ondulado decorativo debajo del techo
   - Paredes color crema
   - Ventanas con productos coloridos
   - Puerta con arco central
   - Letrero "PULPERÍA"
 - Medallas doradas estilo Art Deco
 - Diseño totalmente responsivo (PC y móvil)
+- Iconos modernos de Lucide React coherentes en toda la app
 
 ## Sistema de Meritocracia (Medallas)
 Las medallas se ganan automáticamente basadas en métricas reales:
