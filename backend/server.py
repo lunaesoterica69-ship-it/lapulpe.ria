@@ -185,9 +185,9 @@ ACHIEVEMENT_DEFINITIONS = {
     },
     "catalogo_completo": {
         "name": "Catálogo Completo",
-        "description": "20+ productos registrados",
+        "description": "10+ productos registrados",
         "icon": "Package",
-        "criteria": {"products_count": 20}
+        "criteria": {"products_count": 10}
     },
     "respuesta_rapida": {
         "name": "Respuesta Rápida",
