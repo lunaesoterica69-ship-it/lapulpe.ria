@@ -84,7 +84,13 @@ const MapView = () => {
       );
       return distance <= radiusKm;
     });
-    setPulperias(filtered);
+    
+    // If no pulperias found nearby, show ALL pulperias
+    if (filtered.length === 0 && pulperiasData.length > 0) {
+      setPulperias(pulperiasData);
+    } else {
+      setPulperias(filtered);
+    }
   }, [calculateDistance]);
 
   // Fetch favorites
