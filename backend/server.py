@@ -147,7 +147,7 @@ class Advertisement(BaseModel):
     ad_id: str
     pulperia_id: str
     pulperia_name: str
-    plan: Literal["basico", "destacado", "premium"]
+    plan: Literal["basico", "destacado", "premium", "recomendado"]
     status: Literal["pending", "active", "expired"] = "pending"
     payment_method: str
     payment_reference: Optional[str] = None
