@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Elegante y profesional
+// Logo de La Pulpería - Estilo Art Deco elegante
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-12 h-12",
@@ -110,95 +110,97 @@ const PulperiaLogo = ({ size = "md" }) => {
   return (
     <svg viewBox="0 0 100 100" className={`${sizes[size]}`} xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Gradientes elegantes */}
-        <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="artDecoRed" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#DC2626"/>
           <stop offset="100%" stopColor="#991B1B"/>
         </linearGradient>
-        <linearGradient id="wallGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="artDecoGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FCD34D"/>
+          <stop offset="50%" stopColor="#F59E0B"/>
+          <stop offset="100%" stopColor="#B45309"/>
+        </linearGradient>
+        <linearGradient id="artDecoCream" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#FFFBEB"/>
           <stop offset="100%" stopColor="#FEF3C7"/>
         </linearGradient>
-        <linearGradient id="doorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="artDecoDoor" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#78350F"/>
           <stop offset="100%" stopColor="#451A03"/>
         </linearGradient>
-        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FCD34D"/>
-          <stop offset="50%" stopColor="#F59E0B"/>
-          <stop offset="100%" stopColor="#D97706"/>
-        </linearGradient>
-        {/* Sombra suave */}
-        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.15"/>
-        </filter>
-        <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-          <feOffset in="blur" dx="0" dy="1" result="offsetBlur"/>
-          <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
-        </filter>
       </defs>
       
-      {/* Fondo circular sutil */}
-      <circle cx="50" cy="52" r="46" fill="none" stroke="rgba(220,38,38,0.1)" strokeWidth="1"/>
+      {/* Techo Art Deco - Escalonado geométrico */}
+      <polygon points="50,8 70,20 70,26 80,26 80,32 85,32 85,38 15,38 15,32 20,32 20,26 30,26 30,20" 
+               fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
       
-      {/* Edificio principal con sombra */}
-      <g filter="url(#softShadow)">
-        {/* Pared */}
-        <rect x="18" y="40" width="64" height="48" rx="4" fill="url(#wallGradient)"/>
-        
-        {/* Toldo elegante */}
-        <path d="M14 40 L50 18 L86 40" fill="none" stroke="url(#roofGradient)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        
-        {/* Ondas del toldo - más suaves */}
-        <path d="M12 40 Q22 33 32 41 Q42 49 50 41 Q58 33 68 41 Q78 49 88 41" 
-              fill="none" stroke="url(#roofGradient)" strokeWidth="10" strokeLinecap="round"/>
-        <path d="M12 40 Q22 33 32 41 Q42 49 50 41 Q58 33 68 41 Q78 49 88 41" 
-              fill="none" stroke="#FECACA" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      {/* Líneas decorativas Art Deco en el techo */}
+      <line x1="50" y1="12" x2="50" y2="20" stroke="#FCD34D" strokeWidth="1.5"/>
+      <line x1="40" y1="20" x2="60" y2="20" stroke="#FCD34D" strokeWidth="1"/>
+      <line x1="35" y1="26" x2="65" y2="26" stroke="#FCD34D" strokeWidth="0.8"/>
+      
+      {/* Ornamento central superior */}
+      <circle cx="50" cy="14" r="3" fill="url(#artDecoGold)"/>
+      <polygon points="50,6 52,10 48,10" fill="url(#artDecoGold)"/>
+      
+      {/* Edificio principal */}
+      <rect x="18" y="38" width="64" height="52" fill="url(#artDecoCream)" stroke="#D4AF37" strokeWidth="1.5"/>
+      
+      {/* Franja decorativa superior Art Deco */}
+      <rect x="18" y="38" width="64" height="6" fill="url(#artDecoRed)"/>
+      <line x1="18" y1="41" x2="82" y2="41" stroke="#FCD34D" strokeWidth="0.8"/>
+      
+      {/* Patrón geométrico Art Deco */}
+      <g stroke="#D4AF37" strokeWidth="0.5" fill="none">
+        <path d="M25 44 L25 48 L29 48"/>
+        <path d="M75 44 L75 48 L71 48"/>
+        <path d="M25 86 L25 82 L29 82"/>
+        <path d="M75 86 L75 82 L71 82"/>
       </g>
       
-      {/* Ventanas elegantes con marco */}
-      <g>
-        {/* Ventana izquierda */}
-        <rect x="24" y="50" width="18" height="16" rx="2" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
-        <rect x="25.5" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
-        <rect x="34" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
-        {/* Reflejo */}
-        <rect x="26" y="52" width="3" height="6" rx="0.5" fill="rgba(255,255,255,0.1)"/>
-        {/* Productos */}
-        <circle cx="29" cy="60" r="2.5" fill="#F59E0B"/>
-        <rect x="35" y="57" width="4" height="6" rx="1" fill="#3B82F6"/>
-        
-        {/* Ventana derecha */}
-        <rect x="58" y="50" width="18" height="16" rx="2" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
-        <rect x="59.5" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
-        <rect x="68" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
-        {/* Reflejo */}
-        <rect x="60" y="52" width="3" height="6" rx="0.5" fill="rgba(255,255,255,0.1)"/>
-        {/* Productos */}
-        <circle cx="63" cy="60" r="2.5" fill="#EF4444"/>
-        <rect x="69" y="56" width="4" height="7" rx="1" fill="#22C55E"/>
-      </g>
+      {/* Ventana izquierda - Estilo Art Deco */}
+      <rect x="24" y="52" width="16" height="22" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
+      <rect x="24" y="52" width="16" height="4" fill="url(#artDecoGold)"/>
+      {/* Divisiones geométricas */}
+      <line x1="32" y1="56" x2="32" y2="74" stroke="#D4AF37" strokeWidth="1"/>
+      <line x1="24" y1="65" x2="40" y2="65" stroke="#D4AF37" strokeWidth="0.8"/>
+      {/* Productos */}
+      <circle cx="28" cy="60" r="2" fill="#F59E0B"/>
+      <rect x="34" y="58" width="3" height="5" rx="0.5" fill="#3B82F6"/>
+      <rect x="26" y="68" width="4" height="4" rx="0.5" fill="#EF4444"/>
       
-      {/* Puerta elegante */}
-      <rect x="42" y="52" width="16" height="36" rx="2" fill="url(#doorGradient)" stroke="#92400E" strokeWidth="1"/>
-      {/* Paneles de puerta */}
-      <rect x="44" y="55" width="12" height="10" rx="1.5" fill="#5C2D0E" opacity="0.5"/>
-      <rect x="44" y="68" width="12" height="10" rx="1.5" fill="#5C2D0E" opacity="0.5"/>
-      {/* Perilla dorada */}
-      <circle cx="54" cy="72" r="2.5" fill="url(#goldGradient)"/>
-      <circle cx="53.5" cy="71.5" r="0.8" fill="#FEF3C7" opacity="0.8"/>
+      {/* Ventana derecha - Estilo Art Deco */}
+      <rect x="60" y="52" width="16" height="22" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
+      <rect x="60" y="52" width="16" height="4" fill="url(#artDecoGold)"/>
+      {/* Divisiones geométricas */}
+      <line x1="68" y1="56" x2="68" y2="74" stroke="#D4AF37" strokeWidth="1"/>
+      <line x1="60" y1="65" x2="76" y2="65" stroke="#D4AF37" strokeWidth="0.8"/>
+      {/* Productos */}
+      <circle cx="64" cy="60" r="2" fill="#22C55E"/>
+      <rect x="70" y="58" width="3" height="5" rx="0.5" fill="#EC4899"/>
+      <circle cx="72" cy="70" r="2" fill="#8B5CF6"/>
       
-      {/* Letrero premium */}
-      <rect x="26" y="41" width="48" height="8" rx="2" fill="url(#roofGradient)" stroke="#FCD34D" strokeWidth="0.8"/>
-      <text x="50" y="47" textAnchor="middle" fill="#FEF3C7" fontSize="5.5" fontWeight="bold" fontFamily="Georgia, serif" letterSpacing="1">PULPERÍA</text>
+      {/* Puerta central Art Deco */}
+      <rect x="42" y="50" width="16" height="40" fill="url(#artDecoDoor)" stroke="#D4AF37" strokeWidth="1.5"/>
+      {/* Arco decorativo superior */}
+      <path d="M42 50 L42 54 Q50 48 58 54 L58 50 Z" fill="url(#artDecoGold)"/>
+      {/* Panel Art Deco */}
+      <rect x="44" y="58" width="12" height="16" rx="1" fill="#5C2D0E" stroke="#D4AF37" strokeWidth="0.5"/>
+      {/* Patrón interior del panel */}
+      <line x1="50" y1="58" x2="50" y2="74" stroke="#D4AF37" strokeWidth="0.5"/>
+      <line x1="44" y1="66" x2="56" y2="66" stroke="#D4AF37" strokeWidth="0.5"/>
+      {/* Perilla elegante */}
+      <circle cx="54" cy="78" r="2" fill="url(#artDecoGold)"/>
       
-      {/* Detalles dorados decorativos */}
-      <circle cx="50" cy="16" r="3" fill="url(#goldGradient)"/>
-      <circle cx="49" cy="15" r="1" fill="#FEF3C7" opacity="0.6"/>
+      {/* Letrero Art Deco */}
+      <rect x="30" y="78" width="40" height="8" fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
+      {/* Decoración del letrero */}
+      <polygon points="30,78 33,82 30,86" fill="#FCD34D"/>
+      <polygon points="70,78 67,82 70,86" fill="#FCD34D"/>
+      <text x="50" y="84.5" textAnchor="middle" fill="#FEF3C7" fontSize="5" fontWeight="bold" fontFamily="Georgia, serif" letterSpacing="2">PULPERÍA</text>
       
-      {/* Línea base elegante */}
-      <line x1="15" y1="88" x2="85" y2="88" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Base Art Deco */}
+      <rect x="15" y="90" width="70" height="4" fill="url(#artDecoGold)"/>
+      <line x1="15" y1="92" x2="85" y2="92" stroke="#78350F" strokeWidth="0.5"/>
     </svg>
   );
 };
