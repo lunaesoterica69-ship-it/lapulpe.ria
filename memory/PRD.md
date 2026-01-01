@@ -1,56 +1,41 @@
 # La Pulpería - Product Requirements Document
 
 ## Resumen
-Aplicación web para conectar pulperías hondureñas con clientes locales.
+Aplicación web para conectar pulperías hondureñas con clientes locales. Diseño galáctico con estrellas animadas estilo Grok.
 
 ## URLs
 - **Preview**: https://lapulperia.preview.emergentagent.com
-- **Dominio Personalizado**: https://lapulperiastore.net
+- **Dominio**: https://lapulperiastore.net
+
+## Diseño Visual
+- **Tema**: Galáctico con nebulosas rojas y estrellas animadas
+- **Fondo**: stone-950 con efectos de blur
+- **Animaciones**:
+  - Estrellas que parpadean (twinkle, twinkle-delayed)
+  - Nebulosas pulsantes (pulse-slow)
+  - Partículas flotantes (float-1, float-2, float-3)
+  - Fade in con escala en elementos UI
+  - Hover con glow en botones
 
 ## Autenticación
-- **Preview Domain**: Emergent Auth (automático)
-- **Dominio Personalizado**: Google OAuth propio
-  - Client ID: 792440030382-6aqt3dqunub3hddt0n9plbkc0v4r7l59.apps.googleusercontent.com
+- **Preview**: Emergent Auth
+- **Dominio personalizado**: Google OAuth propio con retry (3 intentos)
+- Token guardado en localStorage
 
-### Configuración Google Cloud Console (REQUERIDO)
-```
-URIs de redirección autorizados:
-https://lapulperiastore.net/auth/callback
+## Endpoints de Salud
+- `/health` - Health check root
+- `/api/health` - Health check bajo /api
 
-Orígenes JavaScript autorizados:
-https://lapulperiastore.net
-```
-
-## Arquitectura
-- **Frontend**: React (desplegado en dominio personalizado)
-- **Backend**: FastAPI (siempre en lapulperia.preview.emergentagent.com)
-- **Base de datos**: MongoDB
-
-### Config centralizado
-Todos los componentes usan `/src/config/api.js` para el BACKEND_URL:
-```javascript
-export const BACKEND_URL = 'https://lapulperia.preview.emergentagent.com';
-```
-
-## Sistema de Notificaciones (Triple Capa)
-1. **Push del navegador** - Service Worker
-2. **Flotantes** - Tarjetas visuales (z-index: 99999)
-3. **Toast** - Backup con Sonner
-
-## Funcionalidades
-- [x] Google OAuth (dominio personalizado)
-- [x] Emergent Auth (preview)
-- [x] Notificaciones push + flotantes + toast
-- [x] Dirección clickeable → Google Maps
-- [x] Sistema de favoritos
-- [x] Órdenes por pulpería
-- [x] Mascota "Pulpero"
-- [x] Panel admin
+## Archivos Clave
+- `/src/App.css` - Todas las animaciones CSS
+- `/src/components/AnimatedBackground.js` - Fondo galáctico
+- `/src/config/api.js` - Config de backend dinámico
+- `/src/pages/LandingPage.js` - Login con retry y animaciones
 
 ## Credenciales
 - **Admin**: onol4sco05@gmail.com / AlEjA127
 
 ## Última Actualización: Enero 1, 2025
-- Backend URL centralizado en /src/config/api.js
-- Google OAuth propio para dominio personalizado
-- Z-index de notificaciones: 99999
+- Animaciones galácticas estilo Grok
+- Login con retry (3 intentos) y mejor manejo de errores
+- Endpoint /health para deployment
