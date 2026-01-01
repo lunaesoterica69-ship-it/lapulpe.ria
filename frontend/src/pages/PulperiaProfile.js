@@ -221,20 +221,20 @@ const PulperiaProfile = () => {
     }
 
     try {
-      await axios.post(`${BACKEND_URL}/api/pulperias/${id}/reviews`, {
+      await api.post(`/api/pulperias/${id}/reviews`, {
         rating,
         comment,
         images: []
-      }, { withCredentials: true });
+      });
 
       toast.success('¡Gracias por tu review!');
       setShowReviewDialog(false);
       setHasReviewed(true);
       
-      const reviewsRes = await axios.get(`${BACKEND_URL}/api/pulperias/${id}/reviews`);
+      const reviewsRes = await api.get(`/api/pulperias/${id}/reviews`);
       setReviews(reviewsRes.data);
       
-      const pulperiaRes = await axios.get(`${BACKEND_URL}/api/pulperias/${id}`);
+      const pulperiaRes = await api.get(`/api/pulperias/${id}`);
       setPulperia(pulperiaRes.data);
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Error al enviar review');
