@@ -999,6 +999,230 @@ async def toggle_product_availability(product_id: str, authorization: Optional[s
     return await db.products.find_one({"product_id": product_id}, {"_id": 0})
 
 # ============================================
+# ACHIEVEMENT SYSTEM ENDPOINTS
+# ============================================
+
+async def calculate_pulperia_stats(pulperia_id: str) -> dict:
+    """Calculate statistics for a pulperia to determine achievements"""
+    # Contar productos
+    products_count = await db.products.count_documents({"pulperia_id": pulperia_id})
+    
+    # Contar ventas completadas
+    sales_count = await db.orders.count_documents({
+        "pulperia_id": pulperia_id,
+        "status": "completed"
+    })
+    
+    # Contar clientes felices (reviews con rating >= 4)
+    happy_customers = await db.reviews.count_documents({
+        "pulperia_id": pulperia_id,
+        "rating": {"$gte": 4}
+    })
+    
+    # Obtener visitas al perfil (si existe el contador)
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    profile_views = pulperia.get("profile_views", 0) if pulperia else 0
+    
+    # Verificar si está verificado
+    is_verified = pulperia.get("is_verified", False) if pulperia else False
+    
+    return {
+        "pulperia_id": pulperia_id,
+        "products_count": products_count,
+        "sales_count": sales_count,
+        "happy_customers": happy_customers,
+        "profile_views": profile_views,
+        "is_verified": is_verified,
+        "avg_response_time": 999,  # Placeholder
+        "growth_rate": 0,  # Placeholder
+        "community_score": 0,  # Placeholder
+        "top_rank": 999  # Placeholder
+    }
+
+async def check_and_award_achievements(pulperia_id: str) -> list:
+    """Check stats and award any new achievements"""
+    stats = await calculate_pulperia_stats(pulperia_id)
+    
+    # Obtener logros ya desbloqueados
+    existing_achievements = await db.achievements.find(
+        {"pulperia_id": pulperia_id},
+        {"_id": 0, "badge_id": 1}
+    ).to_list(100)
+    existing_badges = {a["badge_id"] for a in existing_achievements}
+    
+    new_achievements = []
+    
+    # Verificar cada logro
+    for badge_id, definition in ACHIEVEMENT_DEFINITIONS.items():
+        if badge_id in existing_badges:
+            continue
+        
+        criteria = definition.get("criteria", {})
+        unlocked = True
+        
+        for key, value in criteria.items():
+            stat_value = stats.get(key, 0)
+            
+            if key == "is_verified":
+                if stat_value != value:
+                    unlocked = False
+                    break
+            elif key in ["avg_response_time"]:
+                # Menor es mejor
+                if stat_value > value:
+                    unlocked = False
+                    break
+            else:
+                # Mayor es mejor
+                if stat_value < value:
+                    unlocked = False
+                    break
+        
+        if unlocked:
+            achievement_id = f"achievement_{uuid.uuid4().hex[:12]}"
+            achievement_doc = {
+                "achievement_id": achievement_id,
+                "pulperia_id": pulperia_id,
+                "badge_id": badge_id,
+                "unlocked_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.achievements.insert_one(achievement_doc)
+            new_achievements.append({
+                "badge_id": badge_id,
+                "name": definition["name"],
+                "description": definition["description"],
+                "tier": definition.get("tier", "gold"),
+                "unlocked_at": achievement_doc["unlocked_at"]
+            })
+    
+    return new_achievements
+
+@api_router.get("/achievements/definitions")
+async def get_achievement_definitions():
+    """Get all available achievement definitions"""
+    return ACHIEVEMENT_DEFINITIONS
+
+@api_router.get("/pulperias/{pulperia_id}/achievements")
+async def get_pulperia_achievements(pulperia_id: str):
+    """Get all achievements for a pulperia"""
+    achievements = await db.achievements.find(
+        {"pulperia_id": pulperia_id},
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Enrich with definition data
+    result = []
+    for ach in achievements:
+        badge_id = ach.get("badge_id")
+        definition = ACHIEVEMENT_DEFINITIONS.get(badge_id, {})
+        result.append({
+            **ach,
+            "name": definition.get("name", badge_id),
+            "description": definition.get("description", ""),
+            "icon": definition.get("icon", "Star"),
+            "tier": definition.get("tier", "gold")
+        })
+    
+    return result
+
+@api_router.get("/pulperias/{pulperia_id}/stats")
+async def get_pulperia_stats(pulperia_id: str):
+    """Get statistics for a pulperia"""
+    stats = await calculate_pulperia_stats(pulperia_id)
+    return stats
+
+@api_router.post("/pulperias/{pulperia_id}/check-achievements")
+async def check_achievements(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Check and award new achievements for a pulperia"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    # Solo el dueño puede verificar logros
+    if pulperia["owner_user_id"] != user.user_id and user.email != ADMIN_EMAIL:
+        raise HTTPException(status_code=403, detail="No tienes permiso")
+    
+    new_achievements = await check_and_award_achievements(pulperia_id)
+    
+    return {
+        "new_achievements": new_achievements,
+        "message": f"Se desbloquearon {len(new_achievements)} nuevos logros" if new_achievements else "No hay nuevos logros disponibles"
+    }
+
+@api_router.post("/pulperias/{pulperia_id}/increment-views")
+async def increment_profile_views(pulperia_id: str):
+    """Increment the profile view counter for a pulperia"""
+    result = await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$inc": {"profile_views": 1}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    return {"message": "Vista registrada"}
+
+@api_router.post("/admin/pulperias/{pulperia_id}/verify")
+async def verify_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Verify a pulperia (unlocks 'verificado' achievement)"""
+    user = await get_admin_user(authorization, session_token)
+    
+    result = await db.pulperias.update_one(
+        {"pulperia_id": pulperia_id},
+        {"$set": {"is_verified": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    # Check achievements after verification
+    new_achievements = await check_and_award_achievements(pulperia_id)
+    
+    return {
+        "message": "Pulpería verificada",
+        "new_achievements": new_achievements
+    }
+
+@api_router.post("/admin/pulperias/{pulperia_id}/award-badge")
+async def admin_award_badge(pulperia_id: str, badge_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Manually award a badge to a pulperia"""
+    user = await get_admin_user(authorization, session_token)
+    
+    if badge_id not in ACHIEVEMENT_DEFINITIONS:
+        raise HTTPException(status_code=400, detail="Badge inválido")
+    
+    # Check if already has badge
+    existing = await db.achievements.find_one({
+        "pulperia_id": pulperia_id,
+        "badge_id": badge_id
+    })
+    
+    if existing:
+        raise HTTPException(status_code=400, detail="La pulpería ya tiene este logro")
+    
+    achievement_id = f"achievement_{uuid.uuid4().hex[:12]}"
+    achievement_doc = {
+        "achievement_id": achievement_id,
+        "pulperia_id": pulperia_id,
+        "badge_id": badge_id,
+        "awarded_by": user.user_id,
+        "unlocked_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.achievements.insert_one(achievement_doc)
+    
+    definition = ACHIEVEMENT_DEFINITIONS[badge_id]
+    return {
+        "message": f"Logro '{definition['name']}' otorgado exitosamente",
+        "achievement": {
+            **achievement_doc,
+            "name": definition["name"],
+            "description": definition["description"]
+        }
+    }
+
+# ============================================
 # FAVORITES ENDPOINTS
 # ============================================
 
