@@ -4,8 +4,7 @@ import axios from 'axios';
 import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing } from 'lucide-react';
 import { toast } from 'sonner';
 import { requestNotificationPermission } from '../hooks/useNotifications';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { BACKEND_URL } from '../config/api';
 
 const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const navigate = useNavigate();
