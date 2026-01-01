@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { 
   Shield, Store, Crown, Sparkles, Star, Check, X, Clock, Calendar, Search, 
   Ban, MessageSquare, Award, Zap, Flame, Gem, Trophy, Target, Rocket, 
-  Users, ChevronRight, Send, Eye, AlertTriangle, Lock, Unlock
+  Users, ChevronRight, Send, Eye, AlertTriangle, Lock, Unlock, BadgeCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
@@ -15,16 +15,16 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
-import RomanBadge, { BADGES_ROMAN, RomanBadgeInline } from '../components/ArtDecoBadge';
+import ArtDecoBadge, { BADGES_ARTDECO, BadgeInline } from '../components/ArtDecoBadge';
 
 const ADMIN_PASSWORD = 'AlEjA127';
 
-// Use new Roman style badges
-const BADGES = BADGES_ROMAN;
+// Use Art Deco style badges
+const BADGES = BADGES_ARTDECO;
 
-// Componente de Badge Estilo Romano
+// Componente de Badge Art Deco
 const BadgeDisplay = ({ badgeId, size = 'md', showName = true, animated = true }) => {
-  return <RomanBadge badgeId={badgeId} size={size} showName={showName} animated={animated} />;
+  return <ArtDecoBadge badgeId={badgeId} size={size} showName={showName} animated={animated} />;
 };
 
 const AdminPanel = () => {
