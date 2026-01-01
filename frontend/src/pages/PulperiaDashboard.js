@@ -223,13 +223,12 @@ const PulperiaDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [userRes, pulperiasRes] = await Promise.all([
-        api.get(`/api/auth/me`),
-        api.get(`/api/pulperias`)
-      ]);
-      
+      // First get user data
+      const userRes = await api.get(`/api/auth/me`);
       setUser(userRes.data);
       
+      // Then get pulperias
+      const pulperiasRes = await api.get(`/api/pulperias`);
       const myPulperias = pulperiasRes.data.filter(p => p.owner_user_id === userRes.data.user_id);
       setPulperias(myPulperias);
       
@@ -239,7 +238,14 @@ const PulperiaDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      toast.error('Error al cargar datos');
+      // More specific error handling
+      if (error.response?.status === 401) {
+        toast.error('Sesión expirada. Por favor inicia sesión nuevamente.');
+      } else if (error.response?.status === 403) {
+        toast.error('No tienes permisos para acceder a esta página.');
+      } else {
+        toast.error('Error al cargar datos. Intenta recargar la página.');
+      }
     } finally {
       setLoading(false);
     }
