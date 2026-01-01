@@ -1882,7 +1882,7 @@ async def admin_clear_data(keep_products: bool = True, authorization: Optional[s
 
 # Dominios permitidos para CORS
 ALLOWED_ORIGINS = [
-    "https://lapulperia.preview.emergentagent.com",
+    "https://premium-grocery-1.preview.emergentagent.com",
     "https://lapulperiastore.net",
     "https://www.lapulperiastore.net",
     "https://red-auth-connect.emergent.host",

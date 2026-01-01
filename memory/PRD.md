@@ -4,7 +4,7 @@
 Aplicación web para conectar pulperías hondureñas con clientes locales. Diseño galáctico con estrellas animadas estilo Grok.
 
 ## URLs
-- **Preview**: https://lapulperia.preview.emergentagent.com
+- **Preview**: https://premium-grocery-1.preview.emergentagent.com
 - **Dominio**: https://lapulperiastore.net
 
 ## Diseño Visual

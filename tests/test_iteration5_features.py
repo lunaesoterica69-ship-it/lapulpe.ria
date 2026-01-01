@@ -12,7 +12,7 @@ import pytest
 import requests
 import os
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://lapulperia.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://premium-grocery-1.preview.emergentagent.com')
 
 class TestGoogleOAuthEndpoint:
     """Test Google OAuth URL endpoint for custom domain"""
@@ -37,7 +37,7 @@ class TestGoogleOAuthEndpoint:
     
     def test_google_auth_url_with_preview_domain(self):
         """Test that /api/auth/google/url works with preview domain too"""
-        redirect_uri = "https://lapulperia.preview.emergentagent.com/auth/callback"
+        redirect_uri = "https://premium-grocery-1.preview.emergentagent.com/auth/callback"
         response = requests.get(f"{BASE_URL}/api/auth/google/url", params={"redirect_uri": redirect_uri})
         
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"

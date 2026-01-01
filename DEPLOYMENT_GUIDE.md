@@ -64,7 +64,7 @@ CORS_ORIGINS="*"
 
 #### Frontend (`/app/frontend/.env`)
 ```env
-REACT_APP_BACKEND_URL=https://lapulperia.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://premium-grocery-1.preview.emergentagent.com
 WDS_SOCKET_PORT=443
 ENABLE_HEALTH_CHECK=false
 ```
@@ -109,9 +109,9 @@ PORT=3000 yarn start
 
 ## 📊 URLs de Acceso
 
-- **Frontend:** https://lapulperia.preview.emergentagent.com
-- **Backend API:** https://lapulperia.preview.emergentagent.com/api
-- **API Docs:** https://lapulperia.preview.emergentagent.com/api/docs
+- **Frontend:** https://premium-grocery-1.preview.emergentagent.com
+- **Backend API:** https://premium-grocery-1.preview.emergentagent.com/api
+- **API Docs:** https://premium-grocery-1.preview.emergentagent.com/api/docs
 
 ## ✅ Lista de Verificación Pre-Lanzamiento
 
