@@ -5,55 +5,52 @@ Aplicación web para conectar pulperías hondureñas con clientes locales.
 
 ## URLs
 - **Preview**: https://lapulperia.preview.emergentagent.com
-- **Dominio Personalizado**: https://lapulperiastore.net (usar Emergent Auth)
+- **Dominio Personalizado**: https://lapulperiastore.net
 
 ## Autenticación
-- **Método**: Emergent Auth (Google OAuth manejado)
-- Funciona en PC y móvil
-- Redirección: `https://auth.emergentagent.com/?redirect={url}/dashboard`
+- **Preview Domain**: Emergent Auth (automático)
+- **Dominio Personalizado**: Google OAuth propio
+  - Client ID: 792440030382-6aqt3dqunub3hddt0n9plbkc0v4r7l59.apps.googleusercontent.com
 
-## Sistema de Notificaciones (TRIPLE CAPA)
-1. **Notificaciones Push del Navegador** - Service Worker (`/public/sw.js`)
-2. **Notificaciones Flotantes** - Componente visual en pantalla (`FloatingNotification.js`)
-3. **Toast** - Backup usando Sonner
+### Configuración Google Cloud Console (REQUERIDO)
+```
+URIs de redirección autorizados:
+https://lapulperiastore.net/auth/callback
 
-### Contextos Creados
-- `NotificationContext.js` - Maneja notificaciones flotantes en toda la app
+Orígenes JavaScript autorizados:
+https://lapulperiastore.net
+```
 
-### Eventos Notificados
-- Nueva orden (para dueños de pulpería)
-- Orden aceptada, lista, completada (para clientes)
+## Arquitectura
+- **Frontend**: React (desplegado en dominio personalizado)
+- **Backend**: FastAPI (siempre en lapulperia.preview.emergentagent.com)
+- **Base de datos**: MongoDB
 
-## Funcionalidades Completadas
-- [x] Google OAuth via Emergent Auth
-- [x] Notificaciones push del navegador
-- [x] Notificaciones flotantes en pantalla
-- [x] Toast como backup
-- [x] Dirección clickeable -> Google Maps
+### Config centralizado
+Todos los componentes usan `/src/config/api.js` para el BACKEND_URL:
+```javascript
+export const BACKEND_URL = 'https://lapulperia.preview.emergentagent.com';
+```
+
+## Sistema de Notificaciones (Triple Capa)
+1. **Push del navegador** - Service Worker
+2. **Flotantes** - Tarjetas visuales (z-index: 99999)
+3. **Toast** - Backup con Sonner
+
+## Funcionalidades
+- [x] Google OAuth (dominio personalizado)
+- [x] Emergent Auth (preview)
+- [x] Notificaciones push + flotantes + toast
+- [x] Dirección clickeable → Google Maps
 - [x] Sistema de favoritos
-- [x] Órdenes separadas por pulpería
+- [x] Órdenes por pulpería
 - [x] Mascota "Pulpero"
-- [x] Panel de administración
-
-## Arquitectura de Notificaciones
-```
-/app/frontend/src/
-├── components/
-│   └── FloatingNotification.js   # Notificaciones visuales flotantes
-├── contexts/
-│   └── NotificationContext.js    # Contexto global de notificaciones
-├── hooks/
-│   ├── useNotifications.js       # Push notifications + Service Worker
-│   └── useWebSocket.js           # WebSocket + triggers de notificación
-└── public/
-    └── sw.js                     # Service Worker
-```
+- [x] Panel admin
 
 ## Credenciales
-- **Admin Email**: onol4sco05@gmail.com
-- **Admin Password**: AlEjA127
+- **Admin**: onol4sco05@gmail.com / AlEjA127
 
 ## Última Actualización: Enero 1, 2025
-- Simplificado login para usar solo Emergent Auth (funciona en PC y móvil)
-- Sistema de notificaciones de triple capa (push + flotante + toast)
-- Dirección clickeable que abre Google Maps
+- Backend URL centralizado en /src/config/api.js
+- Google OAuth propio para dominio personalizado
+- Z-index de notificaciones: 99999
