@@ -169,6 +169,88 @@ class AdAssignmentLog(BaseModel):
     assigned_by: str
     created_at: datetime
 
+# Sistema de Logros - Definición de medallas y criterios
+ACHIEVEMENT_DEFINITIONS = {
+    "primera_venta": {
+        "name": "Primera Venta",
+        "description": "¡Completaste tu primera venta!",
+        "icon": "ShoppingBag",
+        "criteria": {"sales_count": 1}
+    },
+    "cliente_feliz": {
+        "name": "10 Clientes Felices",
+        "description": "10 clientes satisfechos",
+        "icon": "Heart",
+        "criteria": {"happy_customers": 10}
+    },
+    "catalogo_completo": {
+        "name": "Catálogo Completo",
+        "description": "20+ productos registrados",
+        "icon": "Package",
+        "criteria": {"products_count": 20}
+    },
+    "respuesta_rapida": {
+        "name": "Respuesta Rápida",
+        "description": "Respondes en menos de 1 hora",
+        "icon": "Clock",
+        "criteria": {"avg_response_time": 60}  # minutos
+    },
+    "vendedor_estrella": {
+        "name": "Vendedor Estrella",
+        "description": "50+ ventas completadas",
+        "icon": "Star",
+        "criteria": {"sales_count": 50}
+    },
+    "popular": {
+        "name": "Pulpería Popular",
+        "description": "100+ visitas a tu perfil",
+        "icon": "Users",
+        "criteria": {"profile_views": 100}
+    },
+    "en_ascenso": {
+        "name": "En Ascenso",
+        "description": "Crecimiento constante",
+        "icon": "TrendingUp",
+        "criteria": {"growth_rate": 10}  # 10% mensual
+    },
+    "verificado": {
+        "name": "Verificado",
+        "description": "Negocio verificado oficialmente",
+        "icon": "BadgeCheck",
+        "criteria": {"is_verified": True}
+    },
+    "top_vendedor": {
+        "name": "Top Vendedor",
+        "description": "Top 10 del mes",
+        "icon": "Trophy",
+        "criteria": {"top_rank": 10},
+        "tier": "legendary"
+    },
+    "leyenda": {
+        "name": "Leyenda Local",
+        "description": "Referente de tu comunidad",
+        "icon": "Crown",
+        "criteria": {"community_score": 100},
+        "tier": "legendary"
+    }
+}
+
+class PulperiaAchievement(BaseModel):
+    achievement_id: str
+    pulperia_id: str
+    badge_id: str  # ID del badge (primera_venta, cliente_feliz, etc.)
+    unlocked_at: datetime
+    
+class PulperiaStats(BaseModel):
+    pulperia_id: str
+    sales_count: int = 0
+    products_count: int = 0
+    profile_views: int = 0
+    happy_customers: int = 0  # Clientes con rating >= 4
+    avg_response_time: int = 999  # En minutos
+    is_verified: bool = False
+    updated_at: datetime
+
 # ============================================
 # REQUEST MODELS
 # ============================================
