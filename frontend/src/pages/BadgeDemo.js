@@ -1,4 +1,4 @@
-import ArtDecoBadge, { BADGES_ARTDECO, BadgeShowcase } from '../components/ArtDecoBadge';
+import ArtDecoBadge, { BADGES_ARTDECO, BadgeInline } from '../components/ArtDecoBadge';
 import AnimatedBackground from '../components/AnimatedBackground';
 
 const BadgeDemo = () => {
@@ -9,77 +9,58 @@ const BadgeDemo = () => {
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-2">Sistema de Medallas</h1>
-          <p className="text-stone-400">Medallas estilo romano con corona de laurel</p>
+          <h1 className="text-4xl font-bold text-amber-400 mb-2">🏆 Logros de Pulpería</h1>
+          <p className="text-stone-400">Medallas doradas por tus logros como vendedor</p>
         </div>
         
         {/* Medallas en tamaño XL */}
         <div className="mb-16">
-          <h2 className="text-xl font-semibold text-amber-400 mb-6 text-center">Tamaño XL - Vista Detallada</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <h2 className="text-xl font-semibold text-amber-300 mb-6 text-center">Vista Detallada</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {BADGES_ARTDECO.map(badge => (
-              <div key={badge.id} className="flex flex-col items-center p-4 bg-stone-900/50 rounded-2xl border border-stone-800">
+              <div key={badge.id} className="flex flex-col items-center p-4 bg-stone-900/50 rounded-2xl border border-amber-900/30 hover:border-amber-500/50 transition-all hover:bg-stone-900/70">
                 <ArtDecoBadge badgeId={badge.id} size="xl" showName={false} />
                 <div className="mt-4 text-center">
-                  <p className="text-white font-bold">{badge.name}</p>
-                  <p className="text-stone-500 text-xs">{badge.description}</p>
-                  <span className="inline-block mt-2 px-2 py-1 bg-stone-800 rounded text-xs text-stone-400 capitalize">
-                    {badge.tier}
-                  </span>
+                  <p className="text-amber-200 font-bold text-sm">{badge.name}</p>
+                  <p className="text-stone-500 text-xs mt-1">{badge.description}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
         
-        {/* Medallas en tamaño LG */}
+        {/* Medallas con nombre */}
         <div className="mb-16">
-          <h2 className="text-xl font-semibold text-amber-400 mb-6 text-center">Tamaño LG - Con Nombre</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <h2 className="text-xl font-semibold text-amber-300 mb-6 text-center">Con Descripción</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {BADGES_ARTDECO.map(badge => (
-              <div key={badge.id} className="p-4 bg-stone-900/30 rounded-xl border border-stone-800/50">
+              <div key={badge.id} className="p-4 bg-gradient-to-br from-stone-900/80 to-stone-800/50 rounded-xl border border-amber-900/20">
                 <ArtDecoBadge badgeId={badge.id} size="lg" showName={true} />
               </div>
             ))}
           </div>
         </div>
         
-        {/* Medallas en tamaño MD */}
+        {/* Badges Inline */}
         <div className="mb-16">
-          <h2 className="text-xl font-semibold text-amber-400 mb-6 text-center">Tamaño MD - Uso Normal</h2>
-          <div className="flex flex-wrap justify-center gap-6">
+          <h2 className="text-xl font-semibold text-amber-300 mb-6 text-center">Versión Compacta</h2>
+          <div className="flex flex-wrap justify-center gap-3">
             {BADGES_ARTDECO.map(badge => (
-              <div key={badge.id} className="p-3 bg-stone-900/30 rounded-lg">
-                <ArtDecoBadge badgeId={badge.id} size="md" showName={true} />
-              </div>
+              <BadgeInline key={badge.id} badgeId={badge.id} />
             ))}
           </div>
         </div>
         
-        {/* Medallas en tamaño SM */}
-        <div className="mb-16">
-          <h2 className="text-xl font-semibold text-amber-400 mb-6 text-center">Tamaño SM - Compacto</h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {BADGES_ARTDECO.map(badge => (
-              <ArtDecoBadge key={badge.id} badgeId={badge.id} size="sm" showName={false} />
-            ))}
-          </div>
-        </div>
-        
-        {/* Comparativa de tiers */}
-        <div className="bg-stone-900/50 rounded-2xl border border-stone-800 p-6">
-          <h2 className="text-xl font-semibold text-amber-400 mb-6 text-center">Jerarquía de Tiers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {['bronze', 'silver', 'gold', 'legendary', 'special'].map(tier => (
-              <div key={tier} className="text-center p-4 rounded-xl bg-stone-800/30">
-                <h3 className="text-white font-bold capitalize mb-4">{tier}</h3>
-                <div className="flex justify-center">
-                  <ArtDecoBadge 
-                    badgeId={BADGES_ARTDECO.find(b => b.tier === tier)?.id} 
-                    size="lg" 
-                    showName={false} 
-                  />
-                </div>
+        {/* Showcase especial - Legendarios */}
+        <div className="bg-gradient-to-br from-amber-900/20 to-stone-900/50 rounded-2xl border border-amber-500/30 p-8">
+          <h2 className="text-2xl font-bold text-amber-400 mb-2 text-center">⭐ Logros Legendarios</h2>
+          <p className="text-stone-400 text-center mb-8">Los más altos honores para tu pulpería</p>
+          <div className="flex justify-center gap-12 flex-wrap">
+            {BADGES_ARTDECO.filter(b => b.tier === 'legendary').map(badge => (
+              <div key={badge.id} className="flex flex-col items-center">
+                <ArtDecoBadge badgeId={badge.id} size="xl" showName={false} />
+                <p className="text-amber-300 font-bold mt-4">{badge.name}</p>
+                <p className="text-stone-500 text-sm">{badge.description}</p>
               </div>
             ))}
           </div>
