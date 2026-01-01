@@ -20,7 +20,7 @@ const SearchProducts = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true });
+        const response = await api.get(`/api/auth/me`, { withCredentials: true });
         setUser(response.data);
         
         const savedCart = localStorage.getItem('cart');

@@ -29,8 +29,8 @@ const OrderHistory = () => {
   const fetchData = async () => {
     try {
       const [userRes, ordersRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/orders/completed`, { withCredentials: true })
+        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/orders/completed`, { withCredentials: true })
       ]);
       
       setUser(userRes.data);
@@ -48,7 +48,7 @@ const OrderHistory = () => {
 
   const fetchStats = async (period) => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/orders/stats?period=${period}`, { withCredentials: true });
+      const response = await api.get(`/api/orders/stats?period=${period}`, { withCredentials: true });
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats:', error);

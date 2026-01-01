@@ -73,9 +73,9 @@ const JobsServices = () => {
   const fetchData = async () => {
     try {
       const [userRes, jobsRes, servicesRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/jobs`),
-        axios.get(`${BACKEND_URL}/api/services`)
+        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/jobs`),
+        api.get(`/api/services`)
       ]);
       
       setUser(userRes.data);
@@ -219,7 +219,7 @@ const JobsServices = () => {
 
   const handleDeleteJob = async (jobId) => {
     try {
-      await axios.delete(`${BACKEND_URL}/api/jobs/${jobId}`, { withCredentials: true });
+      await api.delete(`/api/jobs/${jobId}`, { withCredentials: true });
       toast.success('Oferta eliminada');
       await fetchData();
     } catch (error) {
@@ -230,7 +230,7 @@ const JobsServices = () => {
 
   const handleDeleteService = async (serviceId) => {
     try {
-      await axios.delete(`${BACKEND_URL}/api/services/${serviceId}`, { withCredentials: true });
+      await api.delete(`/api/services/${serviceId}`, { withCredentials: true });
       toast.success('Servicio eliminado');
       await fetchData();
     } catch (error) {

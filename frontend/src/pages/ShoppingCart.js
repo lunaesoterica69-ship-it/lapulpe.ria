@@ -19,7 +19,7 @@ const ShoppingCartPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true });
+        const response = await api.get(`/api/auth/me`, { withCredentials: true });
         setUser(response.data);
         setCustomerName(response.data.name || '');
       } catch (error) {
@@ -103,7 +103,7 @@ const ShoppingCartPage = () => {
 
     setLoading(pulperiaId);
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/orders`, {
+      const response = await api.post(`/api/orders`, {
         customer_name: customerName.trim(),
         pulperia_id: pulperiaId,
         items: pulperiaItems.map(item => ({

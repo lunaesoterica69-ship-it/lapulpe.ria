@@ -105,8 +105,8 @@ const MyOrders = () => {
     const fetchData = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-          axios.get(`${BACKEND_URL}/api/orders`, { withCredentials: true })
+          api.get(`/api/auth/me`, { withCredentials: true }),
+          api.get(`/api/orders`, { withCredentials: true })
         ]);
         setUser(userRes.data);
         setOrders(ordersRes.data);

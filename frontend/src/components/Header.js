@@ -53,7 +53,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
     if (!user) return;
     const fetchCount = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/notifications`, { withCredentials: true });
+        const response = await api.get(`/api/notifications`, { withCredentials: true });
         setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
       } catch (error) { /* Silently ignore */ }
     };
@@ -65,7 +65,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/notifications`, { withCredentials: true });
+      const response = await api.get(`/api/notifications`, { withCredentials: true });
       setNotifications(response.data);
       setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
     } catch (error) {
@@ -83,7 +83,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, { withCredentials: true });
+      await api.post(`/api/auth/logout`, {}, { withCredentials: true });
       localStorage.removeItem('cart');
       navigate('/', { replace: true });
     } catch (error) {
@@ -94,7 +94,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     setUpdatingStatus(true);
     try {
-      await axios.put(`${BACKEND_URL}/api/orders/${orderId}/status`, 
+      await api.put(`/api/orders/${orderId}/status`, 
         { status: newStatus }, 
         { withCredentials: true }
       );

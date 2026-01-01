@@ -115,11 +115,11 @@ const AdminPanel = () => {
   const fetchData = async () => {
     try {
       const [userRes, pulperiasRes, adsRes, logsRes, messagesRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/admin/pulperias`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/admin/ads`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/ads/assignment-log`),
-        axios.get(`${BACKEND_URL}/api/admin/messages`, { withCredentials: true }).catch(() => ({ data: [] }))
+        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/admin/pulperias`, { withCredentials: true }),
+        api.get(`/api/admin/ads`, { withCredentials: true }),
+        api.get(`/api/ads/assignment-log`),
+        api.get(`/api/admin/messages`, { withCredentials: true }).catch(() => ({ data: [] }))
       ]);
       
       setUser(userRes.data);
@@ -152,7 +152,7 @@ const AdminPanel = () => {
 
   const handleActivateAd = async (pulperiaId) => {
     try {
-      await axios.post(`${BACKEND_URL}/api/admin/ads/activate`, {
+      await api.post(`/api/admin/ads/activate`, {
         pulperia_id: pulperiaId,
         plan: selectedPlan,
         duration_days: selectedDuration
@@ -168,7 +168,7 @@ const AdminPanel = () => {
 
   const handleDeactivateAd = async (adId) => {
     try {
-      await axios.post(`${BACKEND_URL}/api/admin/ads/${adId}/deactivate`, {}, { withCredentials: true });
+      await api.post(`/api/admin/ads/${adId}/deactivate`, {}, { withCredentials: true });
       toast.success('Anuncio desactivado');
       fetchData();
     } catch (error) {
@@ -198,7 +198,7 @@ const AdminPanel = () => {
 
   const handleUnsuspend = async (pulperiaId) => {
     try {
-      await axios.post(`${BACKEND_URL}/api/admin/pulperias/${pulperiaId}/unsuspend`, {}, { withCredentials: true });
+      await api.post(`/api/admin/pulperias/${pulperiaId}/unsuspend`, {}, { withCredentials: true });
       toast.success('Pulpería reactivada');
       fetchData();
     } catch (error) {

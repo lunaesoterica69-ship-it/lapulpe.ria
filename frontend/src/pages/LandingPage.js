@@ -112,7 +112,7 @@ const LandingPage = () => {
         console.log('Requesting OAuth URL for redirect:', redirectUri);
         console.log('Using backend:', BACKEND_URL);
         
-        const response = await axios.get(`${BACKEND_URL}/api/auth/google/url`, {
+        const response = await api.get(`/api/auth/google/url`, {
           params: { redirect_uri: redirectUri }
         });
         

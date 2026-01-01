@@ -103,7 +103,7 @@ const PulperiaDashboard = () => {
       
       // Refresh admin messages
       if (selectedPulperia) {
-        axios.get(`${BACKEND_URL}/api/pulperias/${selectedPulperia.pulperia_id}/admin-messages`, { withCredentials: true })
+        api.get(`/api/pulperias/${selectedPulperia.pulperia_id}/admin-messages`, { withCredentials: true })
           .then(res => setAdminMessages(res.data))
           .catch(() => { /* Ignore error */ });
       }
@@ -224,8 +224,8 @@ const PulperiaDashboard = () => {
   const fetchData = async () => {
     try {
       const [userRes, pulperiasRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/pulperias`, { withCredentials: true })
+        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/pulperias`, { withCredentials: true })
       ]);
       
       setUser(userRes.data);
@@ -248,11 +248,11 @@ const PulperiaDashboard = () => {
   const fetchPulperiaData = async (pulperiaId) => {
     try {
       const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/pulperias/${pulperiaId}/products`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/orders`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/pulperias/${pulperiaId}/jobs`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/pulperias/${pulperiaId}/announcements`).catch(() => ({ data: [] })),
-        axios.get(`${BACKEND_URL}/api/pulperias/${pulperiaId}/admin-messages`, { withCredentials: true }).catch(() => ({ data: [] }))
+        api.get(`/api/pulperias/${pulperiaId}/products`, { withCredentials: true }),
+        api.get(`/api/orders`, { withCredentials: true }),
+        api.get(`/api/pulperias/${pulperiaId}/jobs`).catch(() => ({ data: [] })),
+        api.get(`/api/pulperias/${pulperiaId}/announcements`).catch(() => ({ data: [] })),
+        api.get(`/api/pulperias/${pulperiaId}/admin-messages`, { withCredentials: true }).catch(() => ({ data: [] }))
       ]);
       
       setProducts(productsRes.data);
@@ -272,7 +272,7 @@ const PulperiaDashboard = () => {
 
   const checkNewOrders = async (pulperiaId) => {
     try {
-      const ordersRes = await axios.get(`${BACKEND_URL}/api/orders`, { withCredentials: true });
+      const ordersRes = await api.get(`/api/orders`, { withCredentials: true });
       const pulperiaOrders = ordersRes.data.filter(o => o.pulperia_id === pulperiaId);
       const newOrders = pulperiaOrders.filter(o => o.status === 'pending').length;
       
@@ -547,7 +547,7 @@ const PulperiaDashboard = () => {
     if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
     
     try {
-      await axios.delete(`${BACKEND_URL}/api/products/${productId}`, { withCredentials: true });
+      await api.delete(`/api/products/${productId}`, { withCredentials: true });
       toast.success('Producto eliminado');
       await fetchPulperiaData(selectedPulperia.pulperia_id);
     } catch (error) {
@@ -662,7 +662,7 @@ const PulperiaDashboard = () => {
 
   const handleDeleteJob = async (jobId) => {
     try {
-      await axios.delete(`${BACKEND_URL}/api/jobs/${jobId}`, { withCredentials: true });
+      await api.delete(`/api/jobs/${jobId}`, { withCredentials: true });
       toast.success('Empleo eliminado');
       await fetchPulperiaData(selectedPulperia.pulperia_id);
     } catch (error) {
@@ -696,7 +696,7 @@ const PulperiaDashboard = () => {
 
   const handleDeleteAnnouncement = async (announcementId) => {
     try {
-      await axios.delete(`${BACKEND_URL}/api/announcements/${announcementId}`, { withCredentials: true });
+      await api.delete(`/api/announcements/${announcementId}`, { withCredentials: true });
       toast.success('Anuncio eliminado');
       await fetchPulperiaData(selectedPulperia.pulperia_id);
     } catch (error) {

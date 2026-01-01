@@ -14,7 +14,7 @@ const SharedPulperiaLink = () => {
     // Solo buscar info de la pulpería, NO verificar auth
     const fetchPulperia = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/api/pulperias/${id}`);
+        const res = await api.get(`/api/pulperias/${id}`);
         setPulperia(res.data);
       } catch (e) {
         setPulperia(null);

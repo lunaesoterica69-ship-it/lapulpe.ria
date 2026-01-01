@@ -15,8 +15,8 @@ const Messages = () => {
     const fetchData = async () => {
       try {
         const [userRes, messagesRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-          axios.get(`${BACKEND_URL}/api/messages`, { withCredentials: true })
+          api.get(`/api/auth/me`, { withCredentials: true }),
+          api.get(`/api/messages`, { withCredentials: true })
         ]);
         
         setUser(userRes.data);

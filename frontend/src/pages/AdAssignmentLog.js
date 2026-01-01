@@ -14,8 +14,8 @@ const AdAssignmentLog = () => {
     const fetchData = async () => {
       try {
         const [userRes, logsRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }).catch(() => ({ data: null })),
-          axios.get(`${BACKEND_URL}/api/ads/assignment-log`)
+          api.get(`/api/auth/me`, { withCredentials: true }).catch(() => ({ data: null })),
+          api.get(`/api/ads/assignment-log`)
         ]);
         
         setUser(userRes.data);

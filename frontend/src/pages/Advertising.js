@@ -31,9 +31,9 @@ const Advertising = () => {
   const fetchData = async () => {
     try {
       const [userRes, plansRes, adsRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-        axios.get(`${BACKEND_URL}/api/ads/plans`),
-        axios.get(`${BACKEND_URL}/api/ads/my-ads`, { withCredentials: true }).catch(() => ({ data: [] }))
+        api.get(`/api/auth/me`, { withCredentials: true }),
+        api.get(`/api/ads/plans`),
+        api.get(`/api/ads/my-ads`, { withCredentials: true }).catch(() => ({ data: [] }))
       ]);
       
       setUser(userRes.data);
