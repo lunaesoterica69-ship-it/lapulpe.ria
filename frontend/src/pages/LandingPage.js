@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Tiendita simple y limpia
+// Logo de La Pulpería - Elegante y profesional
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-12 h-12",
@@ -109,32 +109,96 @@ const PulperiaLogo = ({ size = "md" }) => {
   
   return (
     <svg viewBox="0 0 100 100" className={`${sizes[size]}`} xmlns="http://www.w3.org/2000/svg">
-      {/* Edificio - fondo crema */}
-      <rect x="15" y="38" width="70" height="54" rx="3" fill="#FEF3C7" stroke="#FFF" strokeWidth="3"/>
+      <defs>
+        {/* Gradientes elegantes */}
+        <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#DC2626"/>
+          <stop offset="100%" stopColor="#991B1B"/>
+        </linearGradient>
+        <linearGradient id="wallGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FFFBEB"/>
+          <stop offset="100%" stopColor="#FEF3C7"/>
+        </linearGradient>
+        <linearGradient id="doorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#78350F"/>
+          <stop offset="100%" stopColor="#451A03"/>
+        </linearGradient>
+        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FCD34D"/>
+          <stop offset="50%" stopColor="#F59E0B"/>
+          <stop offset="100%" stopColor="#D97706"/>
+        </linearGradient>
+        {/* Sombra suave */}
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.15"/>
+        </filter>
+        <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+          <feOffset in="blur" dx="0" dy="1" result="offsetBlur"/>
+          <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+        </filter>
+      </defs>
       
-      {/* Toldo rojo */}
-      <path d="M10 38 L50 14 L90 38" fill="none" stroke="#DC2626" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M8 38 Q19 30 30 40 Q41 50 52 40 Q63 30 74 40 Q85 50 92 40 L92 48 Q83 56 72 46 Q61 36 50 46 Q39 56 28 46 Q17 36 8 46 Z" fill="#DC2626" stroke="#FFF" strokeWidth="2"/>
+      {/* Fondo circular sutil */}
+      <circle cx="50" cy="52" r="46" fill="none" stroke="rgba(220,38,38,0.1)" strokeWidth="1"/>
       
-      {/* Ventana izquierda */}
-      <rect x="22" y="48" width="20" height="18" rx="2" fill="#292524" stroke="#FFF" strokeWidth="2"/>
-      <line x1="32" y1="48" x2="32" y2="66" stroke="#FFF" strokeWidth="1.5"/>
-      <rect x="25" y="54" width="5" height="8" rx="1" fill="#3B82F6"/>
-      <circle cx="38" cy="57" r="3" fill="#F59E0B"/>
+      {/* Edificio principal con sombra */}
+      <g filter="url(#softShadow)">
+        {/* Pared */}
+        <rect x="18" y="40" width="64" height="48" rx="4" fill="url(#wallGradient)"/>
+        
+        {/* Toldo elegante */}
+        <path d="M14 40 L50 18 L86 40" fill="none" stroke="url(#roofGradient)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+        
+        {/* Ondas del toldo - más suaves */}
+        <path d="M12 40 Q22 33 32 41 Q42 49 50 41 Q58 33 68 41 Q78 49 88 41" 
+              fill="none" stroke="url(#roofGradient)" strokeWidth="10" strokeLinecap="round"/>
+        <path d="M12 40 Q22 33 32 41 Q42 49 50 41 Q58 33 68 41 Q78 49 88 41" 
+              fill="none" stroke="#FECACA" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+      </g>
       
-      {/* Ventana derecha */}
-      <rect x="58" y="48" width="20" height="18" rx="2" fill="#292524" stroke="#FFF" strokeWidth="2"/>
-      <line x1="68" y1="48" x2="68" y2="66" stroke="#FFF" strokeWidth="1.5"/>
-      <circle cx="63" cy="57" r="3" fill="#EF4444"/>
-      <rect x="70" y="53" width="5" height="9" rx="1" fill="#22C55E"/>
+      {/* Ventanas elegantes con marco */}
+      <g>
+        {/* Ventana izquierda */}
+        <rect x="24" y="50" width="18" height="16" rx="2" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
+        <rect x="25.5" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
+        <rect x="34" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
+        {/* Reflejo */}
+        <rect x="26" y="52" width="3" height="6" rx="0.5" fill="rgba(255,255,255,0.1)"/>
+        {/* Productos */}
+        <circle cx="29" cy="60" r="2.5" fill="#F59E0B"/>
+        <rect x="35" y="57" width="4" height="6" rx="1" fill="#3B82F6"/>
+        
+        {/* Ventana derecha */}
+        <rect x="58" y="50" width="18" height="16" rx="2" fill="#1F2937" stroke="#D4AF37" strokeWidth="1.5"/>
+        <rect x="59.5" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
+        <rect x="68" y="51.5" width="7" height="13" rx="1" fill="#111827"/>
+        {/* Reflejo */}
+        <rect x="60" y="52" width="3" height="6" rx="0.5" fill="rgba(255,255,255,0.1)"/>
+        {/* Productos */}
+        <circle cx="63" cy="60" r="2.5" fill="#EF4444"/>
+        <rect x="69" y="56" width="4" height="7" rx="1" fill="#22C55E"/>
+      </g>
       
-      {/* Puerta */}
-      <rect x="42" y="52" width="16" height="40" rx="2" fill="#78350F" stroke="#FFF" strokeWidth="2"/>
-      <circle cx="55" cy="74" r="2.5" fill="#FCD34D" stroke="#FFF" strokeWidth="1"/>
+      {/* Puerta elegante */}
+      <rect x="42" y="52" width="16" height="36" rx="2" fill="url(#doorGradient)" stroke="#92400E" strokeWidth="1"/>
+      {/* Paneles de puerta */}
+      <rect x="44" y="55" width="12" height="10" rx="1.5" fill="#5C2D0E" opacity="0.5"/>
+      <rect x="44" y="68" width="12" height="10" rx="1.5" fill="#5C2D0E" opacity="0.5"/>
+      {/* Perilla dorada */}
+      <circle cx="54" cy="72" r="2.5" fill="url(#goldGradient)"/>
+      <circle cx="53.5" cy="71.5" r="0.8" fill="#FEF3C7" opacity="0.8"/>
       
-      {/* Letrero PULPERÍA */}
-      <rect x="28" y="40" width="44" height="7" rx="2" fill="#DC2626" stroke="#FFF" strokeWidth="1.5"/>
-      <text x="50" y="46" textAnchor="middle" fill="#FFF" fontSize="5" fontWeight="bold" fontFamily="Arial, sans-serif">PULPERÍA</text>
+      {/* Letrero premium */}
+      <rect x="26" y="41" width="48" height="8" rx="2" fill="url(#roofGradient)" stroke="#FCD34D" strokeWidth="0.8"/>
+      <text x="50" y="47" textAnchor="middle" fill="#FEF3C7" fontSize="5.5" fontWeight="bold" fontFamily="Georgia, serif" letterSpacing="1">PULPERÍA</text>
+      
+      {/* Detalles dorados decorativos */}
+      <circle cx="50" cy="16" r="3" fill="url(#goldGradient)"/>
+      <circle cx="49" cy="15" r="1" fill="#FEF3C7" opacity="0.6"/>
+      
+      {/* Línea base elegante */}
+      <line x1="15" y1="88" x2="85" y2="88" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
   );
 };
