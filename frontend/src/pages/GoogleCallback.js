@@ -3,10 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Store } from 'lucide-react';
 import { BACKEND_URL } from '../config/api';
+import { useAuth } from '../contexts/AuthContext';
 
 const GoogleCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { loginWithUser } = useAuth();
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('Procesando...');
 
@@ -17,19 +19,15 @@ const GoogleCallback = () => {
 
       console.log('[GoogleCallback] Starting...');
       console.log('[GoogleCallback] Code:', code ? 'present' : 'missing');
-      console.log('[GoogleCallback] Error param:', errorParam);
-      console.log('[GoogleCallback] Backend URL:', BACKEND_URL);
 
       if (errorParam) {
-        console.log('[GoogleCallback] Error from Google:', errorParam);
-        setError('Autenticación cancelada por el usuario');
+        setError('Autenticación cancelada');
         setTimeout(() => navigate('/', { replace: true }), 3000);
         return;
       }
 
       if (!code) {
-        console.log('[GoogleCallback] No code found');
-        setError('Código de autorización no encontrado');
+        setError('Código no encontrado');
         setTimeout(() => navigate('/', { replace: true }), 3000);
         return;
       }
@@ -37,32 +35,33 @@ const GoogleCallback = () => {
       try {
         setStatus('Verificando con Google...');
         
-        // El redirect_uri debe coincidir EXACTAMENTE con lo que se envió a Google
         const redirectUri = `${window.location.origin}/auth/callback`;
+        console.log('[GoogleCallback] Backend URL:', BACKEND_URL);
         console.log('[GoogleCallback] Redirect URI:', redirectUri);
         
-        // Intercambiar código por sesión
+        // Intercambiar código por sesión - SIN withCredentials para evitar problemas de cookies
         const response = await axios.post(
           `${BACKEND_URL}/api/auth/google/callback`,
           null,
           {
             params: { code, redirect_uri: redirectUri },
-            withCredentials: true,
             timeout: 30000
+            // NO usar withCredentials - usaremos el token del response
           }
         );
 
         console.log('[GoogleCallback] Response:', response.data);
 
-        if (response.data) {
+        if (response.data && response.data.session_token) {
           setStatus('¡Bienvenido!');
           
-          // Guardar token de sesión
-          if (response.data.session_token) {
-            localStorage.setItem('session_token', response.data.session_token);
-          }
+          // Guardar token en localStorage
+          localStorage.setItem('session_token', response.data.session_token);
           
-          // Determinar a dónde redirigir
+          // Actualizar el contexto de auth
+          loginWithUser(response.data);
+          
+          // Determinar redirección
           const user = response.data;
           
           setTimeout(() => {
@@ -74,19 +73,19 @@ const GoogleCallback = () => {
               navigate('/map', { replace: true });
             }
           }, 500);
+        } else {
+          throw new Error('No se recibió token de sesión');
         }
       } catch (err) {
         console.error('[GoogleCallback] Error:', err);
-        console.error('[GoogleCallback] Error response:', err.response?.data);
-        
-        const errorMsg = err.response?.data?.detail || 'Error al iniciar sesión. Intenta de nuevo.';
+        const errorMsg = err.response?.data?.detail || 'Error al iniciar sesión';
         setError(errorMsg);
         setTimeout(() => navigate('/', { replace: true }), 4000);
       }
     };
 
     handleCallback();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, loginWithUser]);
 
   return (
     <div className="min-h-screen bg-stone-950 flex items-center justify-center">
@@ -99,11 +98,10 @@ const GoogleCallback = () => {
               </svg>
             </div>
             <p className="text-red-400 font-medium text-lg">{error}</p>
-            <p className="text-stone-500 text-sm mt-2">Redirigiendo a inicio...</p>
+            <p className="text-stone-500 text-sm mt-2">Redirigiendo...</p>
           </>
         ) : (
           <>
-            {/* Logo animado */}
             <div className="relative inline-block mb-6">
               <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-3xl flex items-center justify-center shadow-2xl shadow-red-500/30">
                 <Store className="w-10 h-10 text-white" />
@@ -116,7 +114,6 @@ const GoogleCallback = () => {
             <h2 className="text-xl font-bold text-white mb-2">{status}</h2>
             <p className="text-stone-400 text-sm">Conectando con Google</p>
             
-            {/* Dots de progreso */}
             <div className="flex justify-center gap-2 mt-4">
               <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
               <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
