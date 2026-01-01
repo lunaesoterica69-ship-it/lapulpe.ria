@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Pulpero, { getPulperoMessage } from '../components/Pulpero';
 import useWebSocket from '../hooks/useWebSocket';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
