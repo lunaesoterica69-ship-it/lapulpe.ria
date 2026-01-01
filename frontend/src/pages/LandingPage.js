@@ -34,6 +34,75 @@ const InstagramIcon = () => (
   </svg>
 );
 
+// Modal de "Cómo Funciona" - Defined outside component to prevent re-creation
+const HowItWorksModal = ({ onClose }) => (
+  <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+    <div className="bg-stone-900 rounded-3xl border border-stone-700 max-w-md w-full shadow-2xl max-h-[85vh] overflow-y-auto">
+      <div className="px-6 pt-6 pb-4 border-b border-stone-800">
+        <h2 className="text-xl font-bold text-white text-center">¿Cómo funciona?</h2>
+        <p className="text-stone-500 text-sm text-center mt-1">3 simples pasos</p>
+      </div>
+
+      <div className="px-6 py-5 space-y-4">
+        {/* Paso 1 */}
+        <div className="flex gap-4 items-start">
+          <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <MapPin className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-white font-bold">1. Explora</h3>
+            <p className="text-stone-400 text-sm mt-1">Encuentra pulperías cercanas a tu ubicación en el mapa</p>
+          </div>
+        </div>
+
+        {/* Paso 2 */}
+        <div className="flex gap-4 items-start">
+          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <ShoppingBag className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-white font-bold">2. Ordena</h3>
+            <p className="text-stone-400 text-sm mt-1">Agrega productos al carrito y haz tu pedido</p>
+          </div>
+        </div>
+
+        {/* Paso 3 */}
+        <div className="flex gap-4 items-start">
+          <div className="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <Bell className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-white font-bold">3. Recibe</h3>
+            <p className="text-stone-400 text-sm mt-1">Te notificamos cuando tu orden esté lista para recoger</p>
+          </div>
+        </div>
+
+        {/* Para dueños */}
+        <div className="bg-stone-800 rounded-2xl p-4 mt-4">
+          <div className="flex gap-3 items-start">
+            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Store className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-sm">¿Tienes una pulpería?</h3>
+              <p className="text-stone-400 text-xs mt-1">Registra tu negocio gratis y empieza a recibir pedidos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 pb-6">
+        <button
+          onClick={onClose}
+          className="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-xl font-bold transition-colors"
+        >
+          ¡Empezar!
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const PulperiaLogo = () => (
   <svg viewBox="0 0 50 50" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
     <rect x="8" y="22" width="34" height="24" rx="2" fill="#FEE2E2" opacity="0.9"/>
