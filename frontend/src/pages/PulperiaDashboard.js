@@ -169,8 +169,8 @@ const PulperiaDashboard = () => {
     }
   }, [selectedPulperia]);
 
-  // WebSocket connection (silencioso)
-  useWebSocket(user?.user_id, handleWebSocketMessage);
+  // WebSocket connection con notificaciones flotantes
+  useWebSocket(user?.user_id, handleWebSocketMessage, floatingNotifications);
   
   const [pulperiaForm, setPulperiaForm] = useState({
     name: '',
