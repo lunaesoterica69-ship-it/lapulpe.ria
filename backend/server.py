@@ -1254,6 +1254,250 @@ async def admin_award_badge(pulperia_id: str, badge_id: str, authorization: Opti
     }
 
 # ============================================
+# FEATURED ADS SYSTEM - Anuncios Destacados (1000 Lps/mes)
+# ============================================
+
+@api_router.get("/featured-ads")
+async def get_featured_ads():
+    """Get all active featured ads - visible to everyone"""
+    now = datetime.now(timezone.utc)
+    
+    # Get active ads that haven't expired
+    ads = await db.featured_ads.find({
+        "is_active": True,
+        "expires_at": {"$gt": now.isoformat()}
+    }, {"_id": 0}).to_list(50)
+    
+    return ads
+
+@api_router.get("/featured-ads/my-slot")
+async def get_my_ad_slot(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Get current user's pulperia ad slot status"""
+    user = await get_current_user(authorization, session_token)
+    
+    # Find user's pulperias
+    pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(10)
+    
+    if not pulperias:
+        return {"has_slot": False, "message": "No tienes pulperías registradas"}
+    
+    pulperia_ids = [p["pulperia_id"] for p in pulperias]
+    
+    # Check for active slot
+    now = datetime.now(timezone.utc)
+    slot = await db.featured_ad_slots.find_one({
+        "pulperia_id": {"$in": pulperia_ids},
+        "expires_at": {"$gt": now.isoformat()}
+    }, {"_id": 0})
+    
+    if not slot:
+        return {"has_slot": False, "message": "No tienes un slot habilitado. Contacta al admin."}
+    
+    # Get the ad if exists
+    ad = None
+    if slot.get("ad_id"):
+        ad = await db.featured_ads.find_one({"ad_id": slot["ad_id"]}, {"_id": 0})
+    
+    return {
+        "has_slot": True,
+        "slot": slot,
+        "ad": ad,
+        "can_upload": not slot.get("is_used", False)
+    }
+
+@api_router.post("/featured-ads/upload")
+async def upload_featured_ad(
+    title: Optional[str] = None,
+    description: Optional[str] = None,
+    image_url: Optional[str] = None,
+    video_url: Optional[str] = None,
+    link_url: Optional[str] = None,
+    authorization: Optional[str] = Header(None), 
+    session_token: Optional[str] = Cookie(None)
+):
+    """Upload a featured ad (requires enabled slot)"""
+    user = await get_current_user(authorization, session_token)
+    
+    # Find user's pulperia with active slot
+    pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(10)
+    
+    if not pulperias:
+        raise HTTPException(status_code=400, detail="No tienes pulperías registradas")
+    
+    pulperia_ids = [p["pulperia_id"] for p in pulperias]
+    
+    now = datetime.now(timezone.utc)
+    slot = await db.featured_ad_slots.find_one({
+        "pulperia_id": {"$in": pulperia_ids},
+        "is_used": False,
+        "expires_at": {"$gt": now.isoformat()}
+    })
+    
+    if not slot:
+        raise HTTPException(status_code=403, detail="No tienes un slot disponible. Contacta al admin para habilitarlo (1000 Lps/mes).")
+    
+    if not image_url and not video_url:
+        raise HTTPException(status_code=400, detail="Debes subir al menos una imagen o video")
+    
+    # Get pulperia info
+    pulperia = await db.pulperias.find_one({"pulperia_id": slot["pulperia_id"]}, {"_id": 0})
+    
+    # Create the ad
+    ad_id = f"featured_ad_{uuid.uuid4().hex[:12]}"
+    expires_at = now + timedelta(days=30)
+    
+    ad_doc = {
+        "ad_id": ad_id,
+        "pulperia_id": slot["pulperia_id"],
+        "pulperia_name": pulperia["name"] if pulperia else "Pulpería",
+        "title": title,
+        "description": description,
+        "image_url": image_url,
+        "video_url": video_url,
+        "link_url": link_url or f"/p/{slot['pulperia_id']}",
+        "is_active": True,
+        "created_at": now.isoformat(),
+        "expires_at": expires_at.isoformat()
+    }
+    
+    await db.featured_ads.insert_one(ad_doc)
+    
+    # Mark slot as used
+    await db.featured_ad_slots.update_one(
+        {"slot_id": slot["slot_id"]},
+        {"$set": {"is_used": True, "ad_id": ad_id}}
+    )
+    
+    return {
+        "message": "¡Anuncio destacado creado exitosamente!",
+        "ad": {k: v for k, v in ad_doc.items() if k != "_id"},
+        "expires_at": expires_at.isoformat()
+    }
+
+@api_router.delete("/featured-ads/{ad_id}")
+async def delete_my_featured_ad(ad_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Delete own featured ad"""
+    user = await get_current_user(authorization, session_token)
+    
+    # Find user's pulperias
+    pulperias = await db.pulperias.find({"owner_user_id": user.user_id}, {"_id": 0}).to_list(10)
+    pulperia_ids = [p["pulperia_id"] for p in pulperias]
+    
+    ad = await db.featured_ads.find_one({"ad_id": ad_id})
+    
+    if not ad:
+        raise HTTPException(status_code=404, detail="Anuncio no encontrado")
+    
+    if ad["pulperia_id"] not in pulperia_ids:
+        raise HTTPException(status_code=403, detail="No tienes permiso para eliminar este anuncio")
+    
+    await db.featured_ads.delete_one({"ad_id": ad_id})
+    
+    return {"message": "Anuncio eliminado"}
+
+# Admin endpoints for managing featured ad slots
+@api_router.post("/admin/featured-ads/enable-slot")
+async def admin_enable_ad_slot(
+    pulperia_id: str,
+    days: int = 30,
+    authorization: Optional[str] = Header(None), 
+    session_token: Optional[str] = Cookie(None)
+):
+    """Admin: Enable a featured ad slot for a pulperia (after payment)"""
+    admin = await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    now = datetime.now(timezone.utc)
+    expires_at = now + timedelta(days=days)
+    
+    # Check if already has active slot
+    existing_slot = await db.featured_ad_slots.find_one({
+        "pulperia_id": pulperia_id,
+        "expires_at": {"$gt": now.isoformat()}
+    })
+    
+    if existing_slot:
+        raise HTTPException(status_code=400, detail="Esta pulpería ya tiene un slot activo")
+    
+    slot_id = f"slot_{uuid.uuid4().hex[:12]}"
+    slot_doc = {
+        "slot_id": slot_id,
+        "pulperia_id": pulperia_id,
+        "pulperia_name": pulperia["name"],
+        "enabled_by": admin.user_id,
+        "enabled_at": now.isoformat(),
+        "expires_at": expires_at.isoformat(),
+        "is_used": False,
+        "ad_id": None
+    }
+    
+    await db.featured_ad_slots.insert_one(slot_doc)
+    
+    # Create notification for pulperia owner
+    notification_doc = {
+        "notification_id": f"notif_{uuid.uuid4().hex[:12]}",
+        "user_id": pulperia["owner_user_id"],
+        "type": "ad_slot_enabled",
+        "title": "¡Slot de Anuncio Habilitado!",
+        "message": f"Tu slot de anuncio destacado para '{pulperia['name']}' ha sido activado. Tienes {days} días para subir tu anuncio.",
+        "read": False,
+        "created_at": now.isoformat()
+    }
+    await db.notifications.insert_one(notification_doc)
+    
+    return {
+        "message": f"Slot habilitado para '{pulperia['name']}' por {days} días",
+        "slot": {k: v for k, v in slot_doc.items() if k != "_id"},
+        "expires_at": expires_at.isoformat()
+    }
+
+@api_router.get("/admin/featured-ads/slots")
+async def admin_get_all_slots(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Get all featured ad slots"""
+    await get_admin_user(authorization, session_token)
+    
+    slots = await db.featured_ad_slots.find({}, {"_id": 0}).sort("enabled_at", -1).to_list(100)
+    return slots
+
+@api_router.delete("/admin/featured-ads/slot/{slot_id}")
+async def admin_delete_slot(slot_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Delete/revoke a featured ad slot"""
+    await get_admin_user(authorization, session_token)
+    
+    slot = await db.featured_ad_slots.find_one({"slot_id": slot_id})
+    if not slot:
+        raise HTTPException(status_code=404, detail="Slot no encontrado")
+    
+    # Also delete the ad if exists
+    if slot.get("ad_id"):
+        await db.featured_ads.delete_one({"ad_id": slot["ad_id"]})
+    
+    await db.featured_ad_slots.delete_one({"slot_id": slot_id})
+    
+    return {"message": "Slot y anuncio eliminados"}
+
+@api_router.delete("/admin/featured-ads/{ad_id}")
+async def admin_delete_ad(ad_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Delete any featured ad"""
+    await get_admin_user(authorization, session_token)
+    
+    result = await db.featured_ads.delete_one({"ad_id": ad_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Anuncio no encontrado")
+    
+    # Also update the slot
+    await db.featured_ad_slots.update_one(
+        {"ad_id": ad_id},
+        {"$set": {"is_used": False, "ad_id": None}}
+    )
+    
+    return {"message": "Anuncio eliminado"}
+
+# ============================================
 # FAVORITES ENDPOINTS
 # ============================================
 
