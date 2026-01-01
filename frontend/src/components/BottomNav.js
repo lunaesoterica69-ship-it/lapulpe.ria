@@ -28,7 +28,7 @@ const BottomNav = ({ user, cartCount = 0, activeTab }) => {
       <div className="flex justify-around items-center py-2">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = isActive(item.path);
+          const active = isActive(item.path, item.tab);
           
           return (
             <button
