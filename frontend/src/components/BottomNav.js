@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Search, ShoppingCart, User, Store, Briefcase, History, Megaphone } from 'lucide-react';
+import { Home, Search, ShoppingCart, User, Store, Briefcase, History, Megaphone, Crown } from 'lucide-react';
 
 const BottomNav = ({ user, cartCount = 0 }) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const BottomNav = ({ user, cartCount = 0 }) => {
     { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
   ] : [
     { icon: Home, label: 'Mapa', path: '/map', testId: 'nav-map' },
-    { icon: Search, label: 'Buscar', path: '/search', testId: 'nav-search' },
+    { icon: Crown, label: 'Top', path: '/recommended', testId: 'nav-recommended' },
     { icon: ShoppingCart, label: 'Carrito', path: '/cart', testId: 'nav-cart', badge: cartCount },
     { icon: Briefcase, label: 'Chamba', path: '/jobs-services', testId: 'nav-jobs' },
     { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
