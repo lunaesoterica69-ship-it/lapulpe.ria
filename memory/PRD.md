@@ -1,76 +1,68 @@
 # La Pulpería - Product Requirements Document
 
 ## Resumen
-Aplicación web para conectar pulperías hondureñas con clientes locales. Diseño **Art Deco Premium** con acentos dorados y temática de pulpería tradicional.
+Aplicación web para conectar pulperías hondureñas con clientes locales. Diseño **Galáctico + Premium** con nebulosas rojas y medallas estilo romano.
 
 ## URLs
 - **Preview**: https://premium-grocery-1.preview.emergentagent.com
 - **Dominio**: https://lapulperiastore.net
 
-## Diseño Visual - Art Deco Theme (Actualizado Enero 2025)
-- **Tema Principal**: Art Deco con acentos dorados (#D4A843)
-- **Fondo**: stone-950 con patrón geométrico Art Deco sutil
-- **Logo**: Octágono Art Deco con pulpería tradicional hondureña
-- **Botones**: Estilo Art Deco con bordes cortados (clip-path)
-- **Tipografía**: Serif para títulos, tracking-wide para subtítulos
-- **Animaciones**:
-  - Gold shimmer text effect en títulos
-  - Nebulosas rojas/ámbar sutiles
-  - Hover con scale y glow en botones
-  - Badges con efecto shimmer para premium
+## Diseño Visual - Fusión Galáctico/Premium (Enero 2025)
+### Estilo General
+- **Tema**: Galáctico oscuro con acentos rojos
+- **Fondo**: stone-950 con nebulosas rojas animadas
+- **Estrellas**: Parpadeantes con efecto twinkle
+- **Partículas**: Flotantes animadas
 
-## Componentes Art Deco
-- `art-deco-btn-primary`: Botón principal con gradiente rojo y bordes cortados
-- `art-deco-btn-secondary`: Botón secundario con borde dorado
-- `art-deco-border`: Marco con doble borde dorado
-- `art-deco-card`: Tarjeta con líneas doradas superior/inferior
-- `art-deco-diamond`: Forma de diamante para iconos
-- `gold-shimmer-text`: Texto con efecto shimmer dorado animado
+### Logo
+- Pulpería simple con toldo ondulado rojo
+- Estantes con productos en ventanas
+- Estrella dorada en la cima
+- Sin bordes octogonales excesivos
 
-## Sistema de Medallas Art Deco
+### Componentes UI
+- **Botones**: Gradiente rojo con bordes redondeados (rounded-xl)
+- **Cards**: Fondo semi-transparente con backdrop-blur
+- **Modales**: Bordes stone-700/50, sin bordes Art Deco
+- **Navegación**: Simple con indicadores rojos
+
+### Sistema de Medallas (Estilo Romano)
 Ubicación: `/app/frontend/src/components/ArtDecoBadge.js`
-- Novato, En Ascenso, En Llamas, Élite, Campeón, Legendario, Verificado, Socio
-- Cada medalla tiene forma octogonal Art Deco con SVG personalizado
-- Medalla "Legendario" tiene efecto shimmer premium
+- **Diseño**: Corona de laureles dorados/plateados
+- **Niveles**: Bronze, Silver, Gold, Legendary, Special
+- **Medallas**: Novato, En Ascenso, En Llamas, Élite, Campeón, Legendario, Verificado, Socio
+- **Efectos**: Glow para legendarios, sparkles animados
 
 ## Autenticación
 - **Preview**: Emergent Auth
-- **Dominio personalizado**: Google OAuth propio con JWT en localStorage
-- **Interceptor Axios**: Token automático en todas las requests
-
-## Endpoints de Salud
-- `/health` - Health check root
-- `/api/health` - Health check bajo /api
+- **Dominio personalizado**: Google OAuth con JWT en localStorage
+- **Interceptor Axios**: Token automático en requests
 
 ## Archivos Clave
-- `/src/App.css` - Estilos Art Deco y animaciones CSS
-- `/src/components/ArtDecoBadge.js` - Sistema de medallas premium
-- `/src/components/DisclaimerModal.js` - Modal Art Deco
-- `/src/components/Header.js` - Header con estilo Art Deco
-- `/src/components/BottomNav.js` - Navegación con indicadores Art Deco
-- `/src/config/api.js` - Config de backend dinámico
-- `/src/pages/LandingPage.js` - Landing con logo y diseño Art Deco
+- `/src/App.css` - Animaciones galácticas y estilos
+- `/src/components/ArtDecoBadge.js` - Medallas estilo romano
+- `/src/components/DisclaimerModal.js` - Modal simple
+- `/src/components/Header.js` - Header limpio
+- `/src/components/BottomNav.js` - Navegación simple
+- `/src/pages/LandingPage.js` - Landing con nebulosas
 
 ## Notificaciones
-- **In-App**: FloatingNotification.js + Service Worker (sw.js)
+- **In-App**: FloatingNotification.js + Service Worker
 - **Push**: PWA con manifest.json
-- **Email**: No configurado (requiere API key de usuario)
+- **Email**: No configurado (sin API key)
 
 ## Credenciales
 - **Admin**: onol4sco05@gmail.com / AlEjA127
 
 ## Tareas Pendientes
-- [ ] Verificar login en dominio personalizado (lapulperiastore.net)
-- [ ] Configurar email notifications cuando usuario provea API key
+- [ ] Verificar login en dominio personalizado
 - [ ] Optimizar velocidad de dashboards
 - [ ] Editar/Eliminar anuncios
 
 ## Última Actualización: Enero 1, 2025
-- ✅ Rediseño completo Art Deco
-- ✅ Logo Art Deco basado en pulpería tradicional hondureña
-- ✅ Botones premium con clip-path
-- ✅ Sistema de medallas Art Deco con SVG
-- ✅ Header y BottomNav con estilo Art Deco
-- ✅ Modales (Disclaimer, HowItWorks) actualizados
-- ✅ Patrón geométrico Art Deco en fondo
-- ✅ Colores de bandera hondureña en footer
+- ✅ Fusión de diseño anterior (simple) + nuevo (elegante)
+- ✅ Logo simple de pulpería restaurado
+- ✅ Nebulosas y estrellas de fondo
+- ✅ Medallas estilo romano con laureles
+- ✅ UI limpia sin bordes excesivos
+- ✅ Modales simplificados
