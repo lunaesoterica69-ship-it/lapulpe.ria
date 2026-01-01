@@ -1314,7 +1314,7 @@ async def increment_profile_views(pulperia_id: str):
 @api_router.post("/admin/pulperias/{pulperia_id}/verify")
 async def verify_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
     """Admin: Verify a pulperia (unlocks 'verificado' achievement)"""
-    user = await get_admin_user(authorization, session_token)
+    await get_admin_user(authorization, session_token)
     
     result = await db.pulperias.update_one(
         {"pulperia_id": pulperia_id},
