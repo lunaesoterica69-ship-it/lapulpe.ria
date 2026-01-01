@@ -169,6 +169,23 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
 
                   {/* Content */}
                   <div className="max-h-[60vh] overflow-y-auto">
+                    {/* Enable Notifications Banner */}
+                    {notificationPermission !== 'granted' && (
+                      <button
+                        onClick={handleEnableNotifications}
+                        className="w-full p-3 bg-gradient-to-r from-red-600/20 to-orange-600/20 border-b border-stone-800 flex items-center gap-3 hover:from-red-600/30 hover:to-orange-600/30 transition-colors"
+                      >
+                        <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+                          <BellRing className="w-5 h-5 text-red-400 animate-pulse" />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="text-white text-sm font-medium">Activar notificaciones</p>
+                          <p className="text-stone-400 text-xs">Recibe alertas de pedidos al instante</p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-stone-500" />
+                      </button>
+                    )}
+                    
                     {loading ? (
                       <div className="p-8 text-center">
                         <div className="w-6 h-6 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin mx-auto"></div>
