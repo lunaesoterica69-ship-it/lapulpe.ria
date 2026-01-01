@@ -3,8 +3,221 @@
 }
 
 /* ================================
-   LA PULPERIA - App Styles
-   Professional "Rojo Pulpo" Theme
+   LA PULPERIA - Tema Galáctico
+   Estilo Grok con estrellas
+   ================================ */
+
+/* ================================
+   ANIMACIONES DE ESTRELLAS
+   ================================ */
+
+/* Parpadeo de estrellas */
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes twinkle-delayed {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Partículas flotantes */
+@keyframes float-1 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.2; }
+  25% { transform: translate(10px, -20px); opacity: 0.4; }
+  50% { transform: translate(20px, 0); opacity: 0.2; }
+  75% { transform: translate(10px, 20px); opacity: 0.4; }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+  33% { transform: translate(-15px, -15px); opacity: 0.5; }
+  66% { transform: translate(15px, -10px); opacity: 0.3; }
+}
+
+@keyframes float-3 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.25; }
+  50% { transform: translate(-20px, -30px); opacity: 0.45; }
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+.animate-twinkle-delayed {
+  animation: twinkle-delayed 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+.animate-float-1 {
+  animation: float-1 15s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-2 20s ease-in-out infinite;
+  animation-delay: 5s;
+}
+
+.animate-float-3 {
+  animation: float-3 18s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+/* ================================
+   ANIMACIONES DE UI
+   ================================ */
+
+/* Fade in desde abajo */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in con escala */
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide in desde derecha */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bounce suave */
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Glow pulsante */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.6); }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Clases de animación */
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale 0.3s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out forwards;
+}
+
+.animate-bounce-soft {
+  animation: bounce-soft 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Delays para stagger */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+
+/* ================================
+   EFECTOS HOVER MEJORADOS
+   ================================ */
+
+/* Botón con glow */
+.btn-glow {
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(220, 38, 38, 0.5);
+}
+
+.btn-glow:active {
+  transform: translateY(0);
+}
+
+/* Card con brillo */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.card-shine:hover::before {
+  left: 100%;
+}
+
+/* Efecto glassmorphism mejorado */
+.glass {
+  background: rgba(28, 25, 23, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Shimmer loading */
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.1) 50%, 
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ================================
+   ESTILOS ORIGINALES MEJORADOS
    ================================ */
 
 /* Hero Gradient */
@@ -19,16 +232,16 @@
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(185, 28, 28, 0.1), 0 10px 10px -5px rgba(185, 28, 28, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(185, 28, 28, 0.15), 0 10px 10px -5px rgba(185, 28, 28, 0.08);
 }
 
 /* Button Styles */
 .btn-primary {
-  @apply bg-pulpo-500 text-white hover:bg-pulpo-600 shadow-lg hover:shadow-xl transition-all active:scale-95 font-bold py-3 px-6 rounded-full;
+  @apply bg-red-600 text-white hover:bg-red-500 shadow-lg hover:shadow-xl transition-all active:scale-95 font-bold py-3 px-6 rounded-full;
 }
 
 .btn-secondary {
-  @apply bg-white text-pulpo-600 border-2 border-pulpo-100 hover:border-pulpo-500 hover:bg-pulpo-50 font-bold py-3 px-6 rounded-full transition-all;
+  @apply bg-white text-red-600 border-2 border-red-100 hover:border-red-500 hover:bg-red-50 font-bold py-3 px-6 rounded-full transition-all;
 }
 
 /* Map Container */
@@ -65,7 +278,7 @@ html {
 /* Mobile-first card improvements */
 @media (max-width: 640px) {
   .card-hover:hover {
-    transform: none; /* Disable hover effects on touch devices */
+    transform: none;
   }
   
   .card-hover:active {
@@ -75,7 +288,7 @@ html {
 
 /* Improved touch targets */
 button, a {
-  min-height: 44px; /* Apple's recommended minimum touch target */
+  min-height: 44px;
 }
 
 /* Better dialog/modal on mobile */
@@ -95,18 +308,7 @@ button, a {
 
 /* Animation Utilities */
 .animate-scale-in {
-  animation: scaleIn 0.2s ease-out forwards;
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  animation: fade-in-scale 0.2s ease-out forwards;
 }
 
 /* Page Transitions */
