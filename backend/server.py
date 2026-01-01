@@ -2584,6 +2584,32 @@ async def admin_clear_data(keep_products: bool = True, authorization: Optional[s
     
     return {"message": "Datos limpiados", "deleted": deleted}
 
+# Endpoint temporal para eliminar pulperías específicas
+@api_router.delete("/cleanup/pulperia/{pulperia_id}")
+async def cleanup_delete_pulperia(pulperia_id: str, secret: str = "cleanup123"):
+    """Cleanup: Delete specific pulperia (temporary endpoint)"""
+    if secret != "cleanup123":
+        raise HTTPException(status_code=403, detail="Acceso denegado")
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    name = pulperia.get("name", pulperia_id)
+    
+    # Delete all related data
+    await db.products.delete_many({"pulperia_id": pulperia_id})
+    await db.orders.delete_many({"pulperia_id": pulperia_id})
+    await db.reviews.delete_many({"pulperia_id": pulperia_id})
+    await db.achievements.delete_many({"pulperia_id": pulperia_id})
+    await db.announcements.delete_many({"pulperia_id": pulperia_id})
+    await db.jobs.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ads.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ad_slots.delete_many({"pulperia_id": pulperia_id})
+    await db.pulperias.delete_one({"pulperia_id": pulperia_id})
+    
+    return {"message": f"Pulpería '{name}' eliminada exitosamente"}
+
 # ============================================
 # CORS MIDDLEWARE
 # ============================================
