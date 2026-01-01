@@ -21,58 +21,31 @@ const BottomNav = ({ user, cartCount = 0 }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      {/* Art Deco Top Border */}
-      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
-      
-      <div className="bg-stone-950/95 backdrop-blur-md border-t border-amber-500/10">
-        <div className="flex justify-around items-center py-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            
-            return (
-              <button
-                key={item.path}
-                data-testid={item.testId}
-                onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center justify-center relative py-2 px-4 transition-all duration-300 ${
-                  active 
-                    ? 'text-amber-400' 
-                    : 'text-stone-500 hover:text-amber-200'
-                }`}
-              >
-                {/* Active Indicator - Art Deco Diamond */}
-                {active && (
-                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-amber-400 rotate-45" />
-                )}
-                
-                <div className={`relative ${active ? 'transform scale-110' : ''} transition-transform`}>
-                  <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
-                </div>
-                <span className={`text-[10px] mt-1 tracking-wide ${active ? 'font-bold' : 'font-medium'}`}>
-                  {item.label}
+    <div className="fixed bottom-0 left-0 right-0 bg-stone-950/95 backdrop-blur-md border-t border-stone-800 z-50">
+      <div className="flex justify-around items-center py-2">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.path);
+          
+          return (
+            <button
+              key={item.path}
+              data-testid={item.testId}
+              onClick={() => navigate(item.path)}
+              className={`flex flex-col items-center justify-center relative py-2 px-4 transition-colors ${
+                active ? 'text-red-500' : 'text-stone-600 hover:text-stone-400'
+              }`}
+            >
+              <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 2} />
+              <span className="text-[10px] mt-1 font-medium">{item.label}</span>
+              {item.badge > 0 && (
+                <span className="absolute top-1 right-2 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {item.badge}
                 </span>
-                
-                {/* Cart Badge */}
-                {item.badge > 0 && (
-                  <span 
-                    className="absolute top-1 right-2 text-stone-900 text-[9px] font-bold w-4 h-4 flex items-center justify-center"
-                    style={{
-                      background: 'linear-gradient(135deg, #F7E7A0, #D4A843)',
-                      clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                    }}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-        
-        {/* Art Deco Bottom Accent */}
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
