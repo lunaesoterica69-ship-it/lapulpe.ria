@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { 
   Shield, Store, Crown, Sparkles, Star, Check, X, Clock, Calendar, Search, 
   Ban, MessageSquare, Award, Zap, Flame, Gem, Trophy, Target, Rocket, 
-  Users, ChevronRight, Send, Eye, AlertTriangle, Lock, Unlock, BadgeCheck
+  Users, ChevronRight, Send, Eye, AlertTriangle, Lock, Unlock, BadgeCheck, Tv, Plus, Trash2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
@@ -34,6 +34,7 @@ const AdminPanel = () => {
   const [ads, setAds] = useState([]);
   const [logs, setLogs] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [featuredAdSlots, setFeaturedAdSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('destacado');
@@ -49,6 +50,7 @@ const AdminPanel = () => {
   const [showMessageDialog, setShowMessageDialog] = useState(false);
   const [showBadgeDialog, setShowBadgeDialog] = useState(false);
   const [showSuspendDialog, setShowSuspendDialog] = useState(false);
+  const [showEnableAdSlotDialog, setShowEnableAdSlotDialog] = useState(false);
   const [selectedPulperia, setSelectedPulperia] = useState(null);
   
   // Forms
@@ -56,6 +58,7 @@ const AdminPanel = () => {
   const [selectedBadge, setSelectedBadge] = useState('');
   const [suspendReason, setSuspendReason] = useState('');
   const [suspendDays, setSuspendDays] = useState(7);
+  const [adSlotDays, setAdSlotDays] = useState(30);
 
   const handlePasswordSubmit = () => {
     if (passwordInput === ADMIN_PASSWORD) {
