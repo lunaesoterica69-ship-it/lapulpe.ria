@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo Simple de La Pulpería - Tienda con toldo (diseño original mejorado)
+// Logo Simple de La Pulpería - Usando imagen PNG
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-10 h-10",
@@ -108,58 +108,11 @@ const PulperiaLogo = ({ size = "md" }) => {
   };
   
   return (
-    <svg viewBox="0 0 100 100" className={sizes[size]} xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="roofGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#EF4444"/>
-          <stop offset="100%" stopColor="#B91C1C"/>
-        </linearGradient>
-        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FEF3C7"/>
-          <stop offset="100%" stopColor="#FDE68A"/>
-        </linearGradient>
-        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FCD34D"/>
-          <stop offset="50%" stopColor="#F59E0B"/>
-          <stop offset="100%" stopColor="#D97706"/>
-        </linearGradient>
-        <filter id="softGlow">
-          <feGaussianBlur stdDeviation="2" result="glow"/>
-          <feMerge>
-            <feMergeNode in="glow"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      
-      {/* Building */}
-      <rect x="20" y="45" width="60" height="45" rx="3" fill="url(#wallGrad)" stroke="#DC2626" strokeWidth="2"/>
-      
-      {/* Roof - Toldo ondulado */}
-      <path d="M15 45 L50 22 L85 45" fill="none" stroke="url(#roofGrad)" strokeWidth="4" strokeLinecap="round"/>
-      <path d="M15 45 Q27 38 39 45 Q50 52 61 45 Q73 38 85 45 L85 52 Q73 45 61 52 Q50 59 39 52 Q27 45 15 52 Z" fill="url(#roofGrad)"/>
-      
-      {/* Window left */}
-      <rect x="26" y="52" width="16" height="14" rx="2" fill="#1C1917"/>
-      <rect x="28" y="54" width="12" height="10" rx="1" fill="#292524"/>
-      {/* Products */}
-      <rect x="30" y="57" width="3" height="7" rx="1" fill="#3B82F6"/>
-      <rect x="34" y="59" width="3" height="5" rx="1" fill="#10B981"/>
-      
-      {/* Window right */}
-      <rect x="58" y="52" width="16" height="14" rx="2" fill="#1C1917"/>
-      <rect x="60" y="54" width="12" height="10" rx="1" fill="#292524"/>
-      {/* Hot food */}
-      <circle cx="66" cy="60" r="3" fill="#F59E0B"/>
-      
-      {/* Door */}
-      <rect x="42" y="58" width="16" height="32" rx="2" fill="#7F1D1D"/>
-      <rect x="44" y="60" width="12" height="28" rx="1" fill="#991B1B"/>
-      <circle cx="53" cy="76" r="2" fill="url(#goldGrad)" filter="url(#softGlow)"/>
-      
-      {/* Star on top */}
-      <circle cx="50" cy="18" r="4" fill="url(#goldGrad)" filter="url(#softGlow)"/>
-    </svg>
+    <img 
+      src="/logo-pulperia.png" 
+      alt="La Pulpería" 
+      className={`${sizes[size]} object-contain`}
+    />
   );
 };
 
