@@ -58,7 +58,7 @@ const MapView = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [radius, setRadius] = useState(5);
+  const [radius, setRadius] = useState(50); // 50km default to show more stores
   const [cart, setCart] = useState([]);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [activeTab, setActiveTab] = useState('nearby'); // 'nearby' | 'favorites'
