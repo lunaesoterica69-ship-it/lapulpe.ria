@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { Store } from 'lucide-react';
 
-// Backend URL - always use the Emergent backend for API calls
+// Backend URL - siempre usar el de Emergent
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia.preview.emergentagent.com';
 
 const GoogleCallback = () => {
@@ -16,60 +17,73 @@ const GoogleCallback = () => {
       const code = searchParams.get('code');
       const errorParam = searchParams.get('error');
 
-      console.log('OAuth Callback - Code:', code ? 'present' : 'missing');
-      console.log('OAuth Callback - Error:', errorParam);
+      console.log('[GoogleCallback] Starting...');
+      console.log('[GoogleCallback] Code:', code ? 'present' : 'missing');
+      console.log('[GoogleCallback] Error param:', errorParam);
+      console.log('[GoogleCallback] Backend URL:', BACKEND_URL);
 
       if (errorParam) {
+        console.log('[GoogleCallback] Error from Google:', errorParam);
         setError('Autenticación cancelada por el usuario');
-        setTimeout(() => navigate('/'), 3000);
+        setTimeout(() => navigate('/', { replace: true }), 3000);
         return;
       }
 
       if (!code) {
+        console.log('[GoogleCallback] No code found');
         setError('Código de autorización no encontrado');
-        setTimeout(() => navigate('/'), 3000);
+        setTimeout(() => navigate('/', { replace: true }), 3000);
         return;
       }
 
       try {
         setStatus('Verificando con Google...');
         
-        // Get the redirect URI (must match what was sent to Google)
+        // El redirect_uri debe coincidir EXACTAMENTE con lo que se envió a Google
         const redirectUri = `${window.location.origin}/auth/callback`;
+        console.log('[GoogleCallback] Redirect URI:', redirectUri);
         
-        console.log('OAuth Callback - Redirect URI:', redirectUri);
-        console.log('OAuth Callback - Backend URL:', BACKEND_URL);
-        
-        // Exchange code for session
+        // Intercambiar código por sesión
         const response = await axios.post(
           `${BACKEND_URL}/api/auth/google/callback`,
           null,
           {
             params: { code, redirect_uri: redirectUri },
-            withCredentials: true
+            withCredentials: true,
+            timeout: 30000
           }
         );
 
-        console.log('OAuth Callback - Response:', response.data);
+        console.log('[GoogleCallback] Response:', response.data);
 
         if (response.data) {
           setStatus('¡Bienvenido!');
           
-          // Store session token if returned
+          // Guardar token de sesión
           if (response.data.session_token) {
             localStorage.setItem('session_token', response.data.session_token);
           }
           
-          // Small delay to show success message
+          // Determinar a dónde redirigir
+          const user = response.data;
+          
           setTimeout(() => {
-            navigate('/dashboard', { replace: true });
+            if (!user.user_type) {
+              navigate('/select-type', { replace: true });
+            } else if (user.user_type === 'pulperia') {
+              navigate('/dashboard', { replace: true });
+            } else {
+              navigate('/map', { replace: true });
+            }
           }, 500);
         }
       } catch (err) {
-        console.error('OAuth callback error:', err);
-        console.error('Error response:', err.response?.data);
-        setError(err.response?.data?.detail || 'Error al iniciar sesión. Intenta de nuevo.');
-        setTimeout(() => navigate('/'), 4000);
+        console.error('[GoogleCallback] Error:', err);
+        console.error('[GoogleCallback] Error response:', err.response?.data);
+        
+        const errorMsg = err.response?.data?.detail || 'Error al iniciar sesión. Intenta de nuevo.';
+        setError(errorMsg);
+        setTimeout(() => navigate('/', { replace: true }), 4000);
       }
     };
 
@@ -78,22 +92,38 @@ const GoogleCallback = () => {
 
   return (
     <div className="min-h-screen bg-stone-950 flex items-center justify-center">
-      <div className="text-center">
+      <div className="text-center px-4">
         {error ? (
           <>
-            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <p className="text-red-400 font-medium">{error}</p>
-            <p className="text-stone-500 text-sm mt-2">Redirigiendo...</p>
+            <p className="text-red-400 font-medium text-lg">{error}</p>
+            <p className="text-stone-500 text-sm mt-2">Redirigiendo a inicio...</p>
           </>
         ) : (
           <>
-            <div className="w-16 h-16 border-4 border-red-400/30 rounded-full animate-spin border-t-red-500 mx-auto mb-4"></div>
-            <p className="text-white font-medium">{status}</p>
-            <p className="text-stone-500 text-sm mt-1">Por favor espera</p>
+            {/* Logo animado */}
+            <div className="relative inline-block mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-red-700 rounded-3xl flex items-center justify-center shadow-2xl shadow-red-500/30">
+                <Store className="w-10 h-10 text-white" />
+              </div>
+              <div className="absolute -inset-2">
+                <div className="w-full h-full border-4 border-red-300/20 rounded-full animate-spin border-t-red-400"></div>
+              </div>
+            </div>
+            
+            <h2 className="text-xl font-bold text-white mb-2">{status}</h2>
+            <p className="text-stone-400 text-sm">Conectando con Google</p>
+            
+            {/* Dots de progreso */}
+            <div className="flex justify-center gap-2 mt-4">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
           </>
         )}
       </div>
