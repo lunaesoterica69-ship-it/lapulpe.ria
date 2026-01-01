@@ -85,14 +85,86 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-const PulperiaLogo = () => (
-  <svg viewBox="0 0 50 50" className="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8" y="22" width="34" height="24" rx="2" fill="#FEE2E2" opacity="0.9"/>
-    <path d="M5 24 Q12 18 18 24 Q24 30 30 24 Q36 18 42 24 L45 24 L45 20 L25 8 L5 20 Z" fill="#EF4444"/>
-    <rect x="19" y="30" width="12" height="16" rx="1" fill="#B91C1C"/>
-    <circle cx="28" cy="38" r="1.2" fill="#FCD34D"/>
-  </svg>
-);
+// Logo Art Deco de La Pulpería - Tienda con toldo y detalles premium
+const PulperiaLogo = ({ size = "md" }) => {
+  const sizes = {
+    sm: "w-8 h-8",
+    md: "w-12 h-12",
+    lg: "w-16 h-16",
+    xl: "w-24 h-24"
+  };
+  
+  return (
+    <svg viewBox="0 0 100 100" className={sizes[size]} xmlns="http://www.w3.org/2000/svg">
+      {/* Glow effect */}
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#EF4444"/>
+          <stop offset="100%" stopColor="#B91C1C"/>
+        </linearGradient>
+        <linearGradient id="wallGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FECACA"/>
+          <stop offset="100%" stopColor="#FEE2E2"/>
+        </linearGradient>
+        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FCD34D"/>
+          <stop offset="50%" stopColor="#F59E0B"/>
+          <stop offset="100%" stopColor="#D97706"/>
+        </linearGradient>
+      </defs>
+      
+      {/* Building base with Art Deco shape */}
+      <path d="M15 45 L15 85 Q15 90 20 90 L80 90 Q85 90 85 85 L85 45 Z" fill="url(#wallGradient)" stroke="#DC2626" strokeWidth="2"/>
+      
+      {/* Roof - Techo rojo con forma de toldo ondulado */}
+      <path d="M10 45 L50 20 L90 45" fill="none" stroke="url(#roofGradient)" strokeWidth="4" strokeLinecap="round"/>
+      <path d="M10 45 Q20 38 30 45 Q40 52 50 45 Q60 38 70 45 Q80 52 90 45" fill="url(#roofGradient)" stroke="#B91C1C" strokeWidth="1"/>
+      <path d="M10 45 L10 50 Q20 43 30 50 Q40 57 50 50 Q60 43 70 50 Q80 57 90 50 L90 45 Q80 52 70 45 Q60 38 50 45 Q40 52 30 45 Q20 38 10 45 Z" fill="url(#roofGradient)"/>
+      
+      {/* Window left - Estante con botellas */}
+      <rect x="22" y="52" width="20" height="18" rx="2" fill="#7F1D1D" opacity="0.3"/>
+      <rect x="24" y="54" width="16" height="14" rx="1" fill="#450A0A" opacity="0.5"/>
+      {/* Bottles */}
+      <rect x="26" y="58" width="3" height="10" rx="1" fill="#3B82F6"/>
+      <rect x="30" y="60" width="3" height="8" rx="1" fill="#10B981"/>
+      <rect x="34" y="57" width="3" height="11" rx="1" fill="#F59E0B"/>
+      
+      {/* Window right - Area de comida */}
+      <rect x="58" y="52" width="20" height="18" rx="2" fill="#7F1D1D" opacity="0.3"/>
+      <rect x="60" y="54" width="16" height="14" rx="1" fill="#450A0A" opacity="0.5"/>
+      {/* Hot food steam */}
+      <path d="M66 58 Q64 55 66 52" fill="none" stroke="#FEE2E2" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
+      <path d="M70 58 Q72 54 70 50" fill="none" stroke="#FEE2E2" strokeWidth="1.5" strokeLinecap="round" opacity="0.6"/>
+      <circle cx="68" cy="62" r="4" fill="#DC2626" opacity="0.8"/>
+      
+      {/* Door - Puerta central Art Deco */}
+      <rect x="40" y="55" width="20" height="35" rx="2" fill="#7F1D1D"/>
+      <rect x="42" y="57" width="16" height="31" rx="1" fill="#991B1B"/>
+      {/* Door details Art Deco */}
+      <rect x="44" y="59" width="12" height="8" rx="1" fill="#450A0A" opacity="0.5"/>
+      <rect x="44" y="70" width="12" height="8" rx="1" fill="#450A0A" opacity="0.5"/>
+      {/* Door handle */}
+      <circle cx="54" cy="75" r="2" fill="url(#goldGradient)" filter="url(#glow)"/>
+      
+      {/* Art Deco decorative elements */}
+      <path d="M50 25 L50 20" stroke="url(#goldGradient)" strokeWidth="3" strokeLinecap="round"/>
+      <circle cx="50" cy="18" r="3" fill="url(#goldGradient)" filter="url(#glow)"/>
+      
+      {/* Shopping bag icon small */}
+      <g transform="translate(72, 75) scale(0.4)">
+        <path d="M5 15 L5 35 Q5 38 8 38 L32 38 Q35 38 35 35 L35 15 Z" fill="#DC2626"/>
+        <path d="M12 15 L12 10 Q12 5 20 5 Q28 5 28 10 L28 15" fill="none" stroke="#FEE2E2" strokeWidth="3" strokeLinecap="round"/>
+      </g>
+    </svg>
+  );
+};
 
 const LandingPage = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
