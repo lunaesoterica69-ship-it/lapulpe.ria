@@ -116,7 +116,7 @@ const PulperiaProfile = () => {
         
         // Fetch announcements
         try {
-          const announcementsRes = await axios.get(`${BACKEND_URL}/api/pulperias/${id}/announcements`);
+          const announcementsRes = await api.get(`/api/pulperias/${id}/announcements`);
           setAnnouncements(announcementsRes.data);
         } catch (e) {
           setAnnouncements([]);
