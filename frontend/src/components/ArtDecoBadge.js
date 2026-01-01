@@ -23,7 +23,7 @@ export const BADGES_ARTDECO = [
     name: 'Catálogo Completo', 
     icon: Package, 
     tier: 'gold',
-    description: '20+ productos registrados'
+    description: '10+ productos registrados'
   },
   { 
     id: 'respuesta_rapida', 
