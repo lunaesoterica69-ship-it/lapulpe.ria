@@ -98,7 +98,7 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Simple y representativo
+// Logo de La Pulpería - Tiendita simple y limpia
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
     sm: "w-12 h-12",
@@ -109,46 +109,32 @@ const PulperiaLogo = ({ size = "md" }) => {
   
   return (
     <svg viewBox="0 0 100 100" className={`${sizes[size]}`} xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="roofRed" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#EF4444"/>
-          <stop offset="100%" stopColor="#DC2626"/>
-        </linearGradient>
-      </defs>
+      {/* Edificio - fondo crema */}
+      <rect x="15" y="38" width="70" height="54" rx="3" fill="#FEF3C7" stroke="#FFF" strokeWidth="3"/>
       
-      {/* Edificio principal - fondo amarillo */}
-      <rect x="18" y="40" width="64" height="50" rx="2" fill="#FEF3C7" stroke="#FFF" strokeWidth="2.5"/>
-      
-      {/* Toldo rojo ondulado */}
-      <path d="M12 40 L50 16 L88 40" fill="none" stroke="url(#roofRed)" strokeWidth="4" strokeLinecap="round"/>
-      <path 
-        d="M10 40 Q20 32 30 40 Q40 48 50 40 Q60 32 70 40 Q80 48 90 40 L90 48 Q80 40 70 48 Q60 56 50 48 Q40 40 30 48 Q20 56 10 48 Z" 
-        fill="url(#roofRed)" 
-        stroke="#FFF" 
-        strokeWidth="1.5"
-      />
+      {/* Toldo rojo */}
+      <path d="M10 38 L50 14 L90 38" fill="none" stroke="#DC2626" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M8 38 Q19 30 30 40 Q41 50 52 40 Q63 30 74 40 Q85 50 92 40 L92 48 Q83 56 72 46 Q61 36 50 46 Q39 56 28 46 Q17 36 8 46 Z" fill="#DC2626" stroke="#FFF" strokeWidth="2"/>
       
       {/* Ventana izquierda */}
-      <rect x="24" y="50" width="18" height="16" rx="1" fill="#1C1917" stroke="#FFF" strokeWidth="2"/>
-      <line x1="33" y1="50" x2="33" y2="66" stroke="#FFF" strokeWidth="1.5"/>
-      {/* Productos */}
-      <rect x="26" y="56" width="5" height="8" rx="1" fill="#3B82F6"/>
-      <circle cx="38" cy="58" r="3" fill="#F59E0B"/>
+      <rect x="22" y="48" width="20" height="18" rx="2" fill="#292524" stroke="#FFF" strokeWidth="2"/>
+      <line x1="32" y1="48" x2="32" y2="66" stroke="#FFF" strokeWidth="1.5"/>
+      <rect x="25" y="54" width="5" height="8" rx="1" fill="#3B82F6"/>
+      <circle cx="38" cy="57" r="3" fill="#F59E0B"/>
       
       {/* Ventana derecha */}
-      <rect x="58" y="50" width="18" height="16" rx="1" fill="#1C1917" stroke="#FFF" strokeWidth="2"/>
-      <line x1="67" y1="50" x2="67" y2="66" stroke="#FFF" strokeWidth="1.5"/>
-      {/* Productos */}
-      <circle cx="63" cy="58" r="3" fill="#EF4444"/>
-      <rect x="69" y="55" width="5" height="9" rx="1" fill="#22C55E"/>
+      <rect x="58" y="48" width="20" height="18" rx="2" fill="#292524" stroke="#FFF" strokeWidth="2"/>
+      <line x1="68" y1="48" x2="68" y2="66" stroke="#FFF" strokeWidth="1.5"/>
+      <circle cx="63" cy="57" r="3" fill="#EF4444"/>
+      <rect x="70" y="53" width="5" height="9" rx="1" fill="#22C55E"/>
       
-      {/* Puerta central */}
-      <rect x="43" y="54" width="14" height="36" rx="1" fill="#92400E" stroke="#FFF" strokeWidth="2"/>
-      <circle cx="54" cy="74" r="2" fill="#FCD34D" stroke="#FFF" strokeWidth="1"/>
+      {/* Puerta */}
+      <rect x="42" y="52" width="16" height="40" rx="2" fill="#78350F" stroke="#FFF" strokeWidth="2"/>
+      <circle cx="55" cy="74" r="2.5" fill="#FCD34D" stroke="#FFF" strokeWidth="1"/>
       
-      {/* Letrero */}
-      <rect x="30" y="42" width="40" height="6" rx="1" fill="#DC2626" stroke="#FFF" strokeWidth="1"/>
-      <text x="50" y="47" textAnchor="middle" fill="#FFF" fontSize="4" fontWeight="bold" fontFamily="Arial">PULPERÍA</text>
+      {/* Letrero PULPERÍA */}
+      <rect x="28" y="40" width="44" height="7" rx="2" fill="#DC2626" stroke="#FFF" strokeWidth="1.5"/>
+      <text x="50" y="46" textAnchor="middle" fill="#FFF" fontSize="5" fontWeight="bold" fontFamily="Arial, sans-serif">PULPERÍA</text>
     </svg>
   );
 };
