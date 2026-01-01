@@ -887,17 +887,15 @@ async def close_own_pulperia(pulperia_id: str, close_request: ClosePulperiaReque
     await db.featured_ad_slots.delete_many({"pulperia_id": pulperia_id})
     await db.pulperias.delete_one({"pulperia_id": pulperia_id})
     
-    # Cambiar el tipo de usuario a cliente después de cerrar
-    await db.users.update_one(
-        {"user_id": user.user_id},
-        {"$set": {"user_type": "cliente"}}
-    )
+    # NO cambiar tipo de usuario - mantener como "pulperia" para que pueda crear otra
+    # El usuario sigue siendo tipo pulpería y puede crear una nueva tienda
     
     logger.info(f"[CLOSE STORE] User {user.user_id} closed pulperia '{pulperia_name}'")
     
     return {
-        "message": f"Tu pulpería '{pulperia_name}' ha sido cerrada permanentemente",
-        "redirect_to": "/map"
+        "message": f"Tu pulpería '{pulperia_name}' ha sido cerrada. Puedes crear una nueva cuando quieras.",
+        "redirect_to": "/dashboard",
+        "can_create_new": True
     }
 
 @api_router.get("/pulperias/{pulperia_id}/products")
