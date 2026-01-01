@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { User as UserIcon, LogOut, Mail, CreditCard, Heart, Shield, Store, ShoppingBag, ArrowRightLeft, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,6 @@ import BottomNav from '../components/BottomNav';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useAuth } from '../contexts/AuthContext';
 
-import { BACKEND_URL } from '../config/api';
 
 const UserProfile = () => {
   const navigate = useNavigate();

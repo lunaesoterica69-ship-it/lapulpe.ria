@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { Store as StoreIcon, Package, Plus, Edit, Trash2, Bell, Briefcase, Palette, Type, Megaphone, Image, MessageSquare, Shield, Clock, MapPin, Phone, Check, Share2, Copy, ExternalLink } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
@@ -14,7 +14,6 @@ import { Button } from '../components/ui/button';
 import useWebSocket from '../hooks/useWebSocket';
 import { useNotifications } from '../contexts/NotificationContext';
 
-import { BACKEND_URL } from '../config/api';
 
 // Font options
 const FONT_OPTIONS = [

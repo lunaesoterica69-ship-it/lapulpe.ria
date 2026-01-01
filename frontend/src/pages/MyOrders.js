@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { Package, Clock, CheckCircle, XCircle, ShoppingBag, Sparkles, Zap, Trophy, MapPin, Store, ChevronRight, History, Calendar, Receipt } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,6 @@ import Pulpero, { getPulperoMessage } from '../components/Pulpero';
 import useWebSocket from '../hooks/useWebSocket';
 import { useNotifications } from '../contexts/NotificationContext';
 
-import { BACKEND_URL } from '../config/api';
 
 const StatusBadge = ({ status }) => {
   const config = {

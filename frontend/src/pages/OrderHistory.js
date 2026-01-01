@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { api, BACKEND_URL } from '../config/api';
 import { toast } from 'sonner';
 import { History, TrendingUp, ShoppingBag, DollarSign, Calendar, Package, BarChart3, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 import Header from '../components/Header';
 import AnimatedBackground from '../components/AnimatedBackground';
 
-import { BACKEND_URL } from '../config/api';
 
 const OrderHistory = () => {
   const [user, setUser] = useState(null);
