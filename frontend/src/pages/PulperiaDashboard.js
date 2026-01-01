@@ -255,18 +255,22 @@ const PulperiaDashboard = () => {
 
   const fetchPulperiaData = async (pulperiaId) => {
     try {
-      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes] = await Promise.all([
+      const [productsRes, ordersRes, jobsRes, announcementsRes, adminMsgsRes, achievementsRes, statsRes] = await Promise.all([
         api.get(`/api/pulperias/${pulperiaId}/products`),
         api.get(`/api/orders`),
         api.get(`/api/pulperias/${pulperiaId}/jobs`).catch(() => ({ data: [] })),
         api.get(`/api/pulperias/${pulperiaId}/announcements`).catch(() => ({ data: [] })),
-        api.get(`/api/pulperias/${pulperiaId}/admin-messages`).catch(() => ({ data: [] }))
+        api.get(`/api/pulperias/${pulperiaId}/admin-messages`).catch(() => ({ data: [] })),
+        api.get(`/api/pulperias/${pulperiaId}/achievements`).catch(() => ({ data: [] })),
+        api.get(`/api/pulperias/${pulperiaId}/stats`).catch(() => ({ data: null }))
       ]);
       
       setProducts(productsRes.data);
       setJobs(jobsRes.data);
       setAnnouncements(announcementsRes.data);
       setAdminMessages(adminMsgsRes.data);
+      setAchievements(achievementsRes.data);
+      setPulperiaStats(statsRes.data);
       const pulperiaOrders = ordersRes.data.filter(o => o.pulperia_id === pulperiaId);
       setOrders(pulperiaOrders);
       
@@ -275,6 +279,27 @@ const PulperiaDashboard = () => {
       setNewOrdersCount(newOrders);
     } catch (error) {
       console.error('Error fetching pulperia data:', error);
+    }
+  };
+
+  // Función para verificar y desbloquear nuevos logros
+  const checkForNewAchievements = async () => {
+    if (!selectedPulperia) return;
+    try {
+      const res = await api.post(`/api/pulperias/${selectedPulperia.pulperia_id}/check-achievements`);
+      if (res.data.new_achievements && res.data.new_achievements.length > 0) {
+        res.data.new_achievements.forEach(ach => {
+          toast.success(`🏆 ¡Nuevo logro desbloqueado: ${ach.name}!`, {
+            duration: 5000,
+            style: { background: '#D4AF37', color: '#1a1a1a', fontWeight: 'bold' }
+          });
+        });
+        // Recargar achievements
+        const achievementsRes = await api.get(`/api/pulperias/${selectedPulperia.pulperia_id}/achievements`);
+        setAchievements(achievementsRes.data);
+      }
+    } catch (error) {
+      console.error('Error checking achievements:', error);
     }
   };
 
