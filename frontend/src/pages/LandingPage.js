@@ -98,95 +98,135 @@ const HowItWorksModal = ({ onClose }) => (
   </div>
 );
 
-// Logo de La Pulpería - Tiendita con toldo rojo (recreado con código)
+// Logo de La Pulpería - Tiendita tradicional hondureña
 const PulperiaLogo = ({ size = "md" }) => {
   const sizes = {
-    sm: "w-10 h-10",
-    md: "w-14 h-14",
-    lg: "w-20 h-20",
-    xl: "w-28 h-28"
+    sm: "w-12 h-12",
+    md: "w-16 h-16",
+    lg: "w-24 h-24",
+    xl: "w-32 h-32"
   };
   
   return (
-    <svg viewBox="0 0 100 100" className={`${sizes[size]} drop-shadow-lg`} xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 100 100" className={`${sizes[size]}`} xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {/* Gradiente del toldo rojo */}
-        <linearGradient id="awningGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#EF4444"/>
-          <stop offset="50%" stopColor="#DC2626"/>
-          <stop offset="100%" stopColor="#B91C1C"/>
+        {/* Gradientes para el toldo */}
+        <linearGradient id="awning1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#DC2626"/>
+          <stop offset="100%" stopColor="#991B1B"/>
         </linearGradient>
-        {/* Gradiente de la pared */}
-        <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FEF3C7"/>
-          <stop offset="100%" stopColor="#FDE68A"/>
+        <linearGradient id="awning2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FAFAFA"/>
+          <stop offset="100%" stopColor="#E5E5E5"/>
         </linearGradient>
-        {/* Gradiente dorado */}
-        <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FCD34D"/>
-          <stop offset="50%" stopColor="#F59E0B"/>
-          <stop offset="100%" stopColor="#D97706"/>
+        {/* Pared */}
+        <linearGradient id="wall" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FEF9C3"/>
+          <stop offset="100%" stopColor="#FDE047"/>
         </linearGradient>
-        {/* Sombra suave */}
-        <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000" floodOpacity="0.3"/>
+        {/* Madera */}
+        <linearGradient id="wood" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#92400E"/>
+          <stop offset="50%" stopColor="#78350F"/>
+          <stop offset="100%" stopColor="#451A03"/>
+        </linearGradient>
+        {/* Vidrio */}
+        <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0EA5E9" stopOpacity="0.3"/>
+          <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.2"/>
+          <stop offset="100%" stopColor="#7DD3FC" stopOpacity="0.4"/>
+        </linearGradient>
+        {/* Sombra */}
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#000" floodOpacity="0.3"/>
         </filter>
       </defs>
       
       {/* Sombra del edificio */}
-      <ellipse cx="52" cy="92" rx="30" ry="5" fill="rgba(0,0,0,0.2)"/>
+      <ellipse cx="50" cy="95" rx="35" ry="4" fill="rgba(0,0,0,0.2)"/>
       
-      {/* Edificio principal */}
-      <rect x="20" y="42" width="60" height="48" rx="2" fill="url(#wallGrad)" stroke="#D97706" strokeWidth="1.5"/>
+      {/* Base/Piso */}
+      <rect x="12" y="88" width="76" height="6" rx="1" fill="#78716C"/>
       
-      {/* Toldo ondulado - parte superior */}
-      <path d="M15 42 L50 18 L85 42" fill="none" stroke="url(#awningGrad)" strokeWidth="5" strokeLinecap="round"/>
+      {/* Pared principal */}
+      <rect x="15" y="38" width="70" height="52" fill="url(#wall)" stroke="#CA8A04" strokeWidth="1"/>
       
-      {/* Toldo ondulado - ondas */}
-      <path d="M12 42 Q22 35 32 42 Q42 49 52 42 Q62 35 72 42 Q82 49 88 42 L88 50 Q82 43 72 50 Q62 57 52 50 Q42 43 32 50 Q22 57 12 50 Z" fill="url(#awningGrad)"/>
+      {/* Borde inferior de la pared */}
+      <rect x="15" y="82" width="70" height="8" fill="#A16207"/>
       
-      {/* Líneas del toldo para dar textura */}
-      <path d="M22 36 L22 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M32 42 L32 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M42 36 L42 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M52 42 L52 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M62 36 L62 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M72 42 L72 50" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
-      <path d="M82 36 L82 48" stroke="#991B1B" strokeWidth="0.8" opacity="0.5"/>
+      {/* Toldo rayado - franjas alternadas */}
+      <g filter="url(#shadow)">
+        {/* Soporte del toldo */}
+        <path d="M10 38 L50 12 L90 38" fill="none" stroke="#78350F" strokeWidth="3"/>
+        
+        {/* Franjas del toldo */}
+        <path d="M10 38 L50 12 L90 38 L90 44 L50 20 L10 44 Z" fill="url(#awning1)"/>
+        
+        {/* Ondas del toldo */}
+        <path d="M8 44 Q18 38 28 46 Q38 54 48 46 Q58 38 68 46 Q78 54 88 46 L92 46 Q82 56 72 48 Q62 40 52 48 Q42 56 32 48 Q22 40 12 48 L8 44" fill="url(#awning1)"/>
+        <path d="M8 44 Q18 38 28 46" fill="none" stroke="url(#awning2)" strokeWidth="8" strokeLinecap="round"/>
+        <path d="M28 46 Q38 54 48 46" fill="none" stroke="url(#awning1)" strokeWidth="8" strokeLinecap="round"/>
+        <path d="M48 46 Q58 38 68 46" fill="none" stroke="url(#awning2)" strokeWidth="8" strokeLinecap="round"/>
+        <path d="M68 46 Q78 54 88 46" fill="none" stroke="url(#awning1)" strokeWidth="8" strokeLinecap="round"/>
+        
+        {/* Borde inferior del toldo */}
+        <path d="M8 52 Q18 46 28 54 Q38 62 48 54 Q58 46 68 54 Q78 62 88 54 L92 54" fill="none" stroke="#7F1D1D" strokeWidth="2"/>
+      </g>
       
-      {/* Ventana izquierda */}
-      <rect x="26" y="52" width="16" height="14" rx="1" fill="#292524" stroke="#78716C" strokeWidth="0.5"/>
-      <rect x="27" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
-      <rect x="34.5" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      {/* Ventana izquierda - Mostrador */}
+      <rect x="20" y="50" width="22" height="20" rx="1" fill="url(#wood)" stroke="#451A03" strokeWidth="1"/>
+      <rect x="22" y="52" width="18" height="16" fill="#1C1917"/>
+      <rect x="22" y="52" width="18" height="16" fill="url(#glass)"/>
+      {/* Marco de ventana */}
+      <line x1="31" y1="52" x2="31" y2="68" stroke="#451A03" strokeWidth="1.5"/>
+      <line x1="22" y1="60" x2="40" y2="60" stroke="#451A03" strokeWidth="1.5"/>
       {/* Productos en ventana */}
-      <rect x="29" y="58" width="3" height="6" rx="0.5" fill="#3B82F6"/>
-      <rect x="36" y="60" width="3" height="4" rx="0.5" fill="#10B981"/>
+      <rect x="24" y="62" width="5" height="5" rx="0.5" fill="#EF4444"/>
+      <rect x="34" y="62" width="4" height="5" rx="0.5" fill="#3B82F6"/>
+      <circle cx="27" cy="55" r="2.5" fill="#F59E0B"/>
+      <rect x="33" y="54" width="4" height="4" rx="0.5" fill="#22C55E"/>
       
-      {/* Ventana derecha */}
-      <rect x="58" y="52" width="16" height="14" rx="1" fill="#292524" stroke="#78716C" strokeWidth="0.5"/>
-      <rect x="59" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
-      <rect x="66.5" y="53" width="6.5" height="12" rx="0.5" fill="#1C1917"/>
+      {/* Ventana derecha - Mostrador */}
+      <rect x="58" y="50" width="22" height="20" rx="1" fill="url(#wood)" stroke="#451A03" strokeWidth="1"/>
+      <rect x="60" y="52" width="18" height="16" fill="#1C1917"/>
+      <rect x="60" y="52" width="18" height="16" fill="url(#glass)"/>
+      {/* Marco de ventana */}
+      <line x1="69" y1="52" x2="69" y2="68" stroke="#451A03" strokeWidth="1.5"/>
+      <line x1="60" y1="60" x2="78" y2="60" stroke="#451A03" strokeWidth="1.5"/>
       {/* Productos en ventana */}
-      <circle cx="63" cy="60" r="3" fill="#F59E0B"/>
-      <rect x="68" y="58" width="3" height="6" rx="0.5" fill="#EF4444"/>
+      <circle cx="65" cy="55" r="2.5" fill="#EC4899"/>
+      <rect x="71" y="53" width="4" height="5" rx="0.5" fill="#8B5CF6"/>
+      <rect x="62" y="62" width="5" height="5" rx="0.5" fill="#14B8A6"/>
+      <circle cx="74" cy="65" r="2" fill="#F97316"/>
       
-      {/* Puerta */}
-      <rect x="42" y="55" width="16" height="35" rx="1" fill="#7F1D1D" stroke="#991B1B" strokeWidth="1"/>
-      <rect x="43.5" y="57" width="13" height="31" rx="0.5" fill="#991B1B"/>
-      {/* Panel superior de puerta */}
-      <rect x="45" y="59" width="10" height="12" rx="0.5" fill="#7F1D1D"/>
-      {/* Panel inferior de puerta */}
-      <rect x="45" y="74" width="10" height="12" rx="0.5" fill="#7F1D1D"/>
+      {/* Puerta central */}
+      <rect x="44" y="52" width="12" height="38" rx="1" fill="url(#wood)" stroke="#451A03" strokeWidth="1.5"/>
+      {/* Paneles de puerta */}
+      <rect x="46" y="55" width="8" height="12" rx="0.5" fill="#78350F" stroke="#451A03" strokeWidth="0.5"/>
+      <rect x="46" y="70" width="8" height="12" rx="0.5" fill="#78350F" stroke="#451A03" strokeWidth="0.5"/>
       {/* Perilla */}
-      <circle cx="54" cy="75" r="2" fill="url(#goldAccent)" filter="url(#dropShadow)"/>
+      <circle cx="52" cy="75" r="1.8" fill="#FCD34D" stroke="#B45309" strokeWidth="0.5"/>
+      <circle cx="51.5" cy="74.5" r="0.5" fill="#FEF3C7"/>
       
-      {/* Cartel "La Pulpería" arriba de la puerta */}
-      <rect x="38" y="45" width="24" height="8" rx="1" fill="#7F1D1D" stroke="#D97706" strokeWidth="0.5"/>
-      <text x="50" y="51" textAnchor="middle" fill="#FEF3C7" fontSize="4" fontWeight="bold" fontFamily="serif">PULPERÍA</text>
+      {/* Letrero "PULPERÍA" */}
+      <rect x="28" y="40" width="44" height="8" rx="1" fill="#7F1D1D" stroke="#FCD34D" strokeWidth="1"/>
+      <text x="50" y="46.5" textAnchor="middle" fill="#FEF3C7" fontSize="5.5" fontWeight="bold" fontFamily="Arial, sans-serif">PULPERÍA</text>
       
-      {/* Estrella dorada en el techo */}
-      <circle cx="50" cy="14" r="5" fill="url(#goldAccent)" filter="url(#dropShadow)"/>
-      <circle cx="48" cy="12" r="1.5" fill="#FEF3C7" opacity="0.6"/>
+      {/* Foco/Lámpara sobre la puerta */}
+      <circle cx="50" cy="48" r="2" fill="#FEF3C7" stroke="#CA8A04" strokeWidth="0.5"/>
+      <ellipse cx="50" cy="50" rx="4" ry="2" fill="#FEF9C3" opacity="0.3"/>
+      
+      {/* Detalles decorativos - Macetas */}
+      <ellipse cx="18" cy="88" rx="3" ry="2" fill="#92400E"/>
+      <ellipse cx="18" cy="86" rx="2" ry="3" fill="#22C55E"/>
+      <ellipse cx="82" cy="88" rx="3" ry="2" fill="#92400E"/>
+      <ellipse cx="82" cy="86" rx="2" ry="3" fill="#22C55E"/>
+      
+      {/* Bandera de Honduras pequeña */}
+      <rect x="86" y="28" width="1" height="14" fill="#78350F"/>
+      <rect x="87" y="28" width="8" height="3" fill="#0EA5E9"/>
+      <rect x="87" y="31" width="8" height="3" fill="#FAFAFA"/>
+      <rect x="87" y="34" width="8" height="3" fill="#0EA5E9"/>
     </svg>
   );
 };
