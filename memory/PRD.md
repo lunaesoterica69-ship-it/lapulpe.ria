@@ -17,7 +17,7 @@
 ## Diseño
 - Tema galáctico oscuro con nebulosas rojas
 - Logo SVG Art Deco con:
-  - Techo PLANO escalonado (3 niveles horizontales)
+  - Techo PLANO simple (un solo rectángulo rojo)
   - Paredes color crema
   - Ventanas con productos y decoraciones Art Deco
   - Puerta de madera con arco decorativo
@@ -73,7 +73,13 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 - Accesible desde Dashboard > Editar > "Cerrar Mi Tienda Permanentemente"
 - Requiere escribir el nombre exacto de la pulpería como confirmación
 - Elimina: productos, órdenes, reseñas, logros, anuncios, empleos
-- Cambia el usuario a tipo "cliente" automáticamente
+- **El usuario mantiene tipo "pulpería" y puede crear una nueva tienda**
+
+## Optimizaciones de Rendimiento
+- Índices de MongoDB creados automáticamente al iniciar
+- Lazy loading de todas las páginas principales
+- Consultas paralelas con Promise.all en frontend
+- useCallback y useMemo para evitar re-renders
 
 ## Funcionalidades Implementadas
 - ✅ Login con Google (Emergent Auth + OAuth propio para dominio)
@@ -117,7 +123,7 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 ## Última Actualización
 - Fecha: Enero 2025
 - Cambios:
-  - Logo Art Deco con techo PLANO escalonado (no triangular)
-  - Sistema para cerrar tienda implementado (DELETE /api/pulperias/{id}/close)
+  - Logo Art Deco con techo PLANO simple (no escalonado)
+  - Sistema para cerrar tienda (permite crear nueva después)
+  - Índices de MongoDB para optimizar velocidad
   - Eliminada página temporal BadgeDemo
-  - Mejorado manejo de login en dominio personalizado
