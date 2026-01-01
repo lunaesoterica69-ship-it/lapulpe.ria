@@ -14,9 +14,9 @@ const BottomNav = ({ user, cartCount = 0 }) => {
     { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
   ] : [
     { icon: Home, label: 'Mapa', path: '/map', testId: 'nav-map' },
-    { icon: Crown, label: 'Top', path: '/recommended', testId: 'nav-recommended' },
+    { icon: Search, label: 'Buscar', path: '/search', testId: 'nav-search' },
     { icon: ShoppingCart, label: 'Carrito', path: '/cart', testId: 'nav-cart', badge: cartCount },
-    { icon: Briefcase, label: 'Chamba', path: '/jobs-services', testId: 'nav-jobs' },
+    { icon: Crown, label: 'Top', path: '/recommended', testId: 'nav-recommended' },
     { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
   ];
 
