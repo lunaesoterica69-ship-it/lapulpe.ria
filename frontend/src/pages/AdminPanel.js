@@ -909,6 +909,45 @@ const AdminPanel = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Enable Ad Slot Dialog */}
+      <Dialog open={showEnableAdSlotDialog} onOpenChange={setShowEnableAdSlotDialog}>
+        <DialogContent className="bg-stone-900 border-stone-700 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-amber-400 flex items-center gap-2">
+              <Tv className="w-5 h-5" />
+              Habilitar Slot de Anuncio
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-amber-900/20 rounded-lg p-3 border border-amber-500/20">
+              <p className="text-white font-medium">{selectedPulperia?.name}</p>
+              <p className="text-stone-400 text-sm">{selectedPulperia?.address}</p>
+            </div>
+            <div>
+              <Label className="text-stone-300">Duración (días)</Label>
+              <Input
+                type="number"
+                value={adSlotDays}
+                onChange={(e) => setAdSlotDays(parseInt(e.target.value) || 30)}
+                className="bg-stone-800 border-stone-700 text-white mt-1"
+                min={1}
+                max={365}
+              />
+              <p className="text-stone-500 text-xs mt-1">
+                Precio: 1000 Lps/mes. La pulpería podrá subir 1 anuncio que todos verán.
+              </p>
+            </div>
+            <Button 
+              onClick={handleEnableAdSlot} 
+              className="w-full bg-amber-600 hover:bg-amber-500 text-black"
+            >
+              <Check className="w-4 h-4 mr-2" />
+              Habilitar Slot por {adSlotDays} días
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <BottomNav user={user} />
     </div>
   );
