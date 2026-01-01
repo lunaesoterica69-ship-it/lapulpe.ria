@@ -312,15 +312,14 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
             </div>
           )}
 
-          {/* User Menu - Art Deco Style */}
+          {/* User Menu */}
           {user && (
             <button
               onClick={handleLogout}
-              className="p-2.5 bg-stone-900 border border-amber-500/20 hover:border-amber-500/40 hover:bg-stone-800 transition-all duration-300"
-              style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
+              className="p-2.5 rounded-xl bg-stone-900 border border-stone-800 hover:bg-stone-800 transition-colors"
               title="Cerrar sesión"
             >
-              <LogOut className="w-5 h-5 text-amber-400/70" />
+              <LogOut className="w-5 h-5 text-stone-400" />
             </button>
           )}
         </div>
