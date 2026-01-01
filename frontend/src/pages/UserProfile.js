@@ -319,6 +319,79 @@ const UserProfile = () => {
       </div>
 
       <BottomNav user={user} cartCount={cartCount} />
+      
+      {/* Dialog para cerrar tienda */}
+      <Dialog open={showCloseStoreDialog} onOpenChange={setShowCloseStoreDialog}>
+        <DialogContent className="bg-stone-950 border-red-800 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-red-400 flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6" />
+              ¿Cerrar Tu Tienda?
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="bg-red-900/20 border border-red-800/50 rounded-xl p-4">
+              <p className="text-red-300 font-medium mb-2">⚠️ Esta acción eliminará los datos de esta tienda</p>
+              <ul className="text-sm text-red-200/70 space-y-1 list-disc pl-4">
+                <li>Se eliminarán todos tus productos</li>
+                <li>Se eliminarán todas las órdenes</li>
+                <li>Se eliminarán todas las reseñas</li>
+                <li>Se eliminarán todos tus logros</li>
+              </ul>
+              <p className="text-green-400 text-sm mt-3">✓ Podrás crear una nueva pulpería después</p>
+            </div>
+            
+            <div>
+              <Label className="text-stone-400 text-sm">
+                Para confirmar, escribe el nombre de tu pulpería:
+              </Label>
+              <p className="text-amber-400 font-bold mb-2 text-lg">&quot;{selectedPulperiaToClose?.name}&quot;</p>
+              <Input
+                value={closeConfirmation}
+                onChange={(e) => setCloseConfirmation(e.target.value)}
+                placeholder="Escribe el nombre exacto..."
+                className="bg-stone-900 border-stone-700 text-white"
+                data-testid="close-store-confirmation-input"
+              />
+            </div>
+            
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowCloseStoreDialog(false);
+                  setCloseConfirmation('');
+                  setSelectedPulperiaToClose(null);
+                }}
+                className="flex-1 border-stone-700 text-stone-400 hover:bg-stone-800"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                onClick={handleCloseStore}
+                disabled={isClosingStore || closeConfirmation.trim().toLowerCase() !== selectedPulperiaToClose?.name?.trim().toLowerCase()}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                data-testid="confirm-close-store-button"
+              >
+                {isClosingStore ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Cerrando...
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Cerrar Tienda
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
