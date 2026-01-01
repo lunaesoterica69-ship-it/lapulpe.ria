@@ -2576,7 +2576,7 @@ async def broadcast_order_update(order: dict, event_type: str):
 @api_router.post("/upload-image")
 async def upload_image(file: UploadFile = File(...), authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
     """Upload an image and return its base64 data URL"""
-    user = await get_current_user(authorization, session_token)
+    await get_current_user(authorization, session_token)
     
     # Validate file type
     allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
