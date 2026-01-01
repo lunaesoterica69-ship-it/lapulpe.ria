@@ -1115,6 +1115,13 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
     """Get notifications for current user - shows recent orders with full details"""
     user = await get_current_user(authorization, session_token)
     
+    # Get user's read notifications
+    read_notifications = await db.read_notifications.find(
+        {"user_id": user.user_id},
+        {"_id": 0, "notification_id": 1}
+    ).to_list(100)
+    read_ids = set(n["notification_id"] for n in read_notifications)
+    
     notifications = []
     
     if user.user_type == "cliente":
@@ -1139,8 +1146,11 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
             if len(items) > 3:
                 item_summary += f" +{len(items) - 3} más"
             
+            notification_id = order["order_id"]
+            is_read = notification_id in read_ids
+            
             notifications.append({
-                "id": order["order_id"],
+                "id": notification_id,
                 "type": "order_status",
                 "title": f"Orden en {pulperia_name}",
                 "message": item_summary or "Sin productos",
@@ -1151,7 +1161,8 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
                 "total": order.get("total", 0),
                 "total_items": total_items,
                 "pulperia_name": pulperia_name,
-                "role": "customer"
+                "role": "customer",
+                "read": is_read
             })
     else:
         # Pulperia owners see orders received
@@ -1175,8 +1186,11 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
             if len(items) > 3:
                 item_summary += f" +{len(items) - 3} más"
             
+            notification_id = order["order_id"]
+            is_read = notification_id in read_ids
+            
             notifications.append({
-                "id": order["order_id"],
+                "id": notification_id,
                 "type": "new_order" if order.get("status") == "pending" else "order_update",
                 "title": f"Pedido de {customer_name}",
                 "message": item_summary or "Sin productos",
@@ -1188,10 +1202,26 @@ async def get_notifications(authorization: Optional[str] = Header(None), session
                 "total": order.get("total", 0),
                 "total_items": total_items,
                 "pulperia_name": pulperia_name,
-                "role": "owner"
+                "role": "owner",
+                "read": is_read
             })
     
     return notifications
+
+
+@api_router.post("/notifications/mark-read")
+async def mark_notifications_read(notification_ids: List[str], authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Mark notifications as read"""
+    user = await get_current_user(authorization, session_token)
+    
+    for nid in notification_ids:
+        await db.read_notifications.update_one(
+            {"user_id": user.user_id, "notification_id": nid},
+            {"$set": {"user_id": user.user_id, "notification_id": nid, "read_at": datetime.now(timezone.utc)}},
+            upsert=True
+        )
+    
+    return {"success": True, "marked": len(notification_ids)}
 
 # ============================================
 # JOB ENDPOINTS
