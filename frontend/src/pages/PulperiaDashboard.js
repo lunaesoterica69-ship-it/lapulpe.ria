@@ -12,6 +12,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import useWebSocket from '../hooks/useWebSocket';
+import { useNotifications } from '../contexts/NotificationContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
