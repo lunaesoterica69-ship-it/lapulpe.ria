@@ -43,12 +43,12 @@ const SearchProducts = () => {
 
     setLoading(true);
     try {
-      let url = `${BACKEND_URL}/api/products?search=${searchTerm}`;
+      let url = `/api/products?search=${searchTerm}`;
       if (sortBy) {
         url += `&sort_by=${sortBy}`;
       }
       
-      const response = await axios.get(url);
+      const response = await api.get(url);
       setProducts(response.data);
       
       if (response.data.length === 0) {
