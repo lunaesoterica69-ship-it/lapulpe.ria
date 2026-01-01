@@ -1885,8 +1885,10 @@ ALLOWED_ORIGINS = [
     "https://lapulperia.preview.emergentagent.com",
     "https://lapulperiastore.net",
     "https://www.lapulperiastore.net",
+    "https://red-auth-connect.emergent.host",
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "*"  # Allow all for deployment flexibility
 ]
 
 app.add_middleware(
