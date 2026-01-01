@@ -16,13 +16,14 @@
 
 ## Diseño
 - Tema galáctico oscuro con nebulosas rojas
-- Logo SVG de tiendita tradicional hondureña con:
-  - Toldo rojo/blanco rayado
-  - Paredes amarillas
-  - Ventanas con productos
-  - Puerta de madera
-  - Bandera de Honduras
-- Medallas doradas estilo romano
+- Logo SVG Art Deco con:
+  - Techo PLANO escalonado (3 niveles horizontales)
+  - Paredes color crema
+  - Ventanas con productos y decoraciones Art Deco
+  - Puerta de madera con arco decorativo
+  - Letrero "PULPERÍA"
+  - Líneas doradas decorativas
+- Medallas doradas estilo Art Deco
 
 ## Sistema de Meritocracia (Medallas)
 Las medallas se ganan automáticamente basadas en métricas reales:
@@ -67,8 +68,15 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 3. Pulpería sube 1 anuncio (imagen/video) en `/anuncios`
 4. Anuncio visible para todos por 30 días
 
+## Sistema de Cerrar Tienda
+- Los dueños pueden cerrar su pulpería permanentemente
+- Accesible desde Dashboard > Editar > "Cerrar Mi Tienda Permanentemente"
+- Requiere escribir el nombre exacto de la pulpería como confirmación
+- Elimina: productos, órdenes, reseñas, logros, anuncios, empleos
+- Cambia el usuario a tipo "cliente" automáticamente
+
 ## Funcionalidades Implementadas
-- ✅ Login con Google
+- ✅ Login con Google (Emergent Auth + OAuth propio para dominio)
 - ✅ Mapa con pulperías cercanas
 - ✅ Carrito de compras
 - ✅ Sistema de órdenes
@@ -77,6 +85,7 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 - ✅ Sistema de anuncios destacados (admin habilita)
 - ✅ Notificaciones (contador solo de no leídas)
 - ✅ Página de búsqueda de productos
+- ✅ Sistema de cerrar tienda (eliminar pulpería)
 
 ## Endpoints Importantes
 - `GET /api/pulperias` - Lista de pulperías
@@ -85,6 +94,7 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 - `GET /api/pulperias/{id}/achievements` - Logros de una pulpería
 - `GET /api/pulperias/{id}/stats` - Estadísticas (auto-verifica logros)
 - `POST /api/admin/featured-ads/enable-slot` - Habilitar slot de anuncio
+- `DELETE /api/pulperias/{id}/close` - Cerrar tienda (dueño)
 
 ## Arquitectura
 ```
@@ -98,16 +108,16 @@ Las medallas se ganan automáticamente basadas en métricas reales:
         │   ├── FeaturedAdsCarousel.js # Carousel de anuncios
         │   └── ...
         └── pages/
-            ├── LandingPage.js       # Logo SVG tiendita
+            ├── LandingPage.js       # Logo SVG Art Deco (techo plano)
             ├── FeaturedAdsPage.js   # Página de anuncios
-            ├── PulperiaDashboard.js # Dashboard con logros
+            ├── PulperiaDashboard.js # Dashboard con logros y cerrar tienda
             └── AdminPanel.js        # Panel admin con slots
 ```
 
 ## Última Actualización
 - Fecha: Enero 2025
 - Cambios:
-  - Logo mejorado (tiendita tradicional hondureña)
-  - Sistema de meritocracia implementado (14 medallas)
-  - Sistema de anuncios destacados (admin habilita)
-  - Eliminadas pulperías de prueba
+  - Logo Art Deco con techo PLANO escalonado (no triangular)
+  - Sistema para cerrar tienda implementado (DELETE /api/pulperias/{id}/close)
+  - Eliminada página temporal BadgeDemo
+  - Mejorado manejo de login en dominio personalizado
