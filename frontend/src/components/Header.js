@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, BACKEND_URL } from '../config/api';
-import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle2, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing, Truck, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { requestNotificationPermission } from '../hooks/useNotifications';
 
@@ -10,7 +10,7 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState('default');
@@ -49,16 +49,19 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Fetch unread count
   useEffect(() => {
     if (!user) return;
     const fetchCount = async () => {
       try {
         const response = await api.get(`/api/notifications`);
-        setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
+        // Count only unread notifications
+        const unread = response.data.filter(n => !n.read).length;
+        setUnreadCount(unread);
       } catch (error) { /* Silently ignore */ }
     };
     fetchCount();
-    const interval = setInterval(fetchCount, 30000); // Reduced frequency
+    const interval = setInterval(fetchCount, 30000);
     return () => clearInterval(interval);
   }, [user]);
 
@@ -67,7 +70,8 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
     try {
       const response = await api.get(`/api/notifications`);
       setNotifications(response.data);
-      setNotificationCount(response.data.filter(n => n.status === 'pending' || n.status === 'accepted' || n.status === 'ready' || n.type === 'admin_message').length);
+      const unread = response.data.filter(n => !n.read).length;
+      setUnreadCount(unread);
     } catch (error) {
       /* Ignore errors */
     } finally {
@@ -75,9 +79,35 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
     }
   }, []);
 
+  // Mark notifications as read when dropdown is opened
+  const markAsRead = useCallback(async () => {
+    const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
+    if (unreadIds.length === 0) return;
+    
+    try {
+      await api.post(`/api/notifications/mark-read`, unreadIds);
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch (error) {
+      /* Silently ignore */
+    }
+  }, [notifications]);
+
   useEffect(() => {
     if (showDropdown && user) {
       fetchNotifications();
+    }
+  }, [showDropdown, user, fetchNotifications]);
+
+  // Mark as read when dropdown is opened and notifications are loaded
+  useEffect(() => {
+    if (showDropdown && notifications.length > 0) {
+      const timer = setTimeout(() => {
+        markAsRead();
+      }, 1500); // Mark as read after 1.5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showDropdown, notifications, markAsRead]);
     }
   }, [showDropdown, user, fetchNotifications]);
 
