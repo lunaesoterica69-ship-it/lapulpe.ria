@@ -47,6 +47,7 @@ function AppRouter() {
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/auth/callback" element={<GoogleCallback />} />
         <Route path="/p/:id" element={<SharedPulperiaLink />} />
         <Route path="/select-type" element={<ProtectedRoute><UserTypeSelector /></ProtectedRoute>} />
         <Route path="/map" element={<ProtectedRoute><MapView /></ProtectedRoute>} />
