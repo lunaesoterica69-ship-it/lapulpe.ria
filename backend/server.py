@@ -1067,8 +1067,8 @@ async def check_and_award_achievements(pulperia_id: str) -> list:
                 if stat_value != value:
                     unlocked = False
                     break
-            elif key in ["avg_response_time"]:
-                # Menor es mejor
+            elif key in ["avg_response_time", "top_rank"]:
+                # Menor es mejor (top_rank 1 es mejor que 10)
                 if stat_value > value:
                     unlocked = False
                     break
