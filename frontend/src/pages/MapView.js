@@ -90,7 +90,7 @@ const MapView = () => {
   // Fetch favorites
   const fetchFavorites = useCallback(async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/favorites`, { withCredentials: true });
+      const response = await api.get(`/api/favorites`);
       setFavorites(response.data);
     } catch (error) {
       /* Ignore - user might not be logged in */
@@ -101,9 +101,9 @@ const MapView = () => {
     const fetchData = async () => {
       try {
         const [userRes, pulperiasRes, featuredRes] = await Promise.all([
-          axios.get(`${BACKEND_URL}/api/auth/me`, { withCredentials: true }),
-          axios.get(`${BACKEND_URL}/api/pulperias`),
-          axios.get(`${BACKEND_URL}/api/ads/featured`).catch(() => ({ data: [] }))
+          api.get(`/api/auth/me`),
+          api.get(`/api/pulperias`),
+          api.get(`/api/ads/featured`).catch(() => ({ data: [] }))
         ]);
         
         setUser(userRes.data);
@@ -164,7 +164,7 @@ const MapView = () => {
     }
     
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/pulperias?search=${searchTerm}`);
+      const response = await api.get(`/api/pulperias?search=${searchTerm}`);
       setPulperias(response.data);
     } catch (error) {
       toast.error('Error en la búsqueda');
