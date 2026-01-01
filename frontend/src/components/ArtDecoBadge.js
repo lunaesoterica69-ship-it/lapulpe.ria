@@ -64,7 +64,9 @@ export const BADGES_ART_DECO = [
 
 // Art Deco Badge SVG Component
 const ArtDecoBadge = ({ badgeId, size = 'md', showName = true, animated = true }) => {
+  const reactId = useId();
   const badge = BADGES_ART_DECO.find(b => b.id === badgeId);
+  
   if (!badge) return null;
 
   const sizes = {
@@ -77,8 +79,6 @@ const ArtDecoBadge = ({ badgeId, size = 'md', showName = true, animated = true }
   const Icon = badge.icon;
   const { primary, secondary, accent } = badge.colors;
   const sizeConfig = sizes[size] || sizes.md;
-
-  const reactId = useId();
   const uniqueId = `badge-${badgeId}-${reactId.replace(/:/g, '')}`;
 
   return (
