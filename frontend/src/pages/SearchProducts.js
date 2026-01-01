@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { api, BACKEND_URL } from '../config/api';
+import { api } from '../config/api';
 import { toast } from 'sonner';
 import { Search, Package, Store } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
