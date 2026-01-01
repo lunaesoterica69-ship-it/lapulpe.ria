@@ -854,6 +854,52 @@ async def admin_delete_pulperia(pulperia_id: str, authorization: Optional[str] =
     
     return {"message": f"Pulpería '{pulperia.get('name', pulperia_id)}' eliminada"}
 
+class ClosePulperiaRequest(BaseModel):
+    confirmation_phrase: str  # Debe ser el nombre exacto de la pulpería
+
+@api_router.delete("/pulperias/{pulperia_id}/close")
+async def close_own_pulperia(pulperia_id: str, close_request: ClosePulperiaRequest, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Owner: Close/delete their own pulperia with confirmation"""
+    user = await get_current_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    # Solo el dueño puede cerrar su tienda
+    if pulperia["owner_user_id"] != user.user_id:
+        raise HTTPException(status_code=403, detail="Solo el dueño puede cerrar esta pulpería")
+    
+    # Verificar que la frase de confirmación sea correcta (nombre de la pulpería)
+    if close_request.confirmation_phrase.strip().lower() != pulperia["name"].strip().lower():
+        raise HTTPException(status_code=400, detail=f"La frase de confirmación no coincide. Escribe '{pulperia['name']}' para confirmar.")
+    
+    pulperia_name = pulperia.get('name', pulperia_id)
+    
+    # Eliminar todos los datos relacionados
+    await db.products.delete_many({"pulperia_id": pulperia_id})
+    await db.orders.delete_many({"pulperia_id": pulperia_id})
+    await db.reviews.delete_many({"pulperia_id": pulperia_id})
+    await db.achievements.delete_many({"pulperia_id": pulperia_id})
+    await db.announcements.delete_many({"pulperia_id": pulperia_id})
+    await db.jobs.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ads.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ad_slots.delete_many({"pulperia_id": pulperia_id})
+    await db.pulperias.delete_one({"pulperia_id": pulperia_id})
+    
+    # Cambiar el tipo de usuario a cliente después de cerrar
+    await db.users.update_one(
+        {"user_id": user.user_id},
+        {"$set": {"user_type": "cliente"}}
+    )
+    
+    logger.info(f"[CLOSE STORE] User {user.user_id} closed pulperia '{pulperia_name}'")
+    
+    return {
+        "message": f"Tu pulpería '{pulperia_name}' ha sido cerrada permanentemente",
+        "redirect_to": "/map"
+    }
+
 @api_router.get("/pulperias/{pulperia_id}/products")
 async def get_pulperia_products(pulperia_id: str):
     """Get all products for a pulperia"""
