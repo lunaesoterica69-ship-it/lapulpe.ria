@@ -63,6 +63,8 @@ const PulperiaDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [adminMessages, setAdminMessages] = useState([]);
+  const [achievements, setAchievements] = useState([]);
+  const [pulperiaStats, setPulperiaStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPulperiaDialog, setShowPulperiaDialog] = useState(false);
   const [showProductDialog, setShowProductDialog] = useState(false);
