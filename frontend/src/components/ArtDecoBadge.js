@@ -1,3 +1,4 @@
+import { useState, useId } from 'react';
 import { Star, Zap, Flame, Crown, Trophy, Target, Check, Gem } from 'lucide-react';
 
 // Sistema de Badges Art Deco Premium
@@ -77,7 +78,8 @@ const ArtDecoBadge = ({ badgeId, size = 'md', showName = true, animated = true }
   const { primary, secondary, accent } = badge.colors;
   const sizeConfig = sizes[size] || sizes.md;
 
-  const uniqueId = `badge-${badgeId}-${Math.random().toString(36).substr(2, 9)}`;
+  const reactId = useId();
+  const uniqueId = `badge-${badgeId}-${reactId.replace(/:/g, '')}`;
 
   return (
     <div className="flex items-center gap-3">
