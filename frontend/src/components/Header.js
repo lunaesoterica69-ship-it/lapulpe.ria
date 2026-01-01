@@ -108,8 +108,6 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
       return () => clearTimeout(timer);
     }
   }, [showDropdown, notifications, markAsRead]);
-    }
-  }, [showDropdown, user, fetchNotifications]);
 
   const handleLogout = async () => {
     try {
@@ -141,9 +139,9 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
 
   const getStatusConfig = (status) => ({
     pending: { icon: Clock, text: 'En Cola', color: 'text-amber-400', bg: 'bg-amber-500/20' },
-    accepted: { icon: Sparkles, text: 'Preparando', color: 'text-blue-400', bg: 'bg-blue-500/20' },
-    ready: { icon: CheckCircle, text: 'Lista', color: 'text-green-400', bg: 'bg-green-500/20' },
-    completed: { icon: CheckCircle, text: 'Completada', color: 'text-stone-400', bg: 'bg-stone-500/20' },
+    accepted: { icon: Truck, text: 'Preparando', color: 'text-blue-400', bg: 'bg-blue-500/20' },
+    ready: { icon: CheckCircle2, text: 'Lista', color: 'text-green-400', bg: 'bg-green-500/20' },
+    completed: { icon: CheckCircle2, text: 'Completada', color: 'text-stone-400', bg: 'bg-stone-500/20' },
     cancelled: { icon: XCircle, text: 'Cancelada', color: 'text-red-400', bg: 'bg-red-500/20' }
   })[status] || { icon: Package, text: status, color: 'text-stone-400', bg: 'bg-stone-500/20' };
 
