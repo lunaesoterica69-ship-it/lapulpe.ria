@@ -609,6 +609,98 @@ const AdminPanel = () => {
           </div>
         )}
 
+        {/* Featured Ads Tab */}
+        {activeTab === 'anuncios' && (
+          <div className="space-y-4">
+            {/* Active Slots */}
+            <div className="bg-amber-900/20 backdrop-blur-sm rounded-2xl p-4 border border-amber-500/30">
+              <h3 className="font-bold text-amber-400 mb-4 flex items-center gap-2">
+                <Tv className="w-5 h-5" />
+                Slots de Anuncios Activos (1000 Lps/mes)
+              </h3>
+              
+              {featuredAdSlots.length === 0 ? (
+                <div className="text-center py-8">
+                  <Tv className="w-12 h-12 mx-auto text-stone-600 mb-3" />
+                  <p className="text-stone-500">No hay slots activos</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {featuredAdSlots.map(slot => (
+                    <div key={slot.slot_id} className="bg-stone-900/50 rounded-xl p-4 border border-stone-700/50">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-bold text-white">{slot.pulperia_name}</p>
+                          <p className="text-xs text-stone-500">
+                            Habilitado: {new Date(slot.enabled_at).toLocaleDateString()}
+                          </p>
+                          <p className="text-xs text-stone-500">
+                            Expira: {new Date(slot.expires_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs px-2 py-1 rounded-full font-bold ${
+                            slot.is_used 
+                              ? 'bg-green-500/20 text-green-400' 
+                              : 'bg-yellow-500/20 text-yellow-400'
+                          }`}>
+                            {slot.is_used ? 'Anuncio Subido' : 'Pendiente'}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteAdSlot(slot.slot_id)}
+                            className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Enable New Slot */}
+            <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl p-4 border border-stone-700/50">
+              <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+                <Plus className="w-5 h-5 text-green-400" />
+                Habilitar Nuevo Slot
+              </h3>
+              
+              <div className="space-y-3">
+                {filteredPulperias.filter(p => !hasActiveAdSlot(p.pulperia_id)).map(pulperia => (
+                  <div key={pulperia.pulperia_id} className="flex items-center justify-between bg-stone-900/50 rounded-xl p-3 border border-stone-700/50">
+                    <div className="flex items-center gap-3">
+                      {pulperia.logo_url && (
+                        <img src={pulperia.logo_url} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                      )}
+                      <div>
+                        <p className="font-bold text-white text-sm">{pulperia.name}</p>
+                        <p className="text-xs text-stone-500">{pulperia.address}</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setSelectedPulperia(pulperia);
+                        setShowEnableAdSlotDialog(true);
+                      }}
+                      className="bg-amber-600 hover:bg-amber-500 text-black text-xs"
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      Habilitar
+                    </Button>
+                  </div>
+                ))}
+                {filteredPulperias.filter(p => !hasActiveAdSlot(p.pulperia_id)).length === 0 && (
+                  <p className="text-center text-stone-500 py-4">Todas las pulperías ya tienen slot activo</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Messages Tab */}
         {activeTab === 'messages' && (
           <div className="space-y-4">
