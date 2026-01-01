@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { MapPin, Store as StoreIcon, Star, Crown, Sparkles, ChevronRight, Maximize2, Minimize2, Heart, Map, List } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
@@ -18,7 +17,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-import { BACKEND_URL } from '../config/api';
+import { api, BACKEND_URL } from '../config/api';
 
 function LocationMarker({ position }) {
   const map = useMap();
