@@ -895,6 +895,80 @@ const PulperiaDashboard = () => {
 
       {selectedPulperia && (
         <div className="px-6 py-6 space-y-6">
+          {/* Achievements Section - Sistema de Logros */}
+          <div className="bg-gradient-to-br from-amber-900/20 to-stone-900/50 rounded-2xl border border-amber-500/30 p-6">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-3">
+                <Award className="w-6 h-6 text-amber-400" />
+                <h2 className="text-xl font-bold text-amber-400">Logros de tu Pulpería</h2>
+              </div>
+              <Button
+                onClick={checkForNewAchievements}
+                className="bg-amber-600 hover:bg-amber-500 text-black text-sm"
+              >
+                <RefreshCw className="w-4 h-4 mr-1" />
+                Verificar
+              </Button>
+            </div>
+            
+            {/* Stats */}
+            {pulperiaStats && (
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="bg-stone-800/50 rounded-lg p-3 text-center border border-stone-700/50">
+                  <p className="text-2xl font-bold text-amber-400">{pulperiaStats.products_count}</p>
+                  <p className="text-xs text-stone-400">Productos</p>
+                </div>
+                <div className="bg-stone-800/50 rounded-lg p-3 text-center border border-stone-700/50">
+                  <p className="text-2xl font-bold text-amber-400">{pulperiaStats.sales_count}</p>
+                  <p className="text-xs text-stone-400">Ventas</p>
+                </div>
+                <div className="bg-stone-800/50 rounded-lg p-3 text-center border border-stone-700/50">
+                  <p className="text-2xl font-bold text-amber-400">{pulperiaStats.profile_views}</p>
+                  <p className="text-xs text-stone-400">Visitas</p>
+                </div>
+              </div>
+            )}
+            
+            {/* Unlocked Achievements */}
+            {achievements.length > 0 ? (
+              <div className="flex flex-wrap gap-4">
+                {achievements.map((ach) => (
+                  <ArtDecoBadge 
+                    key={ach.badge_id} 
+                    badgeId={ach.badge_id} 
+                    size="md" 
+                    showName={true} 
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <p className="text-stone-400 text-sm">Aún no has desbloqueado ningún logro</p>
+                <p className="text-stone-500 text-xs mt-1">¡Agrega productos y completa ventas para ganar medallas!</p>
+              </div>
+            )}
+            
+            {/* Available Achievements Preview */}
+            <div className="mt-4 pt-4 border-t border-amber-500/20">
+              <p className="text-xs text-stone-500 mb-2">Logros disponibles:</p>
+              <div className="flex flex-wrap gap-2">
+                {BADGES_ARTDECO
+                  .filter(b => !achievements.find(a => a.badge_id === b.id))
+                  .slice(0, 5)
+                  .map(badge => (
+                    <span key={badge.id} className="px-2 py-1 bg-stone-800/50 rounded text-xs text-stone-500 border border-stone-700/50">
+                      {badge.name}
+                    </span>
+                  ))}
+                {BADGES_ARTDECO.filter(b => !achievements.find(a => a.badge_id === b.id)).length > 5 && (
+                  <span className="px-2 py-1 bg-stone-800/50 rounded text-xs text-stone-500 border border-stone-700/50">
+                    +{BADGES_ARTDECO.filter(b => !achievements.find(a => a.badge_id === b.id)).length - 5} más
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Products Section */}
           <div>
             <div className="flex justify-between items-center mb-4">
