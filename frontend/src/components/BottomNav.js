@@ -1,23 +1,26 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Search, ShoppingCart, User, Store, Briefcase, History, Megaphone, Crown } from 'lucide-react';
+import { Home, Search, ShoppingCart, User, Store, Briefcase, History, Megaphone, Crown, Tv } from 'lucide-react';
 
-const BottomNav = ({ user, cartCount = 0 }) => {
+const BottomNav = ({ user, cartCount = 0, activeTab }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path, tabName) => {
+    if (activeTab) return activeTab === tabName;
+    return location.pathname === path;
+  };
 
   const navItems = user?.user_type === 'pulperia' ? [
-    { icon: Store, label: 'Dashboard', path: '/dashboard', testId: 'nav-dashboard' },
-    { icon: History, label: 'Historial', path: '/order-history', testId: 'nav-history' },
-    { icon: Megaphone, label: 'Publicidad', path: '/advertising', testId: 'nav-advertising' },
-    { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
+    { icon: Store, label: 'Dashboard', path: '/dashboard', testId: 'nav-dashboard', tab: 'dashboard' },
+    { icon: History, label: 'Historial', path: '/order-history', testId: 'nav-history', tab: 'historial' },
+    { icon: Tv, label: 'Anuncios', path: '/anuncios', testId: 'nav-anuncios', tab: 'anuncios' },
+    { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile', tab: 'perfil' },
   ] : [
-    { icon: Home, label: 'Mapa', path: '/map', testId: 'nav-map' },
-    { icon: Search, label: 'Buscar', path: '/search', testId: 'nav-search' },
-    { icon: ShoppingCart, label: 'Carrito', path: '/cart', testId: 'nav-cart', badge: cartCount },
-    { icon: Crown, label: 'Top', path: '/recommended', testId: 'nav-recommended' },
-    { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile' },
+    { icon: Home, label: 'Mapa', path: '/map', testId: 'nav-map', tab: 'mapa' },
+    { icon: Search, label: 'Buscar', path: '/search', testId: 'nav-search', tab: 'buscar' },
+    { icon: Tv, label: 'Anuncios', path: '/anuncios', testId: 'nav-anuncios', tab: 'anuncios' },
+    { icon: ShoppingCart, label: 'Carrito', path: '/cart', testId: 'nav-cart', tab: 'carrito', badge: cartCount },
+    { icon: User, label: 'Perfil', path: '/profile', testId: 'nav-profile', tab: 'perfil' },
   ];
 
   return (
