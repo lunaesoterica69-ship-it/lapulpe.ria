@@ -108,24 +108,27 @@ const LandingPage = () => {
       // Usar Google OAuth propio para el dominio personalizado
       try {
         const redirectUri = `${window.location.origin}/auth/callback`;
-        console.log('Requesting OAuth URL for redirect:', redirectUri);
-        console.log('Using backend:', BACKEND_URL);
+        console.log('[Login] Custom domain detected');
+        console.log('[Login] Redirect URI:', redirectUri);
+        console.log('[Login] Backend:', BACKEND_URL);
         
-        const response = await api.get(`/api/auth/google/url`, {
-          params: { redirect_uri: redirectUri }
-        });
+        // Hacer la request directamente con fetch para evitar problemas de CORS
+        const response = await fetch(`${BACKEND_URL}/api/auth/google/url?redirect_uri=${encodeURIComponent(redirectUri)}`);
+        const data = await response.json();
         
-        if (response.data?.auth_url) {
-          console.log('Redirecting to Google OAuth...');
-          window.location.href = response.data.auth_url;
+        console.log('[Login] Response:', data);
+        
+        if (data?.auth_url) {
+          console.log('[Login] Redirecting to Google...');
+          window.location.href = data.auth_url;
         } else {
-          console.error('No auth URL received');
+          console.error('[Login] No auth URL received');
           alert('Error al iniciar sesión. Por favor intenta de nuevo.');
           setIsLoggingIn(false);
         }
       } catch (error) {
-        console.error('OAuth error:', error);
-        alert('Error al conectar con Google. Por favor intenta de nuevo.');
+        console.error('[Login] OAuth error:', error);
+        alert('Error al conectar con Google. Verifica tu conexión a internet.');
         setIsLoggingIn(false);
       }
     } else {
