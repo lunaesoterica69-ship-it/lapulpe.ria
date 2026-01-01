@@ -736,39 +736,6 @@ const PulperiaDashboard = () => {
     }
   };
 
-  // Función para cerrar tienda permanentemente
-  const handleCloseStore = async () => {
-    if (!selectedPulperia) return;
-    
-    if (closeConfirmation.trim().toLowerCase() !== selectedPulperia.name.trim().toLowerCase()) {
-      toast.error(`Debes escribir exactamente "${selectedPulperia.name}" para confirmar`);
-      return;
-    }
-    
-    setIsClosingStore(true);
-    try {
-      const response = await api.delete(`/api/pulperias/${selectedPulperia.pulperia_id}/close`, {
-        data: { confirmation_phrase: closeConfirmation }
-      });
-      
-      toast.success(response.data.message || '¡Tu tienda ha sido cerrada permanentemente!');
-      setShowCloseStoreDialog(false);
-      setCloseConfirmation('');
-      
-      // Recargar la página para mostrar opción de crear nueva pulpería
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-      
-    } catch (error) {
-      console.error('Error closing store:', error);
-      const errorMsg = error.response?.data?.detail || 'Error al cerrar la tienda';
-      toast.error(errorMsg);
-    } finally {
-      setIsClosingStore(false);
-    }
-  };
-
   const getStatusColor = (status) => {
     const colors = {
       pending: 'bg-yellow-400',
