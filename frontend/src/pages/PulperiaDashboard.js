@@ -82,11 +82,6 @@ const PulperiaDashboard = () => {
   const [announcementForm, setAnnouncementForm] = useState({ content: '', image_url: '', tags: '' });
   const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
   
-  // Estados para cerrar tienda
-  const [showCloseStoreDialog, setShowCloseStoreDialog] = useState(false);
-  const [closeConfirmation, setCloseConfirmation] = useState('');
-  const [isClosingStore, setIsClosingStore] = useState(false);
-  
   // Floating notifications context
   const floatingNotifications = useNotifications();
   
