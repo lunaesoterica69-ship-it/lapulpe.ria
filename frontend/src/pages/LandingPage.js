@@ -102,12 +102,43 @@ const LandingPage = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = () => {
-    // Siempre usar Emergent Auth - funciona en PC y móvil
-    // Emergent Auth maneja todo el flujo de OAuth de forma segura
-    const redirectUrl = window.location.origin + '/dashboard';
-    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  const handleLogin = async () => {
+    if (isLoggingIn) return;
+    setIsLoggingIn(true);
+    
+    const currentHost = window.location.hostname;
+    const isCustomDomain = currentHost === CUSTOM_DOMAIN || currentHost === `www.${CUSTOM_DOMAIN}`;
+    
+    if (isCustomDomain) {
+      // Usar Google OAuth propio para el dominio personalizado
+      try {
+        const redirectUri = `${window.location.origin}/auth/callback`;
+        console.log('Requesting OAuth URL for redirect:', redirectUri);
+        
+        const response = await axios.get(`${BACKEND_URL}/api/auth/google/url`, {
+          params: { redirect_uri: redirectUri }
+        });
+        
+        if (response.data?.auth_url) {
+          console.log('Redirecting to Google OAuth...');
+          window.location.href = response.data.auth_url;
+        } else {
+          console.error('No auth URL received');
+          alert('Error al iniciar sesión. Por favor intenta de nuevo.');
+          setIsLoggingIn(false);
+        }
+      } catch (error) {
+        console.error('OAuth error:', error);
+        alert('Error al conectar con Google. Por favor intenta de nuevo.');
+        setIsLoggingIn(false);
+      }
+    } else {
+      // Usar Emergent Auth para el dominio de preview
+      const redirectUrl = window.location.origin + '/dashboard';
+      window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+    }
   };
 
   const handleDisclaimerClose = () => {
