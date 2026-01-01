@@ -4,22 +4,8 @@ import axios from 'axios';
 import DisclaimerModal from '../components/DisclaimerModal';
 
 const CUSTOM_DOMAIN = 'lapulperiastore.net';
-
-// Dynamically determine backend URL based on current domain
-const getBackendUrl = () => {
-  const currentHost = window.location.hostname;
-  const customDomains = [CUSTOM_DOMAIN, `www.${CUSTOM_DOMAIN}`];
-  
-  // If on custom domain, use same origin (the deployed app)
-  if (customDomains.includes(currentHost)) {
-    return window.location.origin;
-  }
-  
-  // Otherwise use environment variable (for preview/development)
-  return process.env.REACT_APP_BACKEND_URL;
-};
-
-const BACKEND_URL = getBackendUrl();
+// Always use Emergent backend for API calls
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia.preview.emergentagent.com';
 
 // Iconos de redes sociales
 const XIcon = () => (
