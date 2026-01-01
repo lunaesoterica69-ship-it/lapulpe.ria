@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, BACKEND_URL } from '../config/api';
-import { Bell, LogOut, User, Store, CheckCircle2, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing, Truck, AlertCircle } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle2, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing, Truck, AlertCircle, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { requestNotificationPermission } from '../hooks/useNotifications';
 
