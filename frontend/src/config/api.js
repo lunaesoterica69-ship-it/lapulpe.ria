@@ -3,8 +3,26 @@
 
 import axios from 'axios';
 
-// Backend URL - SIEMPRE usar el de Emergent preview
-export const BACKEND_URL = 'https://lapulperia.preview.emergentagent.com';
+// Detectar el backend URL basado en el ambiente
+const getBackendUrl = () => {
+  // Si hay una variable de entorno, usarla
+  if (process.env.REACT_APP_BACKEND_URL) {
+    return process.env.REACT_APP_BACKEND_URL;
+  }
+  
+  // En producción (dominio personalizado), usar el mismo origen
+  const host = window.location.hostname;
+  if (host === 'lapulperiastore.net' || host === 'www.lapulperiastore.net') {
+    // El backend está en el mismo dominio en producción
+    return window.location.origin;
+  }
+  
+  // Fallback al preview de Emergent
+  return 'https://lapulperia.preview.emergentagent.com';
+};
+
+// Backend URL
+export const BACKEND_URL = getBackendUrl();
 
 // Dominio personalizado
 export const CUSTOM_DOMAIN = 'lapulperiastore.net';
@@ -44,7 +62,7 @@ api.interceptors.response.use(
       // Token expirado o inválido
       localStorage.removeItem('session_token');
       // Solo redirigir si no estamos ya en la landing page
-      if (window.location.pathname !== '/') {
+      if (window.location.pathname !== '/' && window.location.pathname !== '/auth/callback') {
         window.location.href = '/';
       }
     }
