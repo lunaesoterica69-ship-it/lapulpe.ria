@@ -2665,6 +2665,45 @@ async def api_health_check():
 
 app.include_router(api_router)
 
+@app.on_event("startup")
+async def startup_db_client():
+    """Create indexes for faster queries on startup"""
+    try:
+        # Índices para pulperías
+        await db.pulperias.create_index("pulperia_id", unique=True)
+        await db.pulperias.create_index("owner_user_id")
+        await db.pulperias.create_index([("location.lat", 1), ("location.lng", 1)])
+        
+        # Índices para productos
+        await db.products.create_index("product_id", unique=True)
+        await db.products.create_index("pulperia_id")
+        await db.products.create_index([("name", "text"), ("description", "text")])
+        
+        # Índices para órdenes
+        await db.orders.create_index("order_id", unique=True)
+        await db.orders.create_index("pulperia_id")
+        await db.orders.create_index("customer_user_id")
+        await db.orders.create_index("status")
+        
+        # Índices para usuarios
+        await db.users.create_index("user_id", unique=True)
+        await db.users.create_index("email", unique=True)
+        
+        # Índices para sesiones
+        await db.user_sessions.create_index("session_token", unique=True)
+        await db.user_sessions.create_index("user_id")
+        
+        # Índices para logros
+        await db.achievements.create_index("pulperia_id")
+        await db.achievements.create_index([("pulperia_id", 1), ("badge_id", 1)], unique=True)
+        
+        # Índices para favoritos
+        await db.favorites.create_index([("user_id", 1), ("pulperia_id", 1)], unique=True)
+        
+        logger.info("[STARTUP] Database indexes created successfully")
+    except Exception as e:
+        logger.warning(f"[STARTUP] Index creation warning: {e}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
