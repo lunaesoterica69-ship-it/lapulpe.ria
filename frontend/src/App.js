@@ -7,6 +7,7 @@ import './App.css';
 
 // Lazy load all other pages for faster initial load
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
+const GoogleCallback = lazy(() => import('./pages/GoogleCallback'));
 const MapView = lazy(() => import('./pages/MapView'));
 const PulperiaProfile = lazy(() => import('./pages/PulperiaProfile'));
 const SharedPulperiaLink = lazy(() => import('./pages/SharedPulperiaLink'));
