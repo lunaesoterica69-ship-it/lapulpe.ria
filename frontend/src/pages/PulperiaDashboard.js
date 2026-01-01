@@ -76,6 +76,9 @@ const PulperiaDashboard = () => {
   const [announcementForm, setAnnouncementForm] = useState({ content: '', image_url: '', tags: '' });
   const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
   
+  // Floating notifications context
+  const floatingNotifications = useNotifications();
+  
   // WebSocket message handler - Maneja órdenes y mensajes de admin
   const handleWebSocketMessage = useCallback((data) => {
     // Handle admin messages
