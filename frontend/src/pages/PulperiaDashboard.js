@@ -760,9 +760,9 @@ const PulperiaDashboard = () => {
       setShowCloseStoreDialog(false);
       setCloseConfirmation('');
       
-      // Redirigir al mapa después de cerrar
+      // Recargar la página para mostrar opción de crear nueva pulpería
       setTimeout(() => {
-        navigate('/map');
+        window.location.reload();
       }, 1500);
       
     } catch (error) {
