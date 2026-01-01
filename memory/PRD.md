@@ -16,14 +16,15 @@
 
 ## Diseño
 - Tema galáctico oscuro con nebulosas rojas
-- Logo SVG Art Deco con:
-  - Techo PLANO simple (un solo rectángulo rojo)
+- Logo SVG estilo tiendita tradicional con:
+  - Techo triangular rojo
+  - Toldo ondulado decorativo
   - Paredes color crema
-  - Ventanas con productos y decoraciones Art Deco
-  - Puerta de madera con arco decorativo
+  - Ventanas con productos coloridos
+  - Puerta con arco central
   - Letrero "PULPERÍA"
-  - Líneas doradas decorativas
 - Medallas doradas estilo Art Deco
+- Diseño totalmente responsivo (PC y móvil)
 
 ## Sistema de Meritocracia (Medallas)
 Las medallas se ganan automáticamente basadas en métricas reales:
@@ -70,7 +71,7 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 
 ## Sistema de Cerrar Tienda
 - Los dueños pueden cerrar su pulpería permanentemente
-- Accesible desde Dashboard > Editar > "Cerrar Mi Tienda Permanentemente"
+- **Ubicación: Perfil de Usuario** (no en Dashboard)
 - Requiere escribir el nombre exacto de la pulpería como confirmación
 - Elimina: productos, órdenes, reseñas, logros, anuncios, empleos
 - **El usuario mantiene tipo "pulpería" y puede crear una nueva tienda**
@@ -123,7 +124,7 @@ Las medallas se ganan automáticamente basadas en métricas reales:
 ## Última Actualización
 - Fecha: Enero 2025
 - Cambios:
-  - Logo Art Deco con techo PLANO simple (no escalonado)
-  - Sistema para cerrar tienda (permite crear nueva después)
-  - Índices de MongoDB para optimizar velocidad
-  - Eliminada página temporal BadgeDemo
+  - Logo rediseñado estilo tiendita tradicional (techo triangular, toldo ondulado)
+  - Diseño responsivo verificado en PC y móvil
+  - Botón "Cerrar Tienda" movido al Perfil de Usuario
+  - Sistema de Anuncios Destacados completo al 100%
