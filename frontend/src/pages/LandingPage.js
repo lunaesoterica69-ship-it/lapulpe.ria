@@ -100,33 +100,11 @@ const LandingPage = () => {
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleLogin = async () => {
-    const currentHost = window.location.hostname;
-    const isCustomDomain = currentHost === CUSTOM_DOMAIN || currentHost === `www.${CUSTOM_DOMAIN}`;
-    
-    if (isCustomDomain) {
-      // Use custom Google OAuth for custom domain
-      try {
-        const redirectUri = `${window.location.origin}/auth/callback`;
-        const response = await axios.get(`${BACKEND_URL}/api/auth/google/url`, {
-          params: { redirect_uri: redirectUri }
-        });
-        
-        if (response.data?.auth_url) {
-          window.location.href = response.data.auth_url;
-        } else {
-          console.error('No auth URL received');
-          alert('Error al iniciar sesión. Por favor intenta de nuevo.');
-        }
-      } catch (error) {
-        console.error('OAuth error:', error);
-        alert('Error al conectar con Google. Por favor intenta de nuevo.');
-      }
-    } else {
-      // Use Emergent Auth for preview domain
-      const redirectUrl = window.location.origin + '/dashboard';
-      window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
-    }
+  const handleLogin = () => {
+    // Siempre usar Emergent Auth - funciona en PC y móvil
+    // Emergent Auth maneja todo el flujo de OAuth de forma segura
+    const redirectUrl = window.location.origin + '/dashboard';
+    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
 
   const handleDisclaimerClose = () => {
