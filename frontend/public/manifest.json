@@ -1,0 +1,20 @@
+{
+  "short_name": "La Pulpería",
+  "name": "La Pulpería - Tu tienda de barrio digital",
+  "description": "Conectando pulperías hondureñas con sus comunidades",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#DC2626",
+  "background_color": "#0c0a09",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es-HN",
+  "categories": ["shopping", "food", "lifestyle"]
+}
