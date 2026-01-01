@@ -1897,6 +1897,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Health check endpoint - MUST be at root level for deployment
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Kubernetes/deployment"""
+    return {"status": "healthy", "service": "lapulperia-backend"}
+
 app.include_router(api_router)
 
 @app.on_event("shutdown")
