@@ -139,7 +139,7 @@ export const NotificationContainer = ({ notifications, onRemove }) => {
   if (notifications.length === 0) return null;
 
   return (
-    <div className="fixed top-20 right-4 z-[9999] space-y-3 pointer-events-auto">
+    <div className="fixed top-20 right-4 z-[99999] space-y-3 pointer-events-auto" style={{ zIndex: 99999 }}>
       {notifications.map((notification) => (
         <FloatingNotification
           key={notification.id}
