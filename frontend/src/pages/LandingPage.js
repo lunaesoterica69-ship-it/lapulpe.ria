@@ -129,18 +129,23 @@ const PulperiaLogo = ({ size = "md" }) => {
         </linearGradient>
       </defs>
       
-      {/* Techo Art Deco - Escalonado geométrico */}
-      <polygon points="50,8 70,20 70,26 80,26 80,32 85,32 85,38 15,38 15,32 20,32 20,26 30,26 30,20" 
-               fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
+      {/* Techo Art Deco - PLANO y escalonado geométrico */}
+      {/* Nivel superior - techo plano */}
+      <rect x="35" y="8" width="30" height="8" fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
+      {/* Nivel medio */}
+      <rect x="25" y="16" width="50" height="8" fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
+      {/* Nivel inferior */}
+      <rect x="15" y="24" width="70" height="14" fill="url(#artDecoRed)" stroke="#FCD34D" strokeWidth="1"/>
       
-      {/* Líneas decorativas Art Deco en el techo */}
-      <line x1="50" y1="12" x2="50" y2="20" stroke="#FCD34D" strokeWidth="1.5"/>
-      <line x1="40" y1="20" x2="60" y2="20" stroke="#FCD34D" strokeWidth="1"/>
-      <line x1="35" y1="26" x2="65" y2="26" stroke="#FCD34D" strokeWidth="0.8"/>
+      {/* Líneas decorativas Art Deco horizontales en el techo */}
+      <line x1="40" y1="12" x2="60" y2="12" stroke="#FCD34D" strokeWidth="1.5"/>
+      <line x1="30" y1="20" x2="70" y2="20" stroke="#FCD34D" strokeWidth="1"/>
+      <line x1="20" y1="28" x2="80" y2="28" stroke="#FCD34D" strokeWidth="0.8"/>
+      <line x1="20" y1="32" x2="80" y2="32" stroke="#FCD34D" strokeWidth="0.8"/>
       
-      {/* Ornamento central superior */}
-      <circle cx="50" cy="14" r="3" fill="url(#artDecoGold)"/>
-      <polygon points="50,6 52,10 48,10" fill="url(#artDecoGold)"/>
+      {/* Ornamentos Art Deco en el techo */}
+      <rect x="47" y="10" width="6" height="4" fill="url(#artDecoGold)"/>
+      <circle cx="50" cy="20" r="2" fill="url(#artDecoGold)"/>
       
       {/* Edificio principal */}
       <rect x="18" y="38" width="64" height="52" fill="url(#artDecoCream)" stroke="#D4AF37" strokeWidth="1.5"/>

@@ -64,11 +64,29 @@ const GoogleCallback = () => {
           // Determinar redirección
           const user = response.data;
           
-          setTimeout(() => {
+          // Determinar la redirección correcta
+          setTimeout(async () => {
             if (!user.user_type) {
               navigate('/select-type', { replace: true });
             } else if (user.user_type === 'pulperia') {
-              navigate('/dashboard', { replace: true });
+              // Verificar si tiene una pulpería antes de ir al dashboard
+              try {
+                const token = localStorage.getItem('session_token');
+                const pulperiasRes = await axios.get(`${BACKEND_URL}/api/pulperias`, {
+                  headers: token ? { Authorization: `Bearer ${token}` } : {}
+                });
+                const myPulperias = pulperiasRes.data.filter(p => p.owner_user_id === user.user_id);
+                
+                if (myPulperias.length > 0) {
+                  navigate('/dashboard', { replace: true });
+                } else {
+                  // Si es tipo pulpería pero no tiene pulpería, ir al dashboard para crear una
+                  navigate('/dashboard', { replace: true });
+                }
+              } catch (err) {
+                console.error('[GoogleCallback] Error checking pulperias:', err);
+                navigate('/dashboard', { replace: true });
+              }
             } else {
               navigate('/map', { replace: true });
             }
