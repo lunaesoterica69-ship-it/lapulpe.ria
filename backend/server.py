@@ -251,6 +251,32 @@ class PulperiaStats(BaseModel):
     is_verified: bool = False
     updated_at: datetime
 
+# Sistema de Anuncios Destacados (1000 Lps/mes)
+# Admin habilita -> Pulpería sube 1 anuncio -> Todos lo ven
+class FeaturedAd(BaseModel):
+    ad_id: str
+    pulperia_id: str
+    pulperia_name: str
+    title: Optional[str] = None
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+    video_url: Optional[str] = None
+    link_url: Optional[str] = None  # URL de destino al hacer click
+    is_active: bool = True
+    created_at: datetime
+    expires_at: datetime  # Fecha de expiración (30 días después de activación)
+
+class FeaturedAdSlot(BaseModel):
+    """Slot habilitado por admin para que una pulpería suba su anuncio"""
+    slot_id: str
+    pulperia_id: str
+    pulperia_name: str
+    enabled_by: str  # Admin que lo habilitó
+    enabled_at: datetime
+    expires_at: datetime  # Fecha límite para usar el slot
+    is_used: bool = False  # True cuando la pulpería subió su anuncio
+    ad_id: Optional[str] = None  # ID del anuncio subido
+
 # ============================================
 # REQUEST MODELS
 # ============================================
