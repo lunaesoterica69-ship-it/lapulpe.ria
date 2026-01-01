@@ -109,26 +109,57 @@ const LandingPage = () => {
       try {
         const redirectUri = `${window.location.origin}/auth/callback`;
         console.log('[Login] Custom domain detected');
-        console.log('[Login] Redirect URI:', redirectUri);
         console.log('[Login] Backend:', BACKEND_URL);
         
-        // Hacer la request directamente con fetch para evitar problemas de CORS
-        const response = await fetch(`${BACKEND_URL}/api/auth/google/url?redirect_uri=${encodeURIComponent(redirectUri)}`);
-        const data = await response.json();
+        // Retry logic para manejar errores de red
+        let attempts = 0;
+        const maxAttempts = 3;
+        let lastError = null;
         
-        console.log('[Login] Response:', data);
-        
-        if (data?.auth_url) {
-          console.log('[Login] Redirecting to Google...');
-          window.location.href = data.auth_url;
-        } else {
-          console.error('[Login] No auth URL received');
-          alert('Error al iniciar sesión. Por favor intenta de nuevo.');
-          setIsLoggingIn(false);
+        while (attempts < maxAttempts) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            const response = await fetch(
+              `${BACKEND_URL}/api/auth/google/url?redirect_uri=${encodeURIComponent(redirectUri)}`,
+              { signal: controller.signal }
+            );
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data?.auth_url) {
+              console.log('[Login] Redirecting to Google...');
+              window.location.href = data.auth_url;
+              return;
+            }
+            break;
+          } catch (err) {
+            lastError = err;
+            attempts++;
+            if (attempts < maxAttempts) {
+              await new Promise(r => setTimeout(r, 1000)); // Esperar 1s antes de reintentar
+            }
+          }
         }
+        
+        console.error('[Login] All attempts failed:', lastError);
+        setIsLoggingIn(false);
+        // Mostrar mensaje más amigable
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-24 left-4 right-4 bg-red-600 text-white px-4 py-3 rounded-xl shadow-2xl z-50 animate-fade-in-up text-center text-sm';
+        toast.textContent = 'No se pudo conectar. Verifica tu internet e intenta de nuevo.';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+        
       } catch (error) {
         console.error('[Login] OAuth error:', error);
-        alert('Error al conectar con Google. Verifica tu conexión a internet.');
         setIsLoggingIn(false);
       }
     } else {
