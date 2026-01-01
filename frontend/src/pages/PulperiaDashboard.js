@@ -58,6 +58,8 @@ const getErrorMessage = (error, defaultMsg = 'Error desconocido') => {
 const JOB_CATEGORIES = ['Ventas', 'Construcción', 'Limpieza', 'Cocina', 'Seguridad', 'Otro'];
 
 const PulperiaDashboard = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [user, setUser] = useState(null);
   const [pulperias, setPulperias] = useState([]);
   const [selectedPulperia, setSelectedPulperia] = useState(null);
@@ -79,6 +81,11 @@ const PulperiaDashboard = () => {
   const [newOrdersCount, setNewOrdersCount] = useState(0);
   const [announcementForm, setAnnouncementForm] = useState({ content: '', image_url: '', tags: '' });
   const [activeNotificationTab, setActiveNotificationTab] = useState('orders');
+  
+  // Estados para cerrar tienda
+  const [showCloseStoreDialog, setShowCloseStoreDialog] = useState(false);
+  const [closeConfirmation, setCloseConfirmation] = useState('');
+  const [isClosingStore, setIsClosingStore] = useState(false);
   
   // Floating notifications context
   const floatingNotifications = useNotifications();
