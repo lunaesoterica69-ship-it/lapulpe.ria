@@ -15,16 +15,16 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
 import { Label } from '../components/ui/label';
-import ArtDecoBadge, { BADGES_ART_DECO, ArtDecoBadgeInline, AdPlanBadge } from '../components/ArtDecoBadge';
+import RomanBadge, { BADGES_ROMAN, RomanBadgeInline } from '../components/ArtDecoBadge';
 
 const ADMIN_PASSWORD = 'AlEjA127';
 
-// Use new Art Deco badges
-const BADGES = BADGES_ART_DECO;
+// Use new Roman style badges
+const BADGES = BADGES_ROMAN;
 
-// Componente de Badge Art Deco
+// Componente de Badge Estilo Romano
 const BadgeDisplay = ({ badgeId, size = 'md', showName = true, animated = true }) => {
-  return <ArtDecoBadge badgeId={badgeId} size={size} showName={showName} animated={animated} />;
+  return <RomanBadge badgeId={badgeId} size={size} showName={showName} animated={animated} />;
 };
 
 const AdminPanel = () => {
