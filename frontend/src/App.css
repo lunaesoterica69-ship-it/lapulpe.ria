@@ -353,6 +353,16 @@
   animation: gold-shimmer 3s linear infinite;
 }
 
+/* Shimmer animation for badges */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
 /* Art Deco Badge/Medal Styles */
 .art-deco-badge {
   background: linear-gradient(135deg, #D4A843 0%, #B8860B 50%, #D4A843 100%);
