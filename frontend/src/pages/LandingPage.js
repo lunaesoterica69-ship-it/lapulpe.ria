@@ -305,42 +305,38 @@ const LandingPage = () => {
       {showDisclaimer && <DisclaimerModal onClose={handleDisclaimerClose} />}
       {showHowItWorks && <HowItWorksModal onClose={() => setShowHowItWorks(false)} />}
 
-      {/* Animated Nebula Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/20 rounded-full blur-[100px] animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-red-500/15 rounded-full blur-[80px] animate-pulse-slow animation-delay-200" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-900/10 rounded-full blur-[120px]" />
-      </div>
-
-      {/* Animated Stars */}
-      <div className="fixed inset-0 pointer-events-none">
-        {/* Capa 1 - estrellas pequeñas */}
-        <div className="absolute inset-0 animate-twinkle" style={{
+      {/* Art Deco Background Pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-5">
+        <div className="absolute inset-0" style={{
           backgroundImage: `
-            radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6), transparent),
-            radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.5), transparent),
-            radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.55), transparent),
-            radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.5), transparent),
-            radial-gradient(1px 1px at 90% 30%, rgba(255,255,255,0.6), transparent),
-            radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.45), transparent),
-            radial-gradient(1px 1px at 85% 85%, rgba(255,255,255,0.5), transparent)
-          `
-        }} />
-        {/* Capa 2 - estrellas medianas */}
-        <div className="absolute inset-0 animate-twinkle-delayed" style={{
-          backgroundImage: `
-            radial-gradient(2px 2px at 25% 35%, rgba(255,255,255,0.4), transparent),
-            radial-gradient(2px 2px at 65% 45%, rgba(255,255,255,0.35), transparent),
-            radial-gradient(2px 2px at 45% 75%, rgba(255,255,255,0.3), transparent)
-          `
+            linear-gradient(30deg, #D4A843 12%, transparent 12.5%, transparent 87%, #D4A843 87.5%, #D4A843),
+            linear-gradient(150deg, #D4A843 12%, transparent 12.5%, transparent 87%, #D4A843 87.5%, #D4A843),
+            linear-gradient(30deg, #D4A843 12%, transparent 12.5%, transparent 87%, #D4A843 87.5%, #D4A843),
+            linear-gradient(150deg, #D4A843 12%, transparent 12.5%, transparent 87%, #D4A843 87.5%, #D4A843)
+          `,
+          backgroundSize: '80px 140px',
+          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px'
         }} />
       </div>
 
-      {/* Floating Particles */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-1 h-1 bg-white/30 rounded-full animate-float-1" style={{ left: '15%', top: '25%' }} />
-        <div className="absolute w-0.5 h-0.5 bg-red-400/40 rounded-full animate-float-2" style={{ left: '75%', top: '35%' }} />
-        <div className="absolute w-1 h-1 bg-white/20 rounded-full animate-float-3" style={{ left: '45%', top: '65%' }} />
+      {/* Animated Nebula Background - More subtle */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-900/15 rounded-full blur-[120px] animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-amber-900/10 rounded-full blur-[100px] animate-pulse-slow animation-delay-200" />
+      </div>
+
+      {/* Art Deco Corner Decorations */}
+      <div className="fixed top-0 left-0 w-32 h-32 pointer-events-none">
+        <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
+          <path d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z" fill="#D4A843"/>
+          <path d="M0 0 L50 0 L50 5 L5 5 L5 50 L0 50 Z" fill="#D4A843" opacity="0.5"/>
+        </svg>
+      </div>
+      <div className="fixed top-0 right-0 w-32 h-32 pointer-events-none transform scale-x-[-1]">
+        <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
+          <path d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z" fill="#D4A843"/>
+          <path d="M0 0 L50 0 L50 5 L5 5 L5 50 L0 50 Z" fill="#D4A843" opacity="0.5"/>
+        </svg>
       </div>
 
       {/* Content */}
@@ -348,36 +344,43 @@ const LandingPage = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col items-center justify-center px-6">
           <div className="text-center animate-fade-in-up">
-            {/* Logo con glow */}
-            <div className="flex items-center justify-center gap-3 mb-3">
+            {/* Logo con glow Art Deco */}
+            <div className="flex flex-col items-center gap-4 mb-4">
               <div className="animate-bounce-soft">
-                <PulperiaLogo />
+                <PulperiaLogo size="lg" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white">
-                La <span className="text-red-500 animate-pulse-slow">Pulpería</span>
-              </h1>
+              <div className="relative">
+                {/* Art Deco Line Decorations */}
+                <div className="absolute -left-12 top-1/2 w-8 h-px bg-gradient-to-r from-transparent to-amber-500/50" />
+                <div className="absolute -right-12 top-1/2 w-8 h-px bg-gradient-to-l from-transparent to-amber-500/50" />
+                <h1 className="text-4xl md:text-5xl font-bold font-serif">
+                  <span className="text-amber-100">La </span>
+                  <span className="gold-shimmer-text">Pulpería</span>
+                </h1>
+              </div>
             </div>
             
-            <p className="text-stone-500 text-base mb-6 animate-fade-in-up animation-delay-100">¿Qué deseaba?</p>
+            <p className="text-amber-500/60 text-base mb-8 animate-fade-in-up animation-delay-100 tracking-widest uppercase text-sm font-serif">¿Qué deseaba?</p>
             
-            {/* Botón con glow animado */}
+            {/* Botón Art Deco Premium */}
             <button
               onClick={handleLogin}
               disabled={isLoggingIn}
-              className="group relative inline-flex items-center gap-3 bg-red-600 hover:bg-red-500 disabled:bg-red-800 text-white font-medium py-3.5 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] active:scale-95 animate-fade-in-up animation-delay-200"
+              data-testid="login-button"
+              className="group relative inline-flex items-center gap-3 art-deco-btn-primary py-4 px-10 text-base transition-all duration-300 animate-fade-in-up animation-delay-200"
             >
               {isLoggingIn ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-amber-100/30 border-t-amber-100 rounded-full animate-spin" />
                   <span>Conectando...</span>
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#fff" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#fff" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#fff" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
                   <span>Comenzar con Google</span>
                   <ArrowRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -387,47 +390,55 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Bottom Section - Redes y Compartir */}
+        {/* Bottom Section - Art Deco Style */}
         <div className="px-6 pb-8 animate-fade-in-up animation-delay-300">
-          {/* Social Links */}
+          {/* Decorative Line */}
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-500/30" />
+            <div className="w-2 h-2 rotate-45 bg-amber-500/30" />
+            <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-500/30" />
+          </div>
+
+          {/* Social Links - Art Deco Style */}
           <div className="flex justify-center gap-3 mb-4">
             <a
               href="https://x.com/LaPul_periaHN"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-stone-900/80 hover:bg-stone-800 text-white py-2.5 px-4 rounded-xl transition-all duration-300 border border-stone-800 hover:border-stone-600 hover:scale-105 backdrop-blur-sm"
+              className="flex items-center gap-2 bg-stone-900/80 hover:bg-stone-800 text-amber-100 py-2.5 px-4 transition-all duration-300 border border-amber-500/20 hover:border-amber-500/40 hover:scale-105 backdrop-blur-sm art-deco-border"
             >
               <XIcon />
-              <span className="text-sm font-medium">X</span>
+              <span className="text-sm font-medium tracking-wide">X</span>
             </a>
             <a
               href="https://www.instagram.com/lapulperiah?igsh=MXJlemJzaTl4NDIxdQ=="
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-2.5 px-4 rounded-xl transition-colors"
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white py-2.5 px-4 transition-all duration-300 hover:scale-105"
+              style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}
             >
               <InstagramIcon />
-              <span className="text-sm font-medium">Instagram</span>
+              <span className="text-sm font-medium tracking-wide">Instagram</span>
             </a>
           </div>
 
-          {/* Share Section */}
+          {/* Share Section - Art Deco */}
           <div className="max-w-sm mx-auto">
-            <div className="bg-stone-900/50 rounded-2xl p-3 border border-stone-800">
-              <p className="text-stone-500 text-xs text-center mb-2">Comparte La Pulpería</p>
+            <div className="bg-stone-900/50 p-3 border border-amber-500/10 art-deco-card">
+              <p className="text-amber-500/50 text-xs text-center mb-2 tracking-widest uppercase">Comparte</p>
               <div className="flex gap-2">
-                <div className="flex-1 bg-stone-800 rounded-lg px-3 py-2 text-xs text-stone-500 truncate">
+                <div className="flex-1 bg-stone-800 px-3 py-2 text-xs text-amber-100/60 truncate border border-amber-500/10">
                   {window.location.host}
                 </div>
                 <button
                   onClick={handleCopyLink}
-                  className={`px-3 py-2 rounded-lg transition-colors ${copied ? 'bg-green-600' : 'bg-stone-700 hover:bg-stone-600'} text-white`}
+                  className={`px-3 py-2 transition-all duration-300 ${copied ? 'bg-emerald-600' : 'bg-stone-700 hover:bg-stone-600 border border-amber-500/20'} text-amber-100`}
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>
                 <button
                   onClick={handleShare}
-                  className="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white transition-colors"
+                  className="px-3 py-2 art-deco-btn-primary"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </button>
@@ -435,7 +446,13 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <p className="text-center text-stone-600 text-xs mt-4">🇭🇳 Conectando comunidades hondureñas</p>
+          {/* Honduras Flag Colors Accent */}
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <div className="w-8 h-1 bg-sky-500 rounded-full" />
+            <div className="w-8 h-1 bg-white rounded-full" />
+            <div className="w-8 h-1 bg-sky-500 rounded-full" />
+          </div>
+          <p className="text-center text-amber-500/40 text-xs mt-2 tracking-widest uppercase font-serif">Conectando comunidades hondureñas</p>
         </div>
       </div>
     </div>
