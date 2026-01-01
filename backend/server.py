@@ -239,13 +239,13 @@ class ServiceCreate(BaseModel):
     images: List[str] = []
 
 class AdvertisementCreate(BaseModel):
-    plan: Literal["basico", "destacado", "premium"]
+    plan: Literal["basico", "destacado", "premium", "recomendado"]
     payment_method: str
     payment_reference: Optional[str] = None
 
 class AdminAdActivation(BaseModel):
     pulperia_id: str
-    plan: Literal["basico", "destacado", "premium"]
+    plan: Literal["basico", "destacado", "premium", "recomendado"]
     duration_days: int = 7
 
 class UserTypeChange(BaseModel):
