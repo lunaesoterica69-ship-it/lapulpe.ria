@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Store } from 'lucide-react';
-
-// Backend URL - siempre usar el de Emergent
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia.preview.emergentagent.com';
+import { BACKEND_URL } from '../config/api';
 
 const GoogleCallback = () => {
   const [searchParams] = useSearchParams();
