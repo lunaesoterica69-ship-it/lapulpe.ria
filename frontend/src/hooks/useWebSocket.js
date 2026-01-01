@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { notifyNewOrder, notifyOrderStatusChange, requestNotificationPermission, registerServiceWorker } from './useNotifications';
+import { requestNotificationPermission, registerServiceWorker, sendBrowserNotification } from './useNotifications';
 import { toast } from 'sonner';
 
 /**
  * Custom hook for WebSocket connection with auto-reconnect
  * Provides real-time order updates with browser notifications
  */
-export const useWebSocket = (userId, onMessage) => {
+export const useWebSocket = (userId, onMessage, floatingNotifications = null) => {
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
@@ -67,7 +67,7 @@ export const useWebSocket = (userId, onMessage) => {
           
           console.log('WebSocket message received:', data.type, data.event);
           
-          // Send browser notifications AND in-app toasts for important events
+          // Send notifications for important events
           if (data.type === 'order_update') {
             const { event: orderEvent, order, target, message } = data;
             const pulperiaName = order.pulperia_name || 'tu pulpería';
@@ -76,10 +76,21 @@ export const useWebSocket = (userId, onMessage) => {
             
             // Notification for pulperia owners - new order
             if (orderEvent === 'new_order' && target === 'owner') {
-              // Browser notification
-              notifyNewOrder(order, pulperiaName);
-              // In-app toast as backup
               const itemSummary = items.slice(0, 2).map(i => `${i.quantity}x ${i.product_name}`).join(', ');
+              
+              // Browser notification
+              sendBrowserNotification(`🛒 ¡Nuevo Pedido en ${pulperiaName}!`, {
+                body: `${order.customer_name}: ${itemSummary}\nTotal: L${order.total?.toFixed(0)}`,
+                tag: 'new-order',
+                renotify: true
+              });
+              
+              // Floating notification (if available)
+              if (floatingNotifications?.notifyNewOrder) {
+                floatingNotifications.notifyNewOrder(order, pulperiaName);
+              }
+              
+              // Toast as additional backup
               toast.success(`🛒 ¡Nuevo Pedido!`, {
                 description: `${order.customer_name}: ${itemSummary} - L${order.total?.toFixed(0)}`,
                 duration: 10000
@@ -88,16 +99,29 @@ export const useWebSocket = (userId, onMessage) => {
             
             // Notification for customers - status changes
             if (target === 'customer' && ['accepted', 'ready', 'completed'].includes(order.status)) {
-              // Browser notification
-              notifyOrderStatusChange(order.status, pulperiaName, order);
-              // In-app toast as backup
               const statusMessages = {
-                accepted: `👨‍🍳 ${pulperiaName} está preparando tu pedido`,
-                ready: `✅ ¡Tu orden en ${pulperiaName} está lista!`,
-                completed: `🎉 Orden completada en ${pulperiaName}`
+                accepted: { title: '👨‍🍳 Preparando tu orden', body: `${pulperiaName} está preparando tu pedido` },
+                ready: { title: '✅ ¡Tu orden está lista!', body: `Pasa a recoger en ${pulperiaName}` },
+                completed: { title: '🎉 Orden completada', body: `Gracias por tu compra en ${pulperiaName}` }
               };
-              toast.success(statusMessages[order.status] || message, {
-                description: `${totalItems} productos • L${order.total?.toFixed(0)}`,
+              
+              const msg = statusMessages[order.status];
+              
+              // Browser notification
+              sendBrowserNotification(msg.title, {
+                body: `${msg.body}\n${totalItems} productos • L${order.total?.toFixed(0)}`,
+                tag: `order-${order.status}`,
+                renotify: true
+              });
+              
+              // Floating notification (if available)
+              if (floatingNotifications?.notifyOrderStatusChange) {
+                floatingNotifications.notifyOrderStatusChange(order.status, pulperiaName, order);
+              }
+              
+              // Toast
+              toast.success(msg.title, {
+                description: `${msg.body} • ${totalItems} productos`,
                 duration: 8000
               });
             }
@@ -139,7 +163,7 @@ export const useWebSocket = (userId, onMessage) => {
     } catch (e) {
       console.error('WebSocket connection error:', e);
     }
-  }, [userId, getWsUrl, onMessage]);
+  }, [userId, getWsUrl, onMessage, floatingNotifications]);
 
   useEffect(() => {
     connectRef.current = connect;
