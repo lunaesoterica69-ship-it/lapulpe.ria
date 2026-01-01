@@ -148,21 +148,20 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
                 )}
               </button>
 
-              {/* Dropdown - Art Deco Style */}
+              {/* Dropdown */}
               {showDropdown && (
                 <div 
-                  className="fixed inset-x-4 top-16 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-stone-900 border border-amber-500/20 shadow-2xl shadow-black/50 overflow-hidden art-deco-card"
+                  className="fixed inset-x-4 top-16 sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:w-96 bg-stone-900 rounded-2xl border border-stone-700 shadow-2xl shadow-black/50 overflow-hidden"
                   style={{ zIndex: 9999 }}
                 >
                   {/* Header */}
-                  <div className="px-4 py-3 border-b border-amber-500/20 flex items-center justify-between bg-stone-900 relative">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
-                    <h3 className="font-bold text-amber-100 font-serif tracking-wide">Notificaciones</h3>
+                  <div className="px-4 py-3 border-b border-stone-800 flex items-center justify-between bg-stone-900">
+                    <h3 className="font-bold text-white">Notificaciones</h3>
                     <button 
                       onClick={() => setShowDropdown(false)}
-                      className="p-1 hover:bg-stone-800 transition-colors sm:hidden"
+                      className="p-1 hover:bg-stone-800 rounded-lg transition-colors sm:hidden"
                     >
-                      <X className="w-5 h-5 text-amber-400/70" />
+                      <X className="w-5 h-5 text-stone-400" />
                     </button>
                   </div>
 
