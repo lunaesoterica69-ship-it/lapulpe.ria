@@ -3,26 +3,8 @@
 
 import axios from 'axios';
 
-// Detectar el backend URL basado en el ambiente
-const getBackendUrl = () => {
-  // Si hay una variable de entorno, usarla
-  if (process.env.REACT_APP_BACKEND_URL) {
-    return process.env.REACT_APP_BACKEND_URL;
-  }
-  
-  // En producción (dominio personalizado), usar el mismo origen
-  const host = window.location.hostname;
-  if (host === 'lapulperiastore.net' || host === 'www.lapulperiastore.net') {
-    // El backend está en el mismo dominio en producción
-    return window.location.origin;
-  }
-  
-  // Fallback al preview de Emergent
-  return 'https://lapulperia-web.preview.emergentagent.com';
-};
-
-// Backend URL
-export const BACKEND_URL = getBackendUrl();
+// Backend URL - SIEMPRE usar la variable de entorno del preview
+export const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://lapulperia-web.preview.emergentagent.com';
 
 // Dominio personalizado
 export const CUSTOM_DOMAIN = 'lapulperiastore.net';
