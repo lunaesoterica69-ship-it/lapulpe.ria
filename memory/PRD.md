@@ -3,8 +3,9 @@
 ## Resumen
 Aplicación web para conectar pulperías hondureñas con clientes locales. Permite a los dueños de pulperías gestionar sus negocios, productos y pedidos, mientras los clientes pueden explorar, ordenar y rastrear sus compras con una mascota animada que representa al "Pulpero" (dueño de la pulpería).
 
-## URL de Preview
-https://lapulperia.preview.emergentagent.com
+## URLs
+- **Preview**: https://lapulperia.preview.emergentagent.com
+- **Dominio Personalizado**: https://lapulperiastore.net
 
 ## Design System
 - **Fondo**: stone-950 con efecto nebulosa roja (CSS puro, sin JavaScript)
@@ -12,6 +13,28 @@ https://lapulperia.preview.emergentagent.com
 - **Lazy Loading**: Todas las páginas excepto LandingPage cargan bajo demanda
 - **Tiempo de carga**: ~0.7 segundos en landing page
 - **Colores primarios**: Red-500/600 para acentos, stone tones para fondos
+
+## Sistema de Autenticación
+- **Preview Domain**: Emergent Auth (Google OAuth manejado)
+- **Dominio Personalizado**: Google OAuth propio configurado
+  - Client ID: 792440030382-...
+  - Callback URL: https://lapulperiastore.net/auth/callback
+
+## Sistema de Notificaciones Push
+- **Service Worker**: `/public/sw.js` para notificaciones persistentes
+- **Permisos**: Solicita permiso al cargar la app
+- **Funcionamiento**: Notificaciones incluso con navegador minimizado
+- **Eventos notificados**:
+  - Nueva orden (para dueños de pulpería)
+  - Orden aceptada (para clientes)
+  - Orden lista para recoger (para clientes)
+  - Orden completada (para clientes)
+
+## Notificaciones Mejoradas
+- Muestran resumen de productos (ej: "2x Pan, 1x Leche")
+- Muestran total de productos y monto
+- Panel expandible con desglose de productos para dueños
+- Integradas con WebSocket para tiempo real
 
 ## Mascota "Pulpero"
 - Componente animado SVG: `/app/frontend/src/components/Pulpero.js`
@@ -44,6 +67,7 @@ https://lapulperia.preview.emergentagent.com
 
 ## Funcionalidades Completadas
 - [x] Google OAuth con emergentintegrations
+- [x] Google OAuth propio para dominio personalizado
 - [x] CRUD de productos y pulperías
 - [x] Sistema de pedidos con WebSocket real-time
 - [x] Panel de personalización de pulperías (tema oscuro)
@@ -60,42 +84,65 @@ https://lapulperia.preview.emergentagent.com
 - [x] Órdenes separadas por pulpería
 - [x] Historial de compras con estadísticas
 - [x] Anuncios con imágenes
+- [x] Service Worker para notificaciones push
+- [x] Notificaciones mejoradas con desglose de productos
+- [x] Soporte para dominio personalizado
 
 ## Backlog
 - [ ] Editar/Eliminar Anuncios
+- [ ] Notificaciones por email (SendGrid) - requiere API key
 - [ ] Crear CLOUDFLARE_DEPLOY_GUIDE.md
 
 ## Arquitectura de Archivos Clave
 ```
-/app/frontend/src/
-├── components/
-│   ├── Pulpero.js              # Mascota con mensajes del dueño
-│   ├── Header.js               # Notificaciones z-index 9999
-│   ├── AnimatedBackground.js   # Estrellas 30fps optimizado
-│   └── BottomNav.js            # Navegación inferior
-├── pages/
-│   ├── MapView.js              # Tabs Cercanas/Favoritas
-│   ├── PulperiaProfile.js      # Botón favoritos en banner
-│   ├── MyOrders.js             # Órdenes por pulpería + historial
-│   ├── ShoppingCart.js         # Checkout por pulpería
-│   └── AdminPanel.js           # Panel admin con password
-└── hooks/
-    └── useWebSocket.js         # WebSocket optimizado
+/app/frontend/
+├── public/
+│   ├── sw.js                    # Service Worker para notificaciones
+│   ├── manifest.json            # PWA manifest
+│   └── index.html               # Meta tags actualizados
+├── src/
+│   ├── config/
+│   │   └── api.js               # Configuración dinámica de API URL
+│   ├── components/
+│   │   ├── Pulpero.js           # Mascota con mensajes del dueño
+│   │   ├── Header.js            # Notificaciones mejoradas
+│   │   ├── AnimatedBackground.js # Estrellas optimizado
+│   │   └── DisclaimerModal.js   # Modal de disclaimer
+│   ├── pages/
+│   │   ├── LandingPage.js       # OAuth dinámico (Emergent/Google)
+│   │   ├── GoogleCallback.js    # Callback para OAuth propio
+│   │   ├── MapView.js           # Tabs Cercanas/Favoritas
+│   │   ├── PulperiaProfile.js   # Favoritos, visor imágenes
+│   │   ├── MyOrders.js          # Órdenes por pulpería + historial
+│   │   └── ShoppingCart.js      # Checkout por pulpería
+│   └── hooks/
+│       ├── useWebSocket.js      # WebSocket + notificaciones
+│       └── useNotifications.js  # Service Worker + push
+/app/backend/
+└── server.py                    # Endpoints OAuth, notificaciones mejoradas
 ```
 
 ## Credenciales
 - **Admin Email**: onol4sco05@gmail.com
 - **Admin Password**: AlEjA127
 
-## Testing
-- **Backend**: 22/22 tests pasando (100%)
-- **Frontend**: Carga en 0.92s con animaciones
-- **Test files**: `/app/test_reports/iteration_4.json`
+## Configuración Google OAuth (Dominio Personalizado)
+En Google Cloud Console, agregar:
+- **URIs de redirección autorizados**:
+  - https://lapulperiastore.net/auth/callback
+  - https://www.lapulperiastore.net/auth/callback
+- **Orígenes de JavaScript autorizados**:
+  - https://lapulperiastore.net
+  - https://www.lapulperiastore.net
 
-## Última Actualización: Diciembre 31, 2024
-- Optimizada velocidad de carga (0.92s)
-- Notificaciones con z-index 9999 (siempre visibles)
-- Sistema de favoritos con tab dedicado
-- Animación de estrellitas estilo Grok optimizada a 30fps
-- Órdenes separadas por pulpería
-- Historial de compras con estadísticas y desglose
+## Testing
+- **Backend**: Endpoints de notificaciones y OAuth validados
+- **Frontend**: Modals, notificaciones y OAuth funcionando
+- **Service Worker**: Registrado y funcionando
+
+## Última Actualización: Enero 1, 2025
+- Implementado Google OAuth propio para dominio personalizado
+- Service Worker para notificaciones push persistentes
+- Notificaciones mejoradas con desglose de productos
+- PWA manifest y meta tags actualizados
+- Lint errors corregidos
