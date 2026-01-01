@@ -2506,7 +2506,7 @@ async def websocket_orders_endpoint(websocket: WebSocket, user_id: str):
             except asyncio.TimeoutError:
                 try:
                     await ws_manager.send_personal_message({"type": "ping"}, websocket)
-                except:
+                except Exception:
                     break
                     
     except WebSocketDisconnect:
