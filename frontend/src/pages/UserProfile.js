@@ -232,6 +232,33 @@ const UserProfile = () => {
           </div>
         </button>
 
+        {/* Close Store - Only for pulperia owners with pulperias */}
+        {user?.user_type === 'pulperia' && myPulperias.length > 0 && (
+          <div className="bg-stone-800/50 backdrop-blur-sm rounded-2xl border border-red-900/50 p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <XCircle className="w-5 h-5 text-red-400" />
+              <h3 className="font-bold text-red-400">Cerrar Tienda</h3>
+            </div>
+            <p className="text-sm text-stone-400 mb-3">
+              Cierra tu pulpería permanentemente. Podrás crear una nueva después.
+            </p>
+            {myPulperias.map(pulperia => (
+              <button
+                key={pulperia.pulperia_id}
+                onClick={() => {
+                  setSelectedPulperiaToClose(pulperia);
+                  setShowCloseStoreDialog(true);
+                }}
+                className="w-full p-3 bg-red-900/20 border border-red-800/50 rounded-xl flex items-center gap-3 hover:bg-red-900/30 transition-all mb-2 last:mb-0"
+              >
+                <Store className="w-5 h-5 text-red-400" />
+                <span className="text-white flex-1 text-left">{pulperia.name}</span>
+                <span className="text-red-400 text-sm">Cerrar</span>
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Logout Button */}
         <button
           onClick={handleLogout}
