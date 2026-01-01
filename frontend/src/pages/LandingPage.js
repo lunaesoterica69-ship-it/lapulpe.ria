@@ -16,24 +16,31 @@ const InstagramIcon = () => (
   </svg>
 );
 
-// Modal de "Cómo Funciona" - Estilo limpio con toques sutiles
+// Modal de "Cómo Funciona" - Estilo limpio con iconos centrados
 const HowItWorksModal = ({ onClose }) => (
   <div className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
     <div className="bg-stone-900 rounded-2xl border border-stone-700/50 max-w-md w-full shadow-2xl max-h-[85vh] overflow-y-auto">
-      <div className="px-6 pt-6 pb-4 border-b border-stone-800">
-        <h2 className="text-xl font-bold text-white text-center">¿Cómo funciona?</h2>
-        <p className="text-stone-500 text-sm text-center mt-1">3 simples pasos</p>
+      {/* Header centrado */}
+      <div className="px-6 pt-6 pb-4 border-b border-stone-800 text-center">
+        <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-red-500/20">
+          <Store className="w-7 h-7 text-white" />
+        </div>
+        <h2 className="text-xl font-bold text-white">¿Cómo funciona?</h2>
+        <p className="text-stone-500 text-sm mt-1">3 simples pasos</p>
       </div>
 
-      <div className="px-6 py-5 space-y-4">
+      <div className="px-6 py-6 space-y-5">
         {/* Paso 1 */}
         <div className="flex gap-4 items-start">
           <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-500/20">
             <MapPin className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h3 className="text-white font-bold">1. Explora</h3>
-            <p className="text-stone-400 text-sm mt-1">Encuentra pulperías cercanas a tu ubicación en el mapa</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-6 h-6 bg-red-500/20 rounded-full flex items-center justify-center text-red-400 text-sm font-bold">1</span>
+              <h3 className="text-white font-bold">Explora</h3>
+            </div>
+            <p className="text-stone-400 text-sm">Encuentra pulperías cercanas a tu ubicación en el mapa</p>
           </div>
         </div>
 
@@ -42,9 +49,12 @@ const HowItWorksModal = ({ onClose }) => (
           <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-500/20">
             <ShoppingBag className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h3 className="text-white font-bold">2. Ordena</h3>
-            <p className="text-stone-400 text-sm mt-1">Agrega productos al carrito y haz tu pedido</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-6 h-6 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-400 text-sm font-bold">2</span>
+              <h3 className="text-white font-bold">Ordena</h3>
+            </div>
+            <p className="text-stone-400 text-sm">Agrega productos al carrito y haz tu pedido</p>
           </div>
         </div>
 
@@ -53,21 +63,24 @@ const HowItWorksModal = ({ onClose }) => (
           <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-500/20">
             <Bell className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h3 className="text-white font-bold">3. Recibe</h3>
-            <p className="text-stone-400 text-sm mt-1">Te notificamos cuando tu orden esté lista para recoger</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-sm font-bold">3</span>
+              <h3 className="text-white font-bold">Recibe</h3>
+            </div>
+            <p className="text-stone-400 text-sm">Te notificamos cuando tu orden esté lista para recoger</p>
           </div>
         </div>
 
         {/* Para dueños */}
-        <div className="bg-stone-800/50 rounded-xl p-4 mt-4">
-          <div className="flex gap-3 items-start">
+        <div className="bg-gradient-to-r from-stone-800/80 to-stone-800/40 rounded-xl p-4 mt-2 border border-stone-700/50">
+          <div className="flex gap-3 items-center">
             <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
               <Store className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-white font-bold text-sm">¿Tienes una pulpería?</h3>
-              <p className="text-stone-400 text-xs mt-1">Registra tu negocio gratis y empieza a recibir pedidos</p>
+              <p className="text-stone-400 text-xs mt-0.5">Registra tu negocio gratis y empieza a recibir pedidos</p>
             </div>
           </div>
         </div>
