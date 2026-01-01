@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag } from 'lucide-react';
+import { Bell, LogOut, User, Store, CheckCircle, Clock, XCircle, Package, Sparkles, ChevronRight, X, ShoppingBag, BellRing } from 'lucide-react';
 import { toast } from 'sonner';
+import { requestNotificationPermission } from '../hooks/useNotifications';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,7 +15,30 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState('default');
   const dropdownRef = useRef(null);
+
+  // Check notification permission status
+  useEffect(() => {
+    if ('Notification' in window) {
+      setNotificationPermission(Notification.permission);
+    }
+  }, []);
+
+  const handleEnableNotifications = async () => {
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      setNotificationPermission('granted');
+      toast.success('¡Notificaciones activadas!', {
+        description: 'Recibirás alertas de nuevos pedidos y actualizaciones'
+      });
+    } else {
+      setNotificationPermission(Notification.permission);
+      toast.error('No se pudieron activar las notificaciones', {
+        description: 'Revisa los permisos de tu navegador'
+      });
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
