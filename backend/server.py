@@ -1374,6 +1374,32 @@ async def get_featured_pulperias():
     
     return featured
 
+
+@api_router.get("/ads/recommended")
+async def get_recommended_pulperias():
+    """Get pulperias with 'recomendado' plan - Premium tier for featured section"""
+    now = datetime.now(timezone.utc)
+    
+    # Only get ads with 'recomendado' plan that are active
+    active_ads = await db.advertisements.find(
+        {
+            "status": "active", 
+            "plan": "recomendado",
+            "end_date": {"$gte": now.isoformat()}
+        },
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    recommended = []
+    for ad in active_ads:
+        pulperia = await db.pulperias.find_one({"pulperia_id": ad["pulperia_id"]}, {"_id": 0})
+        if pulperia:
+            pulperia["ad_plan"] = "recomendado"
+            pulperia["ad_end_date"] = ad.get("end_date")
+            recommended.append(pulperia)
+    
+    return recommended
+
 @api_router.get("/ads/my-ads")
 async def get_my_ads(authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
     """Get ads for current user's pulperias"""
