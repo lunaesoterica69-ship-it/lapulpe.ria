@@ -1905,6 +1905,12 @@ async def health_check():
     """Health check endpoint for Kubernetes/deployment"""
     return {"status": "healthy", "service": "lapulperia-backend"}
 
+# Also add health check under /api for nginx routing
+@api_router.get("/health")
+async def api_health_check():
+    """Health check endpoint under /api prefix"""
+    return {"status": "healthy", "service": "lapulperia-backend"}
+
 app.include_router(api_router)
 
 @app.on_event("shutdown")
