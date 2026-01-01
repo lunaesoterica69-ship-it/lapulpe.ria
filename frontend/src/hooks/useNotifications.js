@@ -1,5 +1,22 @@
-// Hook para notificaciones del navegador
-// Solicita permiso y envía notificaciones push
+// Hook para notificaciones del navegador con Service Worker
+// Soporta notificaciones incluso cuando el navegador está minimizado
+
+let swRegistration = null;
+
+// Registrar Service Worker
+export const registerServiceWorker = async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      swRegistration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registrado');
+      return swRegistration;
+    } catch (error) {
+      console.error('Error registrando Service Worker:', error);
+      return null;
+    }
+  }
+  return null;
+};
 
 export const requestNotificationPermission = async () => {
   if (!('Notification' in window)) {
@@ -8,21 +25,58 @@ export const requestNotificationPermission = async () => {
   }
 
   if (Notification.permission === 'granted') {
+    // Registrar SW si aún no está registrado
+    if (!swRegistration) {
+      await registerServiceWorker();
+    }
     return true;
   }
 
   if (Notification.permission !== 'denied') {
     const permission = await Notification.requestPermission();
-    return permission === 'granted';
+    if (permission === 'granted') {
+      await registerServiceWorker();
+      return true;
+    }
   }
 
   return false;
 };
 
-export const sendBrowserNotification = (title, options = {}) => {
+// Enviar notificación usando Service Worker si está disponible
+export const sendBrowserNotification = async (title, options = {}) => {
   if (!('Notification' in window)) return;
   
-  if (Notification.permission === 'granted') {
+  if (Notification.permission !== 'granted') return;
+
+  // Intentar usar Service Worker para notificaciones persistentes
+  if (swRegistration || navigator.serviceWorker?.controller) {
+    try {
+      const registration = swRegistration || await navigator.serviceWorker.ready;
+      
+      // Enviar mensaje al SW para mostrar notificación
+      if (registration.active) {
+        registration.active.postMessage({
+          type: 'SHOW_NOTIFICATION',
+          title,
+          options: {
+            body: options.body || '',
+            tag: options.tag || 'default',
+            data: {
+              url: options.url || '/orders',
+              orderId: options.orderId
+            }
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      console.log('SW notification failed, using fallback:', e);
+    }
+  }
+
+  // Fallback a notificación normal si SW no está disponible
+  try {
     const notification = new Notification(title, {
       icon: '/favicon.ico',
       badge: '/favicon.ico',
@@ -32,10 +86,8 @@ export const sendBrowserNotification = (title, options = {}) => {
       ...options
     });
 
-    // Auto-cerrar después de 8 segundos
     setTimeout(() => notification.close(), 8000);
 
-    // Click handler
     notification.onclick = () => {
       window.focus();
       if (options.onClick) options.onClick();
@@ -43,6 +95,8 @@ export const sendBrowserNotification = (title, options = {}) => {
     };
 
     return notification;
+  } catch (e) {
+    console.error('Error creating notification:', e);
   }
 };
 
@@ -56,7 +110,9 @@ export const notifyNewOrder = (order, pulperiaName) => {
   sendBrowserNotification(`🛒 ¡Nuevo Pedido en ${pulperiaName}!`, {
     body: `${order.customer_name || 'Cliente'}: ${itemSummary}${extraItems}\nTotal: L${(order.total || 0).toFixed(0)} (${totalItems} productos)`,
     tag: 'new-order',
-    renotify: true
+    renotify: true,
+    url: '/orders',
+    orderId: order.order_id
   });
 };
 
@@ -67,7 +123,9 @@ export const notifyOrderReady = (pulperiaName, order) => {
   sendBrowserNotification(`✅ ¡Tu orden está lista!`, {
     body: `${pulperiaName} tiene tu pedido listo para recoger\n${totalItems} productos • L${(order?.total || 0).toFixed(0)}`,
     tag: 'order-ready',
-    renotify: true
+    renotify: true,
+    url: '/orders',
+    orderId: order?.order_id
   });
 };
 
@@ -78,7 +136,9 @@ export const notifyOrderAccepted = (pulperiaName, order) => {
   sendBrowserNotification(`👨‍🍳 Preparando tu orden`, {
     body: `${pulperiaName} está preparando tu pedido\n${totalItems} productos • L${(order?.total || 0).toFixed(0)}`,
     tag: 'order-accepted',
-    renotify: true
+    renotify: true,
+    url: '/orders',
+    orderId: order?.order_id
   });
 };
 
@@ -95,11 +155,18 @@ export const notifyOrderStatusChange = (status, pulperiaName, order) => {
 
   const msg = messages[status];
   if (msg) {
-    sendBrowserNotification(msg.title, { body: msg.body, tag: `order-${status}`, renotify: true });
+    sendBrowserNotification(msg.title, { 
+      body: msg.body, 
+      tag: `order-${status}`, 
+      renotify: true,
+      url: '/orders',
+      orderId: order?.order_id
+    });
   }
 };
 
 export default {
+  registerServiceWorker,
   requestNotificationPermission,
   sendBrowserNotification,
   notifyNewOrder,
