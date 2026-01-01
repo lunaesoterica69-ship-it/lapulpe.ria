@@ -122,15 +122,12 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
   );
 
   return (
-    <header className="sticky top-0 z-50 bg-stone-950/95 backdrop-blur-md">
-      {/* Art Deco Top Border */}
-      <div className="h-0.5 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
-      
-      <div className="px-4 py-3 flex items-center justify-between border-b border-amber-500/10">
+    <header className="sticky top-0 z-50 bg-stone-950/95 backdrop-blur-md border-b border-stone-800/50">
+      <div className="px-4 py-3 flex items-center justify-between">
         {/* Title Section */}
         <div className="flex-1 min-w-0">
-          <h1 className="text-lg font-bold text-amber-100 truncate font-serif tracking-wide">{title}</h1>
-          {subtitle && <p className="text-xs text-amber-500/50 truncate tracking-wider">{subtitle}</p>}
+          <h1 className="text-lg font-bold text-white truncate">{title}</h1>
+          {subtitle && <p className="text-xs text-stone-500 truncate">{subtitle}</p>}
         </div>
 
         {/* Actions */}
@@ -140,19 +137,12 @@ const Header = ({ user, title, subtitle, onOrderUpdate }) => {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="relative p-2.5 bg-stone-900 border border-amber-500/20 hover:border-amber-500/40 hover:bg-stone-800 transition-all duration-300"
-                style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
+                className="relative p-2.5 rounded-xl bg-stone-900 border border-stone-800 hover:bg-stone-800 transition-colors"
                 data-testid="notifications-button"
               >
-                <Bell className="w-5 h-5 text-amber-400/70" />
+                <Bell className="w-5 h-5 text-stone-400" />
                 {notificationCount > 0 && (
-                  <span 
-                    className="absolute -top-1 -right-1 w-5 h-5 text-stone-900 text-xs font-bold flex items-center justify-center animate-pulse"
-                    style={{
-                      background: 'linear-gradient(135deg, #F7E7A0, #D4A843)',
-                      clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'
-                    }}
-                  >
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
                     {notificationCount > 9 ? '9+' : notificationCount}
                   </span>
                 )}
