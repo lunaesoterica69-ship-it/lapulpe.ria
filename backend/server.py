@@ -784,6 +784,28 @@ async def update_pulperia(pulperia_id: str, pulperia_data: PulperiaCreate, autho
     
     return await db.pulperias.find_one({"pulperia_id": pulperia_id}, {"_id": 0})
 
+@api_router.delete("/admin/pulperias/{pulperia_id}")
+async def admin_delete_pulperia(pulperia_id: str, authorization: Optional[str] = Header(None), session_token: Optional[str] = Cookie(None)):
+    """Admin: Delete a pulperia and all related data"""
+    await get_admin_user(authorization, session_token)
+    
+    pulperia = await db.pulperias.find_one({"pulperia_id": pulperia_id})
+    if not pulperia:
+        raise HTTPException(status_code=404, detail="Pulpería no encontrada")
+    
+    # Delete all related data
+    await db.products.delete_many({"pulperia_id": pulperia_id})
+    await db.orders.delete_many({"pulperia_id": pulperia_id})
+    await db.reviews.delete_many({"pulperia_id": pulperia_id})
+    await db.achievements.delete_many({"pulperia_id": pulperia_id})
+    await db.announcements.delete_many({"pulperia_id": pulperia_id})
+    await db.jobs.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ads.delete_many({"pulperia_id": pulperia_id})
+    await db.featured_ad_slots.delete_many({"pulperia_id": pulperia_id})
+    await db.pulperias.delete_one({"pulperia_id": pulperia_id})
+    
+    return {"message": f"Pulpería '{pulperia.get('name', pulperia_id)}' eliminada"}
+
 @api_router.get("/pulperias/{pulperia_id}/products")
 async def get_pulperia_products(pulperia_id: str):
     """Get all products for a pulperia"""
