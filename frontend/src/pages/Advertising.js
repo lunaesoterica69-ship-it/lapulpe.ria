@@ -101,6 +101,13 @@ const Advertising = () => {
         glow: 'shadow-amber-500/20',
         border: 'border-amber-500/30',
         badge: 'bg-amber-500/20 text-amber-400'
+      },
+      recomendado: {
+        icon: Crown,
+        gradient: 'from-amber-400 via-yellow-500 to-amber-600',
+        glow: 'shadow-amber-400/30',
+        border: 'border-amber-400/40',
+        badge: 'bg-gradient-to-r from-amber-500 to-yellow-500 text-stone-900'
       }
     };
     return configs[planKey] || configs.basico;
