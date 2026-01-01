@@ -26,7 +26,6 @@ const Advertising = lazy(() => import('./pages/Advertising'));
 const AdminPanel = lazy(() => import('./pages/AdminPanel'));
 const AdAssignmentLog = lazy(() => import('./pages/AdAssignmentLog'));
 const RecommendedPage = lazy(() => import('./pages/RecommendedPage'));
-const BadgeDemo = lazy(() => import('./pages/BadgeDemo'));
 const FeaturedAdsPage = lazy(() => import('./pages/FeaturedAdsPage'));
 
 // Simple loading spinner
@@ -68,7 +67,6 @@ function AppRouter() {
         <Route path="/recommended" element={<ProtectedRoute><RecommendedPage /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         <Route path="/ad-log" element={<AdAssignmentLog />} />
-        <Route path="/badge-demo" element={<BadgeDemo />} />
         <Route path="/anuncios" element={<ProtectedRoute><FeaturedAdsPage /></ProtectedRoute>} />
       </Routes>
     </Suspense>
